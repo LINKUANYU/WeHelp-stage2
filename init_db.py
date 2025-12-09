@@ -30,6 +30,7 @@ def create_db():
             CHARACTER SET utf8mb4
             COLLATE utf8mb4_unicode_ci;
         ''')
+        # `...` 是拿來包 欄位名/表名，不能用%s，%s 參數化主要用在 值 (values)，不是用在 資料庫名/表名/欄位名 這種 identifier。
         cnx.commit()
     except Error as e:
         print("建立DB失敗", e)
@@ -61,7 +62,7 @@ def create_table():
             mrt VARCHAR(255) NULL,
             lat DECIMAL(9,6) NULL,
             lng DECIMAL(9,6) NULL,
-            img JSON NULL
+            images JSON NULL
         )ENGINE=InnoDB;
         ''')
         cnx.commit()
@@ -81,7 +82,7 @@ def insert_data():
     cnx = connect_db()
     cur = cnx.cursor()
     sql = f'''
-        INSERT INTO `{TABLE_NAME}`(name, category, description, address, transport, mrt, lat, lng, img)
+        INSERT INTO `{TABLE_NAME}`(name, category, description, address, transport, mrt, lat, lng, images)
         VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)
     '''
 
