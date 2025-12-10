@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse
 from deps import get_conn, get_cur
 from mysql.connector import Error
 from typing import Annotated
+import json
 app=FastAPI()
 
 # Static Pages (Never Modify Code in this Block)
@@ -98,6 +99,15 @@ def attractions(
 	try:
 		cur.execute(sql, params)
 		data = cur.fetchall()
+		# 處理image裡的JSON字串
+		for row in data:
+			row_image = row.get("images")
+			# 如果沒有就設為空陣列
+			if not row_image:
+				row["images"] = []
+			# 如果有，且型別是str，就用json.load去解析，並取代掉原本data裡的資料
+			elif isinstance(row_image, str):
+				row["images"] = json.loads(row_image)
 	except Error as e:
 		return {"error": True, "message": e}
 	
@@ -125,6 +135,14 @@ def attraction_id(
 	try:
 		cur.execute(sql, (attractionId,))
 		data = cur.fetchone()
+		# 處理image裡的JSON字串
+		data_image = data.get("images")
+		# 如果沒有就設為空陣列
+		if not data_image:
+			data["images"] = []
+		# 如果有，且型別是str，就用json.load去解析，並取代掉原本data裡的資料
+		elif isinstance(data_image, str):
+			data["images"] = json.loads(data_image)
 	except Error as e:
 		return {"error": True, "message": e}
 	

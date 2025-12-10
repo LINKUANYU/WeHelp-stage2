@@ -12,5 +12,5 @@ CREATE TABLE IF NOT EXISTS spot(
     mrt VARCHAR(255) NULL,
     lat DECIMAL(9,6) NULL,
     lng DECIMAL(9,6) NULL,
-    imgages JSON NULL
+    images JSON NULL
 )ENGINE=InnoDB;
