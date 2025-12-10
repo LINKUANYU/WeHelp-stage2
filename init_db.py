@@ -102,7 +102,7 @@ def insert_data():
         if "https://" in file_str:
             parts = file_str.split("https://")
             for p in parts:
-                if p.strip():
+                if p.strip() and p.endswith((".jpg", ".JPG", ".png", ".PNG")):
                     imgs.append("https://" + p.strip())
         # 把 imgs（一個 Python list）轉成JSON 字串, ensure_ascii=False 讓網址/中文等不會被轉成 \uXXXX 這種形式
         if imgs:
