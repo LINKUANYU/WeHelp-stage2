@@ -114,7 +114,7 @@ def attractions(
 	return {"nextPage": next_page, "data": data}
 
 
-@app.get("/api/attractions/{attractionId}")
+@app.get("/api/attraction/{attractionId}")
 def attraction_id(
     attractionId: Annotated[int, Path()],
 	cur = Depends(get_cur)
