@@ -138,3 +138,98 @@ body{margin: 0px;}
 
 
 /* Atrractions */
+.l-attraction{height: 966px; padding: 40px 0px;}
+
+.list-bar{
+    max-width: 1200px; width: 100%;
+    padding-bottom: 20px;
+    margin: 0 auto;
+    display: flex; align-items: center;
+}
+.left-container{
+    flex: 0 0 auto;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    padding-left: 15px;
+}
+
+.container{
+    flex: 1 1 auto;
+    min-width: 0;     /* 允許它「可以縮到比內容更窄」*/
+    height: 50px;
+    padding: 13px 10px;
+
+}
+
+
+/* display: block 把一些底部的空間清掉 */
+.container__btn{border: 0px; padding: 0 0; display: block;}
+.btn__icon{height: 32px; width: 32px; display: block;}
+
+.container__list{
+    display: flex; align-items: center;
+    height:100%;
+    white-space: nowrap; /* white-space: nowrap; 不換行 */
+    overflow: hidden;
+    overflow-x: auto;  /* 允許水平滑動 */
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;  /* 在iOS Safari 滑動有慣性作用的感覺 */
+    /* 隱藏滑動軸 */
+    /* Firefox */
+    scrollbar-width: none;
+      /* IE / old Edge */
+    -ms-overflow-style: none;
+}
+/* 隱藏滑動軸 */
+/* Chrome / Safari */
+.container__list::-webkit-scrollbar{
+    height: 0;
+    display: none;
+}
+
+.container__item{padding: 5px 15px;}
+
+.right-container{
+    flex: 0 0 auto;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    padding-right: 15px;
+}
+
+.attraction-group{
+    width: 1200px; margin: 0 auto;
+    padding: 15px;
+}
+.l-card{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+.card{
+    height: 242px; width: 270px; 
+    border: 1px solid #E8E8E8; border-radius: 5px;
+}
+.card__container{position: relative; overflow: hidden;}
+
+.card__img{height: 100%; width: 100%; display: block;}
+
+.card__title{
+    position: absolute;
+    left: 0; bottom: 0; width: 330px;
+    z-index: 2; background: rgba(0, 0, 0, 0.6);
+    padding: 10px;
+}
+
+.card__title--info{height: 20px; display: flex; align-items: center;}
+
+.card__detail{
+    width: 100%;
+    padding: 10px;
+    display: flex; justify-content: space-between;
+}
+
+.card__info{
+    height: 25px;
+    display: flex; align-items: center;
+}

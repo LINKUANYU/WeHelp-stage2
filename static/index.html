@@ -3,36 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="/static/index.css">
   <title>Index</title>
 </head>
 <body>
-    <header class="l-header">
-      <div class="nav">
-        <div class="nav__brand u-text-headline u-color-pri-70">台北一日遊</div>
-        <div class="nav__menu">
-          <button class="nav__btn u-text-body u-color-sec-70 u-bk-color-white">預定行程</button>
-          <button class="nav__btn u-text-body u-color-sec-70 u-bk-color-white">登入/註冊</button>
-        </div>
-      </div> 
-    </header>
-    <div class="l-hero">
-      <img class="hero__img" src="welcome.png">
-      <div class="hero__content">
-        <div class="hero__slogan">
-          <div class="hero__title u-color-white u-text-sloganTitle">輕鬆享受台北一日悠閒</div>
-          <div class="hero__subtitle u-color-white u-text-body--bold">探索每個角落，體驗城市的深度旅遊行程</div>
-        </div>
-        <div class="hero__search">
-          <div class="search">
-            <button class="search__categories-btn u-text-body">全部分類▼</button>
-            <input class="search__input" placeholder="輸入景點名稱查詢" id="search__input">
-            <button class="search__btn">
-              <img class="search__icon" src="icon_search.png">
-            </button>
-          </div>
+  <!-- Header -->
+  <header class="l-header">
+    <div class="nav">
+      <div class="nav__brand u-text-headline u-color-pri-70">台北一日遊</div>
+      <div class="nav__menu">
+        <button class="nav__btn u-text-body u-color-sec-70 u-bk-color-white">預定行程</button>
+        <button class="nav__btn u-text-body u-color-sec-70 u-bk-color-white">登入/註冊</button>
+      </div>
+    </div> 
+  </header>
+  <!-- Hero -->
+  <div class="l-hero">
+    <img class="hero__img" src="/static/welcome.png">
+    <div class="hero__content">
+      <div class="hero__slogan">
+        <div class="hero__title u-color-white u-text-sloganTitle">輕鬆享受台北一日悠閒</div>
+        <div class="hero__subtitle u-color-white u-text-body--bold">探索每個角落，體驗城市的深度旅遊行程</div>
+      </div>
+      <div class="hero__search">
+        <div class="search">
+          <button class="search__categories-btn u-text-body">全部分類▼</button>
+          <input class="search__input" placeholder="輸入景點名稱查詢" id="search__input">
+          <button class="search__btn">
+            <img class="search__icon" src="/static/icon_search.png">
+          </button>
         </div>
       </div>
     </div>
+  </div>
+  <!-- Atrractions area -->
+  <div class="l-attraction">
+    <!-- Atrraction list bar -->
+    <div class="list-bar u-bk-color-white">
+      <div class="left-container">
+        <button class="container__btn u-bk-color-white" id="list-bar-left-btn">
+          <img class="btn__icon" src="/static/left-btn.png">
+        </button>
+      </div>
+      <div class="container">
+        <div class="container__list">
+          <!-- JS填充 -->
+        </div>
+      </div>
+      <div class="right-container">
+        <button class="container__btn u-bk-color-white" id="list-bar-right-btn">
+          <img class="btn__icon" src="/static/right-btn.png">
+        </button>
+      </div>
+    </div>
+    <!-- Atrractions group  -->
+    <div class="attraction-group">
+      <div class="l-card">
+        <!-- Card -->
+        <div class="card u-color-white">
+          <div class="card__container">
+            <img class="card__img" src="/static/Demo.png">
+            <div class="card__title">
+              <div class="card__title--info u-text-body--bold u-color-white">平安鐘</div>
+            </div>
+          </div>
+          <div class="card__detail">
+            <div class="card__info u-text-body u-color-sec-50">忠孝復興</div>
+            <div class="card__info u-text-body u-color-sec-50">公共藝術</div>
+          </div>
+        </div>
+
+
+
+
+      </div>
+    </div>
+
+
+
+  </div>
+  <!-- Footer -->
+  <div class="Footer">
+    
+  </div>
+  <script defer>
+    const bar = document.querySelector('.list-bar');
+    const container__list = bar.querySelector('.container__list');
+    const left_btn = bar.querySelector('#list-bar-left-btn');
+    const right_btn = bar.querySelector('#list-bar-right-btn');
+    // 計算每次滑動的位移量，clientWidth：該元素「可視內容看」的寬度
+    function step(){
+      return container__list.clientWidth * 2 / 3;
+    }
+    
+    left_btn.addEventListener('click',() => {
+      container__list.scrollBy({left: -step(), behavior: "smooth"});
+    });
+    // scrollBy：相對捲動，left：水平捲動位移量
+    right_btn.addEventListener('click',() => {
+      container__list.scrollBy({left: step(), behavior: "smooth"});
+    });
+
+    async function get_data(url) {
+      const res = await fetch(url);
+      const ct = res.headers.get('content-type') || '';
+      const body = ct.includes('application/json') ? await res.json() : await res.text();
+
+      if (!res.ok){
+        const err = new Error (`HTTP ${res.status}`);
+        err.status = res.status;
+        err.payload = body;
+        throw err;
+      }
+      return body;
+    }
+
+    async function startup(){
+      try{
+        const result = await get_data("/api/mrts");
+        const data = result.data;
+        data.forEach(d => {
+          const container__item = document.createElement('div');
+          container__item.classList = "container__item u-text-body u-color-sec-70";
+          container__item.textContent = d;
+          container__list.append(container__item);
+        });
+      }catch(e){
+        console.log(e)
+      }
+    }
+    startup();
+    
+
+  </script>
 </body>
 </html>

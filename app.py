@@ -3,8 +3,11 @@ from fastapi.responses import FileResponse
 from deps import get_conn, get_cur
 from mysql.connector import Error
 from typing import Annotated
+from fastapi.staticfiles import StaticFiles
 import json
 app=FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"))
 
 # Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)
