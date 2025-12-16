@@ -59,19 +59,21 @@
     <!-- Atrractions group  -->
     <div class="attraction-group">
       <div class="l-card">
-        <!-- Card -->
+        <!-- Card 填充物 -->
+        <!-- 填充物範本
         <div class="card u-color-white">
           <div class="card__container">
-            <img class="card__img" src="/static/Demo.png">
+            <img class="card__img" src="">
             <div class="card__title">
               <div class="card__title--info u-text-body--bold u-color-white">平安鐘</div>
             </div>
           </div>
           <div class="card__detail">
-            <div class="card__info u-text-body u-color-sec-50">忠孝復興</div>
-            <div class="card__info u-text-body u-color-sec-50">公共藝術</div>
+            <div class="card__info card__info--1 u-text-body u-color-sec-50">忠孝復興</div>
+            <div class="card__info card__info--2 u-text-body u-color-sec-50">公共藝術</div>
           </div>
-        </div>
+        </div> 
+        -->
 
 
 
@@ -119,6 +121,7 @@
     }
 
     async function startup(){
+      // List bar
       try{
         const result = await get_data("/api/mrts");
         const data = result.data;
@@ -130,6 +133,50 @@
         });
       }catch(e){
         console.log(e)
+      }
+
+      // Attraction
+      try{
+        const result = await get_data("/api/attractions?page=0");
+        const data = result.data;
+        console.log(data);
+        const l_card = document.querySelector('.l-card')
+        data.forEach(d => {
+          // card__caontainer
+          const card_title_info = document.createElement('div');
+          card_title_info.classList = "card__title--info u-text-body--bold u-color-white";
+          card_title_info.textContent = d.name;
+          const card_title = document.createElement('div');
+          card_title.classList = "card__title";
+          card_title.append(card_title_info);
+          const card_img = document.createElement('img');
+          card_img.classList = "card__img";
+          card_img.src = d.images[0];
+          const card_container = document.createElement('div');
+          card_container.classList = "card__container";
+          card_container.append(card_img);
+          card_container.append(card_title);
+          // card__detail
+          const card_info_1 = document.createElement('div');
+          card_info_1.classList = "card__info card__info--1 u-text-body u-color-sec-50";
+          card_info_1.textContent = d.mrt;
+          const card_info_2 = document.createElement('div');
+          card_info_2.classList = "card__info card__info--2 u-text-body u-color-sec-50";
+          card_info_2.textContent = d.category;
+          const card_detail = document.createElement('div');
+          card_detail.classList = "card__detail";
+          card_detail.append(card_info_1);
+          card_detail.append(card_info_2);
+          // card
+          const card = document.createElement('div');
+          card.classList = "card u-color-white";
+          card.append(card_container);
+          card.append(card_detail);
+          // insert card
+          l_card.append(card);
+        });
+      }catch(e){
+        console.log(e);
       }
     }
     startup();

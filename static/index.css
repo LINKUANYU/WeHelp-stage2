@@ -210,9 +210,12 @@ body{margin: 0px;}
     height: 242px; width: 270px; 
     border: 1px solid #E8E8E8; border-radius: 5px;
 }
-.card__container{position: relative; overflow: hidden;}
+.card__container{position: relative; overflow: hidden; height: 197px;}
 
-.card__img{height: 100%; width: 100%; display: block;}
+.card__img{
+    height:100%; width: 100%;
+    /* object-fit: cover; object-position: center; */
+}
 
 .card__title{
     position: absolute;
