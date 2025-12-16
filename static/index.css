@@ -1,0 +1,140 @@
+/* Utility */
+.u-text-sloganTitle{ font-size: 28px; font-weight: bold; line-height: 24px;}
+.u-text-headline{ font-size: 30px; font-weight: bold; line-height: 34px;}
+.u-text-dialogTitle--bold{ font-size: 24px; font-weight: bold; line-height: 24px;}
+.u-text-dialogTitle{ font-size: 24px; font-weight: normal; line-height: 24px;}
+.u-text-button--bold{ font-size: 19px; font-weight: bold; line-height: 16px;}
+.u-text-button{ font-size: 19px; font-weight: bold; line-height: 16px;}
+.u-text-content--bold{ font-size: 19px; font-weight: bold;}
+.u-text-content{ font-size: 16px; font-weight: normal;}
+.u-text-body--bold{ font-size: 16px; font-weight: bold; line-height: 13.3px;}
+.u-text-body{ font-size: 16px; font-weight: 500;line-height: 13.3px;}
+.u-text-category{ font-size: 14px; font-weight: 500;}
+
+.u-color-pri-70{ color: #448899;}
+.u-color-pri-50{ color: #66AABB;}
+.u-color-pri-20{ color: #AADDDE;}
+
+.u-color-sec-70{ color: #666666;}
+.u-color-sec-50{ color: #757575;}
+.u-color-sec-20{ color: #E8E8E8;}
+.u-color-sec-10{ color: #EEEEEE;}
+.u-color-white{ color: white;}
+
+.u-bk-color-pri-70{ background-color: #448899;}
+.u-bk-color-pri-50{ background-color: #66AABB;}
+.u-bk-color-pri-20{ background-color: #AADDDE;}
+
+.u-bk-color-sec-70{ background-color: #666666;}
+.u-bk-color-sec-50{ background-color: #757575;}
+.u-bk-color-sec-20{ background-color: #E8E8E8;}
+.u-bk-color-sec-10{ background-color: #EEEEEE;}
+.u-bk-color-white{ background-color: white;}
+.mb-15{margin-bottom: 15px;}
+
+/* HTML tags */
+html{font-family: "Noto Sans TC"}
+body{margin: 0px;}
+
+/* 
+當容器足夠寬時，width: 100% 會被 max-width: 1200px 限制住，內容區寬度會變成 1200px；
+接著左右 padding 各 10px 會加上去，所以外寬就變成：1200 + 10 + 10 = 1220px
+
+如果設定border-box
+因為大多數人設計「最大寬度」時，想控制的是外框寬度（更好對齊 grid），而不是內容區寬度。
+*/
+*, *::before, *::after{
+  box-sizing: border-box;
+}
+
+
+/* Header */
+.l-header{
+    padding: 10px 0;
+    position: sticky; z-index: 1000;
+}
+
+.nav{
+    max-width: 1200px; width:100%; margin: auto; 
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 10px;
+}
+
+.nav__menu{display: flex;}
+
+.nav__btn{
+    height: 34px; padding: 10px; border: 0;
+}
+
+
+/* Hero */
+.l-hero{
+    height: 320px; width: 100%; 
+    overflow: hidden; position: relative;
+    display: flex; align-items: center;
+}
+
+/* .l-hero::after{
+    content: "";
+    position: absolute;
+    z-index: 1;
+    background: linear-gradient(135deg, #AADDDE, #66AABB);
+} */
+
+.hero__img{
+    width: 100%; height: 100%; 
+    object-fit: cover; object-position:top;
+    position: absolute; z-index: 0;
+}
+
+.hero__content{
+    position: relative; z-index: 2;
+    max-width: 1200px; width: 100%;
+    margin: 0 auto; padding: 10px;
+}
+
+.hero__slogan{margin-bottom: 25px;}
+
+.hero__title{
+    margin-bottom: 15px; height: 41px;
+    display: flex; align-items: center;
+}
+.hero__subtitle{
+    height: 22px;
+    display: flex; align-items: center;
+}
+
+.search{
+    max-width: 460px; width: 100%;
+    border: none; border-radius: 5px;
+    overflow: hidden; display: flex;
+}
+/* flex預設align-items: stretch 
+    同一排的 flex items 會在「垂直方向」被拉到一樣高
+    高度由最高的子元素決定
+*/
+
+.search__categories-btn{
+    width: 100px; padding: 16px 8px;
+    border: none;
+}
+.search__input{
+    height: 46px; padding:0 15px; 
+    max-width: 300px; width: 100%;
+    border: none;
+}
+.search__input::placeholder{
+    font-size: 16px; font-weight: bold;
+    line-height: 13.3px;
+}
+
+.search__btn{
+    background-color: #448899;
+    display: flex; align-items: center;
+    padding: 8px 15px;
+    border: none;
+}
+.search__icon{height: 30px; width: 30px;}
+
+
+/* Atrractions */
