@@ -33,14 +33,14 @@
         <div class="search">
           <button class="search__categories-btn u-text-body">全部分類▼</button>
           <input class="search__input u-text-body--bold" placeholder="輸入景點名稱查詢" id="search__input">
-          <button class="search__btn">
+          <button class="search__btn" type="submit">
             <img class="search__icon" src="/static/icon_search.png">
           </button>
         </div>
       </div>
       <div class="category__menu u-bg-white">
         <div class="category__item u-text-category">全部分類</div>
-
+        <!-- categories 填充物 -->
       </div>
     </div>
   </div>
@@ -95,8 +95,6 @@
     const left_btn = bar.querySelector('#listBar-left-btn');
     const right_btn = bar.querySelector('#listBar-right-btn');
     const category_menu = document.querySelector('.category__menu');
-    const search_categories_btn = document.querySelector('.search__categories-btn');
-    const search_input = document.querySelector('#search__input');
     const sentinel = document.querySelector('#sentinel');
 
 
@@ -130,6 +128,7 @@
     async function startup(){
       // Fetch List bar
       try{
+        const search_input = document.querySelector('#search__input');
         const result = await get_data("/api/mrts");
         const data = result.data;
         data.forEach(d => {
@@ -201,69 +200,65 @@
           category_item.classList = "category__item u-text-category";
           category_item.textContent = d;
           category_menu.append(category_item);
-          // menu function: put category into search input
-          category_item.addEventListener('click', () => {
-            search_input.value = category_item.textContent;
-            category_menu.classList.remove('category__menu--open')
-          });
         });
       }catch(e){
         console.log(e);
       }
-
-      // category menu event
+      const search_categories_btn = document.querySelector('.search__categories-btn');
+      // category menu panel event
       search_categories_btn.addEventListener('click', () => {
       category_menu.classList.toggle('category__menu--open');
       });
-
+      // panel item replace btn text event
+      const category__items = document.querySelectorAll('.category__item');
+      category__items.forEach((item) => {
+        item.addEventListener('click', () => {
+          search_categories_btn.textContent = item.textContent + "▼";
+          category_menu.classList.remove('category__menu--open');
+        });
+      });
     }
+
     startup();
 
     
       // Fetch Attraction and build HTML
-    async function build_attractions(url){
-      try{
-        const result = await get_data(url);
-        const data = result.data;
-        const card_grid = document.querySelector('.cardGrid')
-        data.forEach(d => {
-          // card__caontainer
-          const card_title_text = document.createElement('div');
-          card_title_text.classList = "card__titleText u-text-body--bold u-c-white";
-          card_title_text.textContent = d.name;
-          const card_title = document.createElement('div');
-          card_title.classList = "card__title";
-          card_title.append(card_title_text);
-          const card_img = document.createElement('img');
-          card_img.classList = "card__img";
-          card_img.src = d.images[0];
-          const card_media = document.createElement('div');
-          card_media.classList = "card__media";
-          card_media.append(card_img);
-          card_media.append(card_title);
-          // card__detail
-          const card_info_mrt = document.createElement('div');
-          card_info_mrt.classList = "card__info card__info--mrt u-text-body u-c-sec-50";
-          card_info_mrt.textContent = d.mrt;
-          const card_info_category = document.createElement('div');
-          card_info_category.classList = "card__info card__info--category u-text-body u-c-sec-50";
-          card_info_category.textContent = d.category;
-          const card_detail = document.createElement('div');
-          card_detail.classList = "card__detail";
-          card_detail.append(card_info_mrt);
-          card_detail.append(card_info_category);
-          // card
-          const card = document.createElement('div');
-          card.classList = "card u-c-white";
-          card.append(card_media);
-          card.append(card_detail);
-          // insert card
-          card_grid.append(card);
-        });
-        return result.nextPage;
-      }catch(e){
-        console.log(e);
-      }
+    function build_attractions(data){
+      const card_grid = document.querySelector('.cardGrid');
+      data.forEach(d => {
+        // card__media
+        const card_title_text = document.createElement('div');
+        card_title_text.classList = "card__titleText u-text-body--bold u-c-white";
+        card_title_text.textContent = d.name;
+        const card_title = document.createElement('div');
+        card_title.classList = "card__title";
+        card_title.append(card_title_text);
+        const card_img = document.createElement('img');
+        card_img.classList = "card__img";
+        card_img.src = d.images[0];
+        const card_media = document.createElement('div');
+        card_media.classList = "card__media";
+        card_media.append(card_img);
+        card_media.append(card_title);
+        // card__detail
+        const card_info_mrt = document.createElement('div');
+        card_info_mrt.classList = "card__info card__info--mrt u-text-body u-c-sec-50";
+        card_info_mrt.textContent = d.mrt;
+        const card_info_category = document.createElement('div');
+        card_info_category.classList = "card__info card__info--category u-text-body u-c-sec-50";
+        card_info_category.textContent = d.category;
+        const card_detail = document.createElement('div');
+        card_detail.classList = "card__detail";
+        card_detail.append(card_info_mrt);
+        card_detail.append(card_info_category);
+        // card
+        const card = document.createElement('div');
+        card.classList = "card u-c-white";
+        card.append(card_media);
+        card.append(card_detail);
+        // insert card
+        card_grid.append(card);
+      });
     }
 
 
@@ -274,15 +269,31 @@
     
     // Load more Function
     async function load_more(){
+      console.log("load more 開始跑")
       // 避免無限重跑
       if (loadding || done) return;
       loadding = true;
 
       // 第一次觸發後先暫停觀察，避免長出的東西不夠把sentinel推到交集範圍外
       observer.unobserve(sentinel);
-      // 執行build attractions
+
+      let should_resume = false;
+
       try{
-        const next_page = await build_attractions(`/api/attractions?page=${page}`)
+        console.log("這個時候load more 抓到的page:", page);
+        const result = await get_attractions(page);
+        const data = result.data;
+        if (!data || data.length === 0) {
+          console.log("NO Fetch Data");
+          done = true;
+          observer.disconnect();
+          console.log("觀察停止");
+          return;
+        }
+        
+        build_attractions(data);
+
+        const next_page = result.nextPage;
         // 如果沒有下一頁了，停止觀察
         if (next_page === null){
           done = true;
@@ -291,11 +302,12 @@
         } else {
           // 有下一頁的話將頁碼更新
           page = next_page;
+          should_resume = true
         }
       } finally {
         loadding = false;
         // 重新啟動觀察，就算前面長出來的東西不夠把sentinel推出交集，還是可以再觸發一次
-        if (!done) observer.observe(sentinel);
+        if (should_resume) observer.observe(sentinel);
       }
     }
 
@@ -305,7 +317,9 @@
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting){
+          console.log("滾動監控被偵測到了")
           load_more();
+          
         }
       }, {root: null, rootMargin: "0px 0px 50px 0px", threshold: 0}
     );
@@ -316,7 +330,53 @@
     // 啟動觀察
     observer.observe(sentinel);
 
-    
+    // Filtering by Category and Keyword
+    const search_btn = document.querySelector('.search__btn');
+    const card_grid = document.querySelector('.cardGrid');
+    search_btn.addEventListener('click', (e) => {
+      console.log("搜尋按鈕被觸發了")
+      e.preventDefault();
+      card_grid.innerHTML = "";
+      page = 0;
+      done = false;
+      loadding = false;
+      observer.unobserve(sentinel);
+      observer.observe(sentinel);
+      // 或是load more()
+      
+
+    });
+
+    // Fetch attractions API
+    async function get_attractions(page = 0) {
+      console.log("fetch API被觸發了")
+      const search__categories_btn = document.querySelector('.search__categories-btn');
+      let category = search__categories_btn.textContent.replace("▼","");
+      const search_input = document.querySelector('.search__input');
+      const keyword = search_input.value.trim();
+      if (category === "全部分類"){
+        category = null;
+      }
+
+      let url = `/api/attractions?page=${page}`;
+      if (category && keyword){
+        url += `&category=${category}&keyword=${keyword}`
+      }
+      else if (category){
+        url += `&category=${category}`
+      }
+      else if (keyword){
+        url += `&keyword=${keyword}`
+      }
+      console.log(url);
+      try{
+        const result = await get_data(url);
+        return result;
+      }catch(e){
+        console.log(e);
+      }
+    }
+
 
   </script>
 </body>
