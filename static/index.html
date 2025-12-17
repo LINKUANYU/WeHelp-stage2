@@ -84,6 +84,7 @@
       
     </div>
   </div>
+  <div id="sentinel"></div>
   <!-- Footer -->
   <div class="l-footer u-bg-sec-50">
     <div class="footer__text u-text-body--bold u-c-white">COPYRIGHT © 2021 台北一日遊</div>
@@ -96,6 +97,7 @@
     const category_menu = document.querySelector('.category__menu');
     const search_categories_btn = document.querySelector('.search__categories-btn');
     const search_input = document.querySelector('#search__input');
+    const sentinel = document.querySelector('#sentinel');
 
 
     // 計算每次滑動的位移量，clientWidth：該元素「可視內容看」的寬度
@@ -146,10 +148,83 @@
       }
 
       // Fetch Attraction
+      // try{
+      //   const result = await get_data("/api/attractions?page=0");
+      //   const data = result.data;
+      //   console.log(data);
+      //   const card_grid = document.querySelector('.cardGrid')
+      //   data.forEach(d => {
+      //     // card__caontainer
+      //     const card_title_text = document.createElement('div');
+      //     card_title_text.classList = "card__titleText u-text-body--bold u-c-white";
+      //     card_title_text.textContent = d.name;
+      //     const card_title = document.createElement('div');
+      //     card_title.classList = "card__title";
+      //     card_title.append(card_title_text);
+      //     const card_img = document.createElement('img');
+      //     card_img.classList = "card__img";
+      //     card_img.src = d.images[0];
+      //     const card_media = document.createElement('div');
+      //     card_media.classList = "card__media";
+      //     card_media.append(card_img);
+      //     card_media.append(card_title);
+      //     // card__detail
+      //     const card_info_mrt = document.createElement('div');
+      //     card_info_mrt.classList = "card__info card__info--mrt u-text-body u-c-sec-50";
+      //     card_info_mrt.textContent = d.mrt;
+      //     const card_info_category = document.createElement('div');
+      //     card_info_category.classList = "card__info card__info--category u-text-body u-c-sec-50";
+      //     card_info_category.textContent = d.category;
+      //     const card_detail = document.createElement('div');
+      //     card_detail.classList = "card__detail";
+      //     card_detail.append(card_info_mrt);
+      //     card_detail.append(card_info_category);
+      //     // card
+      //     const card = document.createElement('div');
+      //     card.classList = "card u-c-white";
+      //     card.append(card_media);
+      //     card.append(card_detail);
+      //     // insert card
+      //     card_grid.append(card);
+      //   });
+      // }catch(e){
+      //   console.log(e);
+      // }
+
+      // Fetch Category Menu
       try{
-        const result = await get_data("/api/attractions?page=0");
+        const result = await get_data("/api/categories");
         const data = result.data;
-        console.log(data);
+        data.forEach(d => {
+          // create menu
+          const category_item = document.createElement('div');
+          category_item.classList = "category__item u-text-category";
+          category_item.textContent = d;
+          category_menu.append(category_item);
+          // menu function: put category into search input
+          category_item.addEventListener('click', () => {
+            search_input.value = category_item.textContent;
+            category_menu.classList.remove('category__menu--open')
+          });
+        });
+      }catch(e){
+        console.log(e);
+      }
+
+      // category menu event
+      search_categories_btn.addEventListener('click', () => {
+      category_menu.classList.toggle('category__menu--open');
+      });
+
+    }
+    startup();
+
+    
+      // Fetch Attraction and build HTML
+    async function build_attractions(url){
+      try{
+        const result = await get_data(url);
+        const data = result.data;
         const card_grid = document.querySelector('.cardGrid')
         data.forEach(d => {
           // card__caontainer
@@ -185,44 +260,61 @@
           // insert card
           card_grid.append(card);
         });
+        return result.nextPage;
       }catch(e){
         console.log(e);
       }
-
-      // Fetch Category Menu
-      try{
-        const result = await get_data("/api/categories");
-        const data = result.data;
-        data.forEach(d => {
-          // create menu
-          const category_item = document.createElement('div');
-          category_item.classList = "category__item u-text-category";
-          category_item.textContent = d;
-          category_menu.append(category_item);
-          // menu function: put category into search input
-          category_item.addEventListener('click', () => {
-            search_input.value = category_item.textContent;
-            category_menu.classList.remove('category__menu--open')
-          });
-        });
-      }catch(e){
-        console.log(e);
-      }
-
-      // category menu event
-      search_categories_btn.addEventListener('click', () => {
-      category_menu.classList.toggle('category__menu--open');
-      });
-
-
     }
-    startup();
 
+
+    // Load Attractions
+    let page = 0;
+    let loadding = false;
+    let done = false;
     
+    // Load more Function
+    async function load_more(){
+      // 避免無限重跑
+      if (loadding || done) return;
+      loadding = true;
 
+      // 第一次觸發後先暫停觀察，避免長出的東西不夠把sentinel推到交集範圍外
+      observer.unobserve(sentinel);
+      // 執行build attractions
+      try{
+        const next_page = await build_attractions(`/api/attractions?page=${page}`)
+        // 如果沒有下一頁了，停止觀察
+        if (next_page === null){
+          done = true;
+          observer.disconnect();
+          console.log("觀察停止")
+        } else {
+          // 有下一頁的話將頁碼更新
+          page = next_page;
+        }
+      } finally {
+        loadding = false;
+        // 重新啟動觀察，就算前面長出來的東西不夠把sentinel推出交集，還是可以再觸發一次
+        if (!done) observer.observe(sentinel);
+      }
+    }
 
+    // IntersectionObserver：讓瀏覽器「監控某個元素」和「某個可視區域」的交集狀態
+    // entries 是一批「狀態有變化」的觀察結果（每個是 IntersectionObserverEntry）
+    // isIntersecting 表示 target 目前是否和 root 有交集（至少碰到、重疊到一點點也算）
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting){
+          load_more();
+        }
+      }, {root: null, rootMargin: "0px 0px 50px 0px", threshold: 0}
+    );
+    // root null：以「整個瀏覽器視窗」當觀察視窗，element：以「某個容器」當觀察視窗（適合容器內滾動）
+    // threshold 門檻，代表「交集比例」的觸發點，threshold: 0：只要有一點點交集就算（最常用於無限滾動），threshold: 1：要完全進入可視範圍才算，也可以用陣列 [0, 0.25, 0.5, 1]：跨越任一比例就觸發
+    // rootMargin 把 root 的可視範圍「擴大或縮小」的偏移量（很重要）："200px 0px"：把 root 上下額外擴大 200px（通常用來「提前載入」，不用真的到底才載），也可以是 "200px 0px -80px 0px"：底部縮小 80px（例如你有 fixed footer 遮住內容時）
     
-
+    // 啟動觀察
+    observer.observe(sentinel);
 
     
 
