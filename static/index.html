@@ -32,7 +32,7 @@
       <div class="hero__search">
         <div class="search">
           <button class="search__categories-btn u-text-body">全部分類▼</button>
-          <input class="search__input" placeholder="輸入景點名稱查詢" id="search__input">
+          <input class="search__input u-text-body--bold" placeholder="輸入景點名稱查詢" id="search__input">
           <button class="search__btn">
             <img class="search__icon" src="/static/icon_search.png">
           </button>
@@ -95,6 +95,7 @@
     const right_btn = bar.querySelector('#listBar-right-btn');
     const category_menu = document.querySelector('.category__menu');
     const search_categories_btn = document.querySelector('.search__categories-btn');
+    const search_input = document.querySelector('#search__input');
 
 
     // 計算每次滑動的位移量，clientWidth：該元素「可視內容看」的寬度
@@ -125,21 +126,26 @@
     }
 
     async function startup(){
-      // List bar
+      // Fetch List bar
       try{
         const result = await get_data("/api/mrts");
         const data = result.data;
         data.forEach(d => {
+          // create list bar item
           const listBar_item = document.createElement('div');
           listBar_item.classList = "listBar__item u-text-body u-c-sec-70";
           listBar_item.textContent = d;
           listBar_list.append(listBar_item);
+          // item function: put mrt into search input
+          listBar_item.addEventListener('click', () => {
+            search_input.value = listBar_item.textContent;
+          });
         });
       }catch(e){
         console.log(e)
       }
 
-      // Attraction
+      // Fetch Attraction
       try{
         const result = await get_data("/api/attractions?page=0");
         const data = result.data;
@@ -183,28 +189,38 @@
         console.log(e);
       }
 
-      // Category Menu
+      // Fetch Category Menu
       try{
         const result = await get_data("/api/categories");
         const data = result.data;
-        console.log(data);
         data.forEach(d => {
+          // create menu
           const category_item = document.createElement('div');
           category_item.classList = "category__item u-text-category";
           category_item.textContent = d;
           category_menu.append(category_item);
+          // menu function: put category into search input
+          category_item.addEventListener('click', () => {
+            search_input.value = category_item.textContent;
+            category_menu.classList.remove('category__menu--open')
+          });
         });
       }catch(e){
         console.log(e);
       }
 
+      // category menu event
+      search_categories_btn.addEventListener('click', () => {
+      category_menu.classList.toggle('category__menu--open');
+      });
+
+
     }
     startup();
 
     
-    search_categories_btn.addEventListener('click', () => {
-      category_menu.classList.toggle('category__menu--open');
-    });
+
+
     
 
 
