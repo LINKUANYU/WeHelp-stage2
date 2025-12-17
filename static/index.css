@@ -11,26 +11,25 @@
 .u-text-body{ font-size: 16px; font-weight: 500;line-height: 13.3px;}
 .u-text-category{ font-size: 14px; font-weight: 500;}
 
-.u-color-pri-70{ color: #448899;}
-.u-color-pri-50{ color: #66AABB;}
-.u-color-pri-20{ color: #AADDDE;}
+.u-c-pri-70{ color: #448899;}
+.u-c-pri-50{ color: #66AABB;}
+.u-c-pri-20{ color: #AADDDE;}
 
-.u-color-sec-70{ color: #666666;}
-.u-color-sec-50{ color: #757575;}
-.u-color-sec-20{ color: #E8E8E8;}
-.u-color-sec-10{ color: #EEEEEE;}
-.u-color-white{ color: white;}
+.u-c-sec-70{ color: #666666;}
+.u-c-sec-50{ color: #757575;}
+.u-c-sec-20{ color: #E8E8E8;}
+.u-c-sec-10{ color: #EEEEEE;}
+.u-c-white{ color: white;}
 
-.u-bk-color-pri-70{ background-color: #448899;}
-.u-bk-color-pri-50{ background-color: #66AABB;}
-.u-bk-color-pri-20{ background-color: #AADDDE;}
+.u-bg-pri-70{ background-color: #448899;}
+.u-bg-pri-50{ background-color: #66AABB;}
+.u-bg-pri-20{ background-color: #AADDDE;}
 
-.u-bk-color-sec-70{ background-color: #666666;}
-.u-bk-color-sec-50{ background-color: #757575;}
-.u-bk-color-sec-20{ background-color: #E8E8E8;}
-.u-bk-color-sec-10{ background-color: #EEEEEE;}
-.u-bk-color-white{ background-color: white;}
-.mb-15{margin-bottom: 15px;}
+.u-bg-sec-70{ background-color: #666666;}
+.u-bg-sec-50{ background-color: #757575;}
+.u-bg-sec-20{ background-color: #E8E8E8;}
+.u-bg-sec-10{ background-color: #EEEEEE;}
+.u-bg-white{ background-color: white;}
 
 /* HTML tags */
 html{font-family: "Noto Sans TC"}
@@ -138,22 +137,22 @@ body{margin: 0px;}
 
 
 /* Atrractions */
-.l-attraction{height: 966px; padding: 40px 0px;}
+.l-attractions{height: 966px; padding: 40px 0px;}
 
-.list-bar{
+.listBar{
     max-width: 1200px; width: 100%;
     padding-bottom: 20px;
     margin: 0 auto;
     display: flex; align-items: center;
 }
-.left-container{
+.listBar__nav--left{
     flex: 0 0 auto;
     padding-top: 9px;
     padding-bottom: 9px;
     padding-left: 15px;
 }
 
-.container{
+.listBar__viewport{
     flex: 1 1 auto;
     min-width: 0;     /* 允許它「可以縮到比內容更窄」*/
     height: 50px;
@@ -163,10 +162,10 @@ body{margin: 0px;}
 
 
 /* display: block 把一些底部的空間清掉 */
-.container__btn{border: 0px; padding: 0 0; display: block;}
-.btn__icon{height: 32px; width: 32px; display: block;}
+.listBar__btn{border: 0px; padding: 0 0; display: block;}
+.listBar__icon{height: 32px; width: 32px; display: block;}
 
-.container__list{
+.listBar__list{
     display: flex; align-items: center;
     height:100%;
     white-space: nowrap; /* white-space: nowrap; 不換行 */
@@ -183,34 +182,32 @@ body{margin: 0px;}
 }
 /* 隱藏滑動軸 */
 /* Chrome / Safari */
-.container__list::-webkit-scrollbar{
+.listBar__list::-webkit-scrollbar{
     height: 0;
     display: none;
 }
 
-.container__item{padding: 5px 15px;}
+.listBar__item{padding: 5px 15px;}
 
-.right-container{
+.listBar__nav--right{
     flex: 0 0 auto;
     padding-top: 9px;
     padding-bottom: 9px;
     padding-right: 15px;
 }
 
-.attraction-group{
-    width: 1200px; margin: 0 auto;
-    padding: 15px;
-}
-.l-card{
+.cardGrid{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 30px;
+    width: 1200px; margin: 0 auto;
+    padding: 15px;
 }
 .card{
     height: 242px; width: 270px; 
     border: 1px solid #E8E8E8; border-radius: 5px;
 }
-.card__container{position: relative; overflow: hidden; height: 197px;}
+.card__media{position: relative; overflow: hidden; height: 197px;}
 
 .card__img{
     height:100%; width: 100%;
@@ -224,7 +221,7 @@ body{margin: 0px;}
     padding: 10px;
 }
 
-.card__title--info{height: 20px; display: flex; align-items: center;}
+.card__titleText{height: 20px; display: flex; align-items: center;}
 
 .card__detail{
     width: 100%;

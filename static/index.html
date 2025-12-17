@@ -10,10 +10,10 @@
   <!-- Header -->
   <header class="l-header">
     <div class="nav">
-      <div class="nav__brand u-text-headline u-color-pri-70">台北一日遊</div>
+      <div class="nav__brand u-text-headline u-c-pri-70">台北一日遊</div>
       <div class="nav__menu">
-        <button class="nav__btn u-text-body u-color-sec-70 u-bk-color-white">預定行程</button>
-        <button class="nav__btn u-text-body u-color-sec-70 u-bk-color-white">登入/註冊</button>
+        <button class="nav__btn u-text-body u-c-sec-70 u-bg-white">預定行程</button>
+        <button class="nav__btn u-text-body u-c-sec-70 u-bg-white">登入/註冊</button>
       </div>
     </div> 
   </header>
@@ -22,8 +22,8 @@
     <img class="hero__img" src="/static/welcome.png">
     <div class="hero__content">
       <div class="hero__slogan">
-        <div class="hero__title u-color-white u-text-sloganTitle">輕鬆享受台北一日悠閒</div>
-        <div class="hero__subtitle u-color-white u-text-body--bold">探索每個角落，體驗城市的深度旅遊行程</div>
+        <div class="hero__title u-c-white u-text-sloganTitle">輕鬆享受台北一日悠閒</div>
+        <div class="hero__subtitle u-c-white u-text-body--bold">探索每個角落，體驗城市的深度旅遊行程</div>
       </div>
       <div class="hero__search">
         <div class="search">
@@ -37,73 +37,65 @@
     </div>
   </div>
   <!-- Atrractions area -->
-  <div class="l-attraction">
+  <div class="l-attractions">
     <!-- Atrraction list bar -->
-    <div class="list-bar u-bk-color-white">
-      <div class="left-container">
-        <button class="container__btn u-bk-color-white" id="list-bar-left-btn">
-          <img class="btn__icon" src="/static/left-btn.png">
+    <div class="listBar u-bg-white">
+      <div class="listBar__nav--left">
+        <button class="listBar__btn u-bg-white" id="listBar-left-btn">
+          <img class="listBar__icon" src="/static/left-btn.png">
         </button>
       </div>
-      <div class="container">
-        <div class="container__list">
+      <div class="listBar__viewport">
+        <div class="listBar__list">
           <!-- JS填充 -->
         </div>
       </div>
-      <div class="right-container">
-        <button class="container__btn u-bk-color-white" id="list-bar-right-btn">
-          <img class="btn__icon" src="/static/right-btn.png">
+      <div class="listBar__nav--right">
+        <button class="listBar__btn u-bg-white" id="listBar-right-btn">
+          <img class="listBar__icon" src="/static/right-btn.png">
         </button>
       </div>
     </div>
-    <!-- Atrractions group  -->
-    <div class="attraction-group">
-      <div class="l-card">
-        <!-- Card 填充物 -->
-        <!-- 填充物範本
-        <div class="card u-color-white">
-          <div class="card__container">
-            <img class="card__img" src="">
-            <div class="card__title">
-              <div class="card__title--info u-text-body--bold u-color-white">平安鐘</div>
-            </div>
+    <!-- Card grid  -->
+    <div class="cardGrid">
+      <!-- Card 填充物 -->
+      <!-- 填充物範本 
+      <div class="card u-c-white">
+        <div class="card__media">
+          <img class="card__img" src="">
+          <div class="card__title">
+            <div class="card__titleText u-text-body--bold u-c-white">平安鐘</div>
           </div>
-          <div class="card__detail">
-            <div class="card__info card__info--1 u-text-body u-color-sec-50">忠孝復興</div>
-            <div class="card__info card__info--2 u-text-body u-color-sec-50">公共藝術</div>
-          </div>
-        </div> 
-        -->
-
-
-
-
-      </div>
+        </div>
+        <div class="card__detail">
+          <div class="card__info card__info--mrt u-text-body u-c-sec-50">忠孝復興</div>
+          <div class="card__info card__info--category u-text-body u-c-sec-50">公共藝術</div>
+        </div>
+      </div>  
+      -->
+      
     </div>
-
-
-
   </div>
   <!-- Footer -->
   <div class="Footer">
     
   </div>
   <script defer>
-    const bar = document.querySelector('.list-bar');
-    const container__list = bar.querySelector('.container__list');
-    const left_btn = bar.querySelector('#list-bar-left-btn');
-    const right_btn = bar.querySelector('#list-bar-right-btn');
+    const bar = document.querySelector('.listBar');
+    const listBar_list = bar.querySelector('.listBar__list');
+    const left_btn = bar.querySelector('#listBar-left-btn');
+    const right_btn = bar.querySelector('#listBar-right-btn');
     // 計算每次滑動的位移量，clientWidth：該元素「可視內容看」的寬度
     function step(){
-      return container__list.clientWidth * 2 / 3;
+      return listBar_list.clientWidth * 2 / 3;
     }
     
     left_btn.addEventListener('click',() => {
-      container__list.scrollBy({left: -step(), behavior: "smooth"});
+      listBar_list.scrollBy({left: -step(), behavior: "smooth"});
     });
     // scrollBy：相對捲動，left：水平捲動位移量
     right_btn.addEventListener('click',() => {
-      container__list.scrollBy({left: step(), behavior: "smooth"});
+      listBar_list.scrollBy({left: step(), behavior: "smooth"});
     });
 
     async function get_data(url) {
@@ -126,10 +118,10 @@
         const result = await get_data("/api/mrts");
         const data = result.data;
         data.forEach(d => {
-          const container__item = document.createElement('div');
-          container__item.classList = "container__item u-text-body u-color-sec-70";
-          container__item.textContent = d;
-          container__list.append(container__item);
+          const listBar_item = document.createElement('div');
+          listBar_item.classList = "listBar__item u-text-body u-c-sec-70";
+          listBar_item.textContent = d;
+          listBar_list.append(listBar_item);
         });
       }catch(e){
         console.log(e)
@@ -140,40 +132,40 @@
         const result = await get_data("/api/attractions?page=0");
         const data = result.data;
         console.log(data);
-        const l_card = document.querySelector('.l-card')
+        const card_grid = document.querySelector('.cardGrid')
         data.forEach(d => {
           // card__caontainer
-          const card_title_info = document.createElement('div');
-          card_title_info.classList = "card__title--info u-text-body--bold u-color-white";
-          card_title_info.textContent = d.name;
+          const card_title_text = document.createElement('div');
+          card_title_text.classList = "card__titleText u-text-body--bold u-c-white";
+          card_title_text.textContent = d.name;
           const card_title = document.createElement('div');
           card_title.classList = "card__title";
-          card_title.append(card_title_info);
+          card_title.append(card_title_text);
           const card_img = document.createElement('img');
           card_img.classList = "card__img";
           card_img.src = d.images[0];
-          const card_container = document.createElement('div');
-          card_container.classList = "card__container";
-          card_container.append(card_img);
-          card_container.append(card_title);
+          const card_media = document.createElement('div');
+          card_media.classList = "card__media";
+          card_media.append(card_img);
+          card_media.append(card_title);
           // card__detail
-          const card_info_1 = document.createElement('div');
-          card_info_1.classList = "card__info card__info--1 u-text-body u-color-sec-50";
-          card_info_1.textContent = d.mrt;
-          const card_info_2 = document.createElement('div');
-          card_info_2.classList = "card__info card__info--2 u-text-body u-color-sec-50";
-          card_info_2.textContent = d.category;
+          const card_info_mrt = document.createElement('div');
+          card_info_mrt.classList = "card__info card__info--mrt u-text-body u-c-sec-50";
+          card_info_mrt.textContent = d.mrt;
+          const card_info_category = document.createElement('div');
+          card_info_category.classList = "card__info card__info--category u-text-body u-c-sec-50";
+          card_info_category.textContent = d.category;
           const card_detail = document.createElement('div');
           card_detail.classList = "card__detail";
-          card_detail.append(card_info_1);
-          card_detail.append(card_info_2);
+          card_detail.append(card_info_mrt);
+          card_detail.append(card_info_category);
           // card
           const card = document.createElement('div');
-          card.classList = "card u-color-white";
-          card.append(card_container);
+          card.classList = "card u-c-white";
+          card.append(card_media);
           card.append(card_detail);
           // insert card
-          l_card.append(card);
+          card_grid.append(card);
         });
       }catch(e){
         console.log(e);
