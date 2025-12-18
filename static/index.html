@@ -140,55 +140,14 @@
           // item function: put mrt into search input
           listBar_item.addEventListener('click', () => {
             search_input.value = listBar_item.textContent;
+            // 觸發搜尋
+            const search_btn = document.querySelector('.search__btn');
+            search_btn.click();
           });
         });
       }catch(e){
         console.log(e)
       }
-
-      // Fetch Attraction
-      // try{
-      //   const result = await get_data("/api/attractions?page=0");
-      //   const data = result.data;
-      //   console.log(data);
-      //   const card_grid = document.querySelector('.cardGrid')
-      //   data.forEach(d => {
-      //     // card__caontainer
-      //     const card_title_text = document.createElement('div');
-      //     card_title_text.classList = "card__titleText u-text-body--bold u-c-white";
-      //     card_title_text.textContent = d.name;
-      //     const card_title = document.createElement('div');
-      //     card_title.classList = "card__title";
-      //     card_title.append(card_title_text);
-      //     const card_img = document.createElement('img');
-      //     card_img.classList = "card__img";
-      //     card_img.src = d.images[0];
-      //     const card_media = document.createElement('div');
-      //     card_media.classList = "card__media";
-      //     card_media.append(card_img);
-      //     card_media.append(card_title);
-      //     // card__detail
-      //     const card_info_mrt = document.createElement('div');
-      //     card_info_mrt.classList = "card__info card__info--mrt u-text-body u-c-sec-50";
-      //     card_info_mrt.textContent = d.mrt;
-      //     const card_info_category = document.createElement('div');
-      //     card_info_category.classList = "card__info card__info--category u-text-body u-c-sec-50";
-      //     card_info_category.textContent = d.category;
-      //     const card_detail = document.createElement('div');
-      //     card_detail.classList = "card__detail";
-      //     card_detail.append(card_info_mrt);
-      //     card_detail.append(card_info_category);
-      //     // card
-      //     const card = document.createElement('div');
-      //     card.classList = "card u-c-white";
-      //     card.append(card_media);
-      //     card.append(card_detail);
-      //     // insert card
-      //     card_grid.append(card);
-      //   });
-      // }catch(e){
-      //   console.log(e);
-      // }
 
       // Fetch Category Menu
       try{
@@ -220,9 +179,6 @@
     }
 
     startup();
-
-    
-
 
 
     // Load Attractions
@@ -318,8 +274,6 @@
       loadding = false;
       // observe 重新啟動
       observer.observe(sentinel);
-      
-
     });
 
     // Fetch attractions API
