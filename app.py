@@ -119,7 +119,7 @@ def attractions(
 		return {"data": None}
 
 	# 檢查有沒有下一頁
-	if (page + 1) * PAGE_AMOUNT > total:
+	if (page + 1) * PAGE_AMOUNT >= total:
 		next_page = None
 	else:
 		next_page = page + 1 
