@@ -115,20 +115,32 @@ body{margin: 0px;}
 */
 
 .search__categories-btn{
+    flex: 0 0 auto;
     width: 100px; padding: 16px 8px;
     border: none;
 }
 .search__input{
+    flex: 1 1 auto;
+    min-width: 0;
     height: 46px; padding:0 15px; 
-    max-width: 300px; width: 100%;
+    max-width: 300px;
     border: none;
 }
+
+/* flex: 1 1 auto 說明
+    1) 第一個：flex-grow: 1，有剩餘空間時，這個元素要不要長大、以及長大的比例。
+    2) 第二個：flex-shrink: 1，空間不夠時，這個元素要不要縮小、以及縮小的比例。
+    3) 第三個：flex-basis: auto，元素在「分配剩餘空間」之前的起始尺寸（基準寬度）。
+        auto 通常表示以元素自身的 width / 內容尺寸作為基準（input 會受自身 CSS、placeholder、預設寬等影響）。
+        flex: 1 1 300px：表示理想基準 300px，但仍可伸縮。
+ */
 .search__input::placeholder{
     font-size: 16px; font-weight: bold;
     line-height: 13.3px;
 }
 
 .search__btn{
+    flex: 0 0 auto;
     background-color: #448899;
     display: flex; align-items: center;
     padding: 8px 15px;
@@ -262,3 +274,35 @@ body{margin: 0px;}
 }
 
 .footer__text{padding: 5px 0px;}
+
+@media (max-width: 1200px) and (min-width: 601px){
+    .listBar{width:90%}
+    .cardGrid{
+        width: 90%;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .card{width: 100%;}
+    .card__title{width: 100%}
+    .card__img{object-fit: cover; object-position: center;}
+}
+
+@media (max-width: 600px){
+    .hero__content{
+        padding: 20px;
+    }
+    .cardGrid{
+        width: 100%;
+        grid-template-columns: 1fr;
+        padding: 15px;
+        gap: 15px;
+    }
+    .card{
+        width: 100%;
+        height: 280px;
+    }
+    .card__media{
+        height: 235px;
+    }
+    .card__title{width: 100%}
+    .card__img{object-fit: cover; object-position: center;}
+}
