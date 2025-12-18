@@ -3,8 +3,11 @@ from fastapi.responses import FileResponse
 from deps import get_conn, get_cur
 from mysql.connector import Error
 from typing import Annotated
+from fastapi.staticfiles import StaticFiles
 import json
 app=FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"))
 
 # Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)
@@ -116,7 +119,7 @@ def attractions(
 		return {"data": None}
 
 	# 檢查有沒有下一頁
-	if (page + 1) * PAGE_AMOUNT > total:
+	if (page + 1) * PAGE_AMOUNT >= total:
 		next_page = None
 	else:
 		next_page = page + 1 

@@ -1,0 +1,309 @@
+/* HTML tags */
+html{font-family: "Noto Sans TC"}
+body{margin: 0px;}
+
+/* box-sizing: border-box
+當容器足夠寬時，width: 100% 會被 max-width: 1200px 限制住，內容區寬度會變成 1200px；
+接著左右 padding 各 10px 會加上去，所以外寬就變成：1200 + 10 + 10 = 1220px
+
+如果設定border-box
+因為大多數人設計「最大寬度」時，想控制的是外框寬度（更好對齊 grid），而不是內容區寬度。
+*/
+*, *::before, *::after{
+  box-sizing: border-box;
+}
+
+
+/* Header */
+.l-header{
+    padding: 10px 0;
+    position: sticky; z-index: 1000;
+}
+
+.nav{
+    max-width: 1200px; width:100%; margin: auto; 
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 10px;
+}
+
+.nav__menu{display: flex;}
+
+.nav__btn{
+    height: 34px; padding: 10px; border: 0;
+}
+
+
+/* Hero */
+.l-hero{
+    height: 320px; width: 100%; 
+    position: relative;
+    display: flex; align-items: center;
+}
+
+/* .l-hero::after{
+    content: "";
+    position: absolute;
+    z-index: 1;
+    background: linear-gradient(135deg, #AADDDE, #66AABB);
+} */
+
+.hero__img{
+    width: 100%; height: 100%; 
+    object-fit: cover; object-position:top;
+    position: absolute; z-index: 0;
+}
+
+.hero__content{
+    position: relative; z-index: 2;
+    max-width: 1200px; width: 100%;
+    margin: 0 auto; padding: 10px;
+}
+
+.hero__slogan{margin-bottom: 25px;}
+
+.hero__title{
+    margin-bottom: 15px; height: 41px;
+    display: flex; align-items: center;
+}
+.hero__subtitle{
+    height: 22px;
+    display: flex; align-items: center;
+}
+
+.search{
+    max-width: 460px; width: 100%;
+    border: none; border-radius: 5px;
+    overflow: hidden; display: flex;
+    box-shadow: 0px 0px 20px 0px #AABBCC;
+}
+/* flex預設align-items: stretch 
+    同一排的 flex items 會在「垂直方向」被拉到一樣高
+    高度由最高的子元素決定
+*/
+
+.search__categories-btn{
+    flex: 0 0 auto;
+    width: 100px; padding: 16px 8px;
+    border: none;
+}
+.search__input{
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 46px; padding:0 15px; 
+    max-width: 300px;
+    border: none;
+}
+
+/* flex: 1 1 auto 說明
+    1) 第一個：flex-grow: 1，有剩餘空間時，這個元素要不要長大、以及長大的比例。
+    2) 第二個：flex-shrink: 1，空間不夠時，這個元素要不要縮小、以及縮小的比例。
+    3) 第三個：flex-basis: auto，元素在「分配剩餘空間」之前的起始尺寸（基準寬度）。
+        auto 通常表示以元素自身的 width / 內容尺寸作為基準（input 會受自身 CSS、placeholder、預設寬等影響）。
+        flex: 1 1 300px：表示理想基準 300px，但仍可伸縮。
+ */
+.search__input::placeholder{
+    font-size: 16px; font-weight: bold;
+    line-height: 13.3px;
+}
+
+.search__btn{
+    flex: 0 0 auto;
+    background-color: #448899;
+    display: flex; align-items: center;
+    padding: 8px 15px;
+    border: none;
+}
+.search__icon{height: 30px; width: 30px;}
+
+.category__menu{
+    position: absolute; z-index: 999;
+    width: 300px; height: 160px;
+    margin-top: 5px;
+    border: 0px; border-radius: 5px;
+    box-shadow: 0px 0px 20px 0px #AABBCC;
+    display: none; /* 為了切換顯示 */ 
+    grid-template-columns: repeat(3,1fr);
+}
+.category__menu--open{display: grid;}
+
+.category__item{
+    display: flex; align-items: center; justify-content: center;
+    padding: 10px; border: 0px; border-radius: 8px;
+}
+.category__item:hover{
+    background: #EEEEEE;
+}
+
+
+/* Atrractions */
+.l-attractions{padding: 40px 0px;}
+
+.listBar{
+    max-width: 1200px; width: 100%;
+    padding-bottom: 20px;
+    margin: 0 auto;
+    display: flex; align-items: center;
+}
+.listBar__nav--left{
+    flex: 0 0 auto;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    padding-left: 15px;
+}
+
+.listBar__viewport{
+    flex: 1 1 auto;
+    min-width: 0;     /* 允許它「可以縮到比內容更窄」*/
+    height: 50px;
+    padding: 13px 10px;
+
+}
+
+
+/* display: block 把一些底部的空間清掉 */
+.listBar__btn{border: 0px; padding: 0 0; display: block;}
+.listBar__icon{height: 32px; width: 32px; display: block;}
+
+.listBar__list{
+    display: flex; align-items: center;
+    height:100%;
+    white-space: nowrap; /* white-space: nowrap; 不換行 */
+    overflow: hidden;
+    overflow-x: auto;  /* 允許水平滑動 */
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;  /* 在iOS Safari 滑動有慣性作用的感覺 */
+    /* 隱藏滑動軸 */
+    /* Firefox */
+    scrollbar-width: none;
+      /* IE / old Edge */
+    -ms-overflow-style: none;
+}
+/* 隱藏滑動軸 */
+/* Chrome / Safari */
+.listBar__list::-webkit-scrollbar{
+    height: 0;
+    display: none;
+}
+
+.listBar__item{padding: 5px 15px;}
+
+.listBar__nav--right{
+    flex: 0 0 auto;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    padding-right: 15px;
+}
+
+.cardGrid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    width: 1200px; margin: 0 auto;
+    padding: 15px;
+}
+.card{
+    height: 242px; width: 270px; 
+    border: 1px solid #E8E8E8; border-radius: 5px;
+}
+.card__media{position: relative; overflow: hidden; height: 197px;}
+
+.card__img{
+    height:100%; width: 100%;
+    /* object-fit: cover; object-position: center; */
+}
+
+.card__title{
+    position: absolute;
+    left: 0; bottom: 0; width: 330px;
+    z-index: 2; background: rgba(0, 0, 0, 0.6);
+    padding: 10px;
+}
+
+.card__titleText{height: 20px; display: flex; align-items: center;}
+
+.card__detail{
+    width: 100%;
+    padding: 10px;
+    display: flex; justify-content: space-between;
+}
+
+.card__info{
+    height: 25px;
+    display: flex; align-items: center;
+}
+
+/* Footer */
+.l-footer{
+    height: 104px; width: 100%;
+    padding: 40px 0px;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.footer__text{padding: 5px 0px;}
+
+@media (max-width: 1200px) and (min-width: 601px){
+    .listBar{width:90%}
+    .cardGrid{
+        width: 90%;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .card{width: 100%;}
+    .card__title{width: 100%}
+    .card__img{object-fit: cover; object-position: center;}
+}
+
+@media (max-width: 600px){
+    .hero__content{
+        padding: 20px;
+    }
+    .cardGrid{
+        width: 100%;
+        grid-template-columns: 1fr;
+        padding: 15px;
+        gap: 15px;
+    }
+    .card{
+        width: 100%;
+        height: 280px;
+    }
+    .card__media{
+        height: 235px;
+    }
+    .card__title{width: 100%}
+    .card__img{object-fit: cover; object-position: center;}
+}
+
+
+/* Utility */
+.u-text-sloganTitle{ font-size: 28px; font-weight: bold; line-height: 24px;}
+.u-text-headline{ font-size: 30px; font-weight: bold; line-height: 34px;}
+.u-text-dialogTitle--bold{ font-size: 24px; font-weight: bold; line-height: 24px;}
+.u-text-dialogTitle{ font-size: 24px; font-weight: normal; line-height: 24px;}
+.u-text-button--bold{ font-size: 19px; font-weight: bold; line-height: 16px;}
+.u-text-button{ font-size: 19px; font-weight: bold; line-height: 16px;}
+.u-text-content--bold{ font-size: 19px; font-weight: bold;}
+.u-text-content{ font-size: 16px; font-weight: normal;}
+.u-text-body--bold{ font-size: 16px; font-weight: bold; line-height: 13.3px;}
+.u-text-body{ font-size: 16px; font-weight: 500;line-height: 13.3px;}
+.u-text-category{ font-size: 14px; font-weight: 500;}
+
+.u-c-pri-70{ color: #448899;}
+.u-c-pri-50{ color: #66AABB;}
+.u-c-pri-20{ color: #AADDDE;}
+
+.u-c-sec-70{ color: #666666;}
+.u-c-sec-50{ color: #757575;}
+.u-c-sec-20{ color: #E8E8E8;}
+.u-c-sec-10{ color: #EEEEEE;}
+.u-c-white{ color: white;}
+
+.u-bg-pri-70{ background-color: #448899;}
+.u-bg-pri-50{ background-color: #66AABB;}
+.u-bg-pri-20{ background-color: #AADDDE;}
+
+.u-bg-sec-70{ background-color: #666666;}
+.u-bg-sec-50{ background-color: #757575;}
+.u-bg-sec-20{ background-color: #E8E8E8;}
+.u-bg-sec-10{ background-color: #EEEEEE;}
+.u-bg-white{ background-color: white;}
