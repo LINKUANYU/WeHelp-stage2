@@ -7,10 +7,49 @@
   <title>Index</title>
 </head>
 <body>
+  <!-- login modal -->
+  <div class="modal is-hidden" id="login-modal">
+    <div class="modal__backdrop"></div>
+    <div class="modal__content modal__content--login">
+      <div class="modal__decorator-bar"></div>
+      <div class="modal__close">
+        <img class="modal__close-icon" src="/static/close.png">
+      </div>
+      <div class="modal__body">
+        <div class="modal__title u-text-headline3 u-c-sec-70">登入會員帳號</div>
+        <input class="auth__input auth__input--email" placeholder="輸入電子信箱">
+        <input class="auth__input auth__input--password" placeholder="輸入密碼">
+        <button class="auth__submit u-bg-pri-70 u-c-white u-text-btn">登入帳戶</button>
+        <div class="auth__hint u-c-sec-70 u-text-body">
+          還沒有帳戶？<a class="auth__link--signup">點此註冊</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- signup modal -->
+  <div class="modal is-hidden" id="signup-modal">
+    <div class="modal__backdrop"></div>
+    <div class="modal__content modal__content--signup">
+      <div class="modal__decorator-bar"></div>
+      <div class="modal__close">
+        <img class="modal__close-icon" src="/static/close.png">
+      </div>
+      <div class="modal__body">
+        <div class="modal__title u-text-headline3 u-c-sec-70">註冊會員帳號</div>
+        <input class="auth__input auth__input--name" placeholder="輸入姓名">
+        <input class="auth__input auth__input--email" placeholder="輸入電子信箱">
+        <input class="auth__input auth__input--password" placeholder="輸入密碼">
+        <button class="auth__submit u-bg-pri-70 u-c-white u-text-btn">註冊新帳戶</button>
+        <div class="auth__hint u-c-sec-70 u-text-body">
+          已經有帳戶了？<a class="auth__link--login">點此登入</a>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Header -->
   <header class="l-header">
     <div class="nav">
-      <div class="nav__brand u-text-headline u-c-pri-70">台北一日遊</div>
+      <div class="nav__brand u-text-headline2 u-c-pri-70">台北一日遊</div>
       <div class="nav__menu">
         <button class="nav__btn u-text-body u-c-sec-70 u-bg-white">預定行程</button>
         <button class="nav__btn u-text-body u-c-sec-70 u-bg-white">登入/註冊</button>
