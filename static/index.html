@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/static/index.css">
+  <link rel="stylesheet" href="/static/css/common.css">
+  <link rel="stylesheet" href="/static/css/index.css">
   <title>Index</title>
 </head>
 <body>
   <!-- login modal -->
-  <div class="modal is-hidden" id="login-modal">
+  <div class="modal is is-hidden" id="login-modal">
     <div class="modal__backdrop"></div>
     <div class="modal__content modal__content--login">
       <div class="modal__decorator-bar"></div>
       <div class="modal__close">
-        <img class="modal__close-icon" src="/static/close.png">
+        <img class="modal__close-icon" src="/static/photo/close.png">
       </div>
       <div class="modal__body">
         <div class="modal__title u-text-headline3 u-c-sec-70">登入會員帳號</div>
@@ -32,7 +33,7 @@
     <div class="modal__content modal__content--signup">
       <div class="modal__decorator-bar"></div>
       <div class="modal__close">
-        <img class="modal__close-icon" src="/static/close.png">
+        <img class="modal__close-icon" src="/static/photo/close.png">
       </div>
       <div class="modal__body">
         <div class="modal__title u-text-headline3 u-c-sec-70">註冊會員帳號</div>
@@ -52,14 +53,14 @@
       <div class="nav__brand u-text-headline2 u-c-pri-70">台北一日遊</div>
       <div class="nav__menu">
         <button class="nav__btn u-text-body u-c-sec-70 u-bg-white">預定行程</button>
-        <button class="nav__btn u-text-body u-c-sec-70 u-bg-white">登入/註冊</button>
+        <button class="nav__btn u-text-body u-c-sec-70 u-bg-white" id="login-btn">登入/註冊</button>
       </div>
     </div> 
   </header>
   <!-- Hero -->
   <div class="l-hero">
     <!-- Hero BG img -->
-    <img class="hero__img" src="/static/welcome.png">
+    <img class="hero__img" src="/static/photo/welcome.png">
     <!-- Hero content -->
     <div class="hero__content">
       <!-- Hero slogan -->
@@ -73,11 +74,11 @@
           <button class="search__categories-btn u-text-body">全部分類▼</button>
           <input class="search__input u-text-body--bold" placeholder="輸入景點名稱查詢" id="search__input">
           <button class="search__btn" type="submit">
-            <img class="search__icon" src="/static/icon_search.png">
+            <img class="search__icon" src="/static/photo/icon_search.png">
           </button>
         </div>
       </div>
-      <div class="category__menu u-bg-white">
+      <div class="category__menu is-hidden u-bg-white">
         <div class="category__item u-text-category">全部分類</div>
         <!-- categories 填充物 -->
       </div>
@@ -89,7 +90,7 @@
     <div class="listBar u-bg-white">
       <div class="listBar__nav--left">
         <button class="listBar__btn u-bg-white" id="listBar-left-btn">
-          <img class="listBar__icon" src="/static/left-btn.png">
+          <img class="listBar__icon" src="/static/photo/left-btn.png">
         </button>
       </div>
       <div class="listBar__viewport">
@@ -99,7 +100,7 @@
       </div>
       <div class="listBar__nav--right">
         <button class="listBar__btn u-bg-white" id="listBar-right-btn">
-          <img class="listBar__icon" src="/static/right-btn.png">
+          <img class="listBar__icon" src="/static/photo/right-btn.png">
         </button>
       </div>
     </div>
@@ -205,16 +206,20 @@
       const search_categories_btn = document.querySelector('.search__categories-btn');
       // category menu panel event
       search_categories_btn.addEventListener('click', () => {
-      category_menu.classList.toggle('category__menu--open');
+      category_menu.classList.toggle('is-hidden');
       });
       // panel item replace btn text event
       const category__items = document.querySelectorAll('.category__item');
       category__items.forEach((item) => {
         item.addEventListener('click', () => {
           search_categories_btn.textContent = item.textContent + "▼";
-          category_menu.classList.remove('category__menu--open');
+          category_menu.classList.toggle('is-hidden');
         });
       });
+      // login btn event
+      
+
+
     }
 
     startup();
