@@ -3,7 +3,11 @@
     border-top: 1px solid #E8E8E8;
 }
 
-.divider--1200{max-width:1200px; width:100%; margin: 40px auto;}
+.divider--1200{
+    border: 0px;
+    border-top: 1px solid #E8E8E8;
+    max-width:1200px; width:100%; margin: 40px auto;
+}
 
 .l-attraction{
     max-width: 1200px; width: 100%;
@@ -13,7 +17,8 @@
 }
 
 .carousel{
-    width: 540px; height: 400px;
+    max-width: 540px; width: 100%;
+    height: 400px;
     position: relative;
     overflow: hidden;
     margin-right: 30px;
@@ -88,11 +93,11 @@
     padding: 15px 20px;
 }
 .booking__field{
-    margin-bottom: 15px; 
+    margin-bottom: 15px;
     display: flex; align-items: center;
 }
-.booking__field--h22{height: 22px;}
 .booking__field--h24{height: 24px;}
+.booking__field--h22{height: 22px;}
 
 .booking__label{margin-right: 5px;}
 .booking__date{
@@ -138,3 +143,37 @@
     margin-bottom: 20px;
 }
 .info-section__title{height: 32px; display: flex; align-items: center;}
+
+@media (max-width: 899px){
+    .divider{display: none;}
+    .l-attraction{
+        width: 100%;
+        flex-direction: column;
+        gap: 20px;
+        height: auto;
+        padding: 0px; margin: 0px;
+    }
+    .carousel{
+        max-width: none;
+        width: 95%;
+        margin: 0 auto;
+        height: 350px;
+    }
+    .profile{
+        max-width: none;
+        width: 95%;
+        margin: 0px auto;
+    }
+    .booking__field--h24{height: 48px; line-height: 1.5;}
+}
+
+@media (max-width: 360px){
+    .carousel{
+        width: 100%;
+        border-radius: 0px;
+    }
+    .profile{
+        width: 100%;
+        padding: 0px 10px;
+    }
+}

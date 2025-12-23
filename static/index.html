@@ -108,7 +108,7 @@
     <div class="cardGrid">
       <!-- Card 填充物 -->
       <!-- 填充物範本 
-      <div class="card u-c-white">
+      <a class="card u-c-white" href="">
         <div class="card__media">
           <img class="card__img" src="">
           <div class="card__title">
@@ -119,7 +119,7 @@
           <div class="card__info card__info--mrt u-text-body u-c-sec-50">忠孝復興</div>
           <div class="card__info card__info--category u-text-body u-c-sec-50">公共藝術</div>
         </div>
-      </div>  
+      </a>  
       -->
       
     </div>
@@ -381,8 +381,9 @@
         card_detail.append(card_info_mrt);
         card_detail.append(card_info_category);
         // card
-        const card = document.createElement('div');
+        const card = document.createElement('a');
         card.classList = "card u-c-white";
+        card.href = `/attraction/${d.id}`;
         card.append(card_media);
         card.append(card_detail);
         // insert card
