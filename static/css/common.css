@@ -115,12 +115,14 @@ position: absolute
 .u-text-dialogTitle{ font-size: 24px; font-weight: normal; line-height: 24px;}
 .u-text-btn--bold{ font-size: 19px; font-weight: bold; line-height: 16px;}
 .u-text-btn{ font-size: 19px; line-height: 16px;}
+.u-text-btn--400{ font-size: 19px; font-weight: 400; line-height: 16px;}
 .u-text-content--bold{ font-size: 19px; font-weight: bold;}
 .u-text-content{ font-size: 16px; font-weight: normal;}
 .u-text-body--bold{ font-size: 16px; font-weight: bold; line-height: 13.3px;}
 .u-text-body{ font-size: 16px; font-weight: 500;line-height: 13.3px;}
 .u-text-body--400{ font-size: 16px; font-weight: 400;line-height: 13.3px;}
 .u-text-category{ font-size: 14px; font-weight: 500;}
+.u-line-height--2{line-height: 2;}
 
 .u-c-pri-70{ color: #448899;}
 .u-c-pri-50{ color: #66AABB;}

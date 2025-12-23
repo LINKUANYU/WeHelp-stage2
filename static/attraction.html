@@ -15,7 +15,7 @@
     <div class="modal__content modal__content--login">
       <div class="modal__decorator-bar"></div>
       <div class="modal__close">
-        <img class="modal__close-icon" src="/static/close.png">
+        <img class="modal__close-icon" src="/static/photo/close.png">
       </div>
       <div class="modal__body">
         <div class="modal__title u-text-headline3 u-c-sec-70">登入會員帳號</div>
@@ -34,7 +34,7 @@
     <div class="modal__content modal__content--signup">
       <div class="modal__decorator-bar"></div>
       <div class="modal__close">
-        <img class="modal__close-icon" src="/static/close.png">
+        <img class="modal__close-icon" src="/static/photo/close.png">
       </div>
       <div class="modal__body">
         <div class="modal__title u-text-headline3 u-c-sec-70">註冊會員帳號</div>
@@ -62,17 +62,41 @@
   <!-- Atrractions card -->
   <div class="l-attraction">
     <div class="carousel">
-      <img class="carousel__img" src="/static/photo/demo.jpeg">
-      <img class="carousel__nav carousel__nav--prev" src="/static/photo/left-btn.png">
-      <img class="carousel__nav carousel__nav--next" src="/static/photo/right-btn.png">
-      <div class="carousel__indicator"></div>
+      <!-- Fetch API 後傳入建立 photo -->
+      <div class="carousel__track">
+      <!-- 
+      ＊＊觀念補充＊＊ 
+      結構設計 Viewport（窗框）→ Track（軌道）→ Slide（單格）→ Img（圖片）
+        Track：是一條「長條軌道」，裡面放很多張 slide。切換照片就是把 track 往左移。可被 translateX 移動
+        Slide：是「一格一格的版位」，每格固定佔 viewport 的 100% 寬；這樣 index 才能穩定對應位移距離。
+        Img：圖片本體，不管原始比例，用 object-fit 規則在 slide 內填滿。
+  
+        <div class="carousel__slide">
+          <img class="carousel__img">
+        </div>  
+      -->
+
+      </div>
+
+      <!-- Button -->
+      <button class="carousel__nav carousel__nav--prev" type="button">
+        <img class="carousel__btn" src="/static/photo/left-btn.png">
+      </button>
+      <button class="carousel__nav carousel__nav--next" type="button">
+        <img class="carousel__btn" src="/static/photo/right-btn.png">
+      </button>
+
+      <div class="carousel__indicator">
+        <!-- Fetch API 後傳入 <div class="carousel__indicator-seg"></div> -->
+      </div>
+
     </div>
     <div class="profile">
-      <div class="profile__name u-text-headline3 u-c-sec-70">平安鐘</div>
-      <div class="profile__cat-mrt u-text-body-400 u-c-sec-70">公共藝術</div>
+      <div class="profile__name u-text-headline3 u-c-sec-70"></div>
+      <div class="profile__cat-mrt u-text-body--400 u-c-sec-70"></div>
       <div class="booking u-bg-sec-20">
-        <div class="booking__field u-text-body--bold u-c-sec-70">訂購導覽行程</div>
-        <div class="booking__field u-text-body--400 u-c-sec-70">以此景點為中心的一日行程，帶您探索城市角落故事</div>
+        <div class="booking__field booking__field--h22 u-text-body--bold u-c-sec-70">訂購導覽行程</div>
+        <div class="booking__field booking__field--h24 u-text-body--400 u-c-sec-70">以此景點為中心的一日行程，帶您探索城市角落故事</div>
         <div class="booking__field">
           <div class="booking__label u-text-body--bold u-c-sec-70">選擇日期：</div>
           <input class="booking__date" type="date">
@@ -82,33 +106,33 @@
           <div class="booking__time-group">
             <label class="time-option">
               <input type="radio" class="time-option__radio" name="time" value="morning">
-              <span class="u-text-body-400 u-c-sec-70">上半天</span>
+              <span class="u-text-body--400 u-c-sec-70">上半天</span>
             </label>
             <label class="time-option">
               <input type="radio" class="time-option__radio" name="time" value="afternoon">
-              <span class="u-text-body-400 u-c-sec-70">下半天</span>
+              <span class="u-text-body--400 u-c-sec-70">下半天</span>
             </label>
           </div>
         </div>
-        <div class="booking__field">
+        <div class="booking__field booking__field--h22">
           <div class="booking__label u-text-body--bold u-c-sec-70">導覽費用：</div>
-          <div class="booking__price u-text-body--400 u-c-sec-70">新台幣2000元</div>
+          <div class="booking__price u-text-body--400 u-c-sec-70"></div>
         </div>
-        <button class="booking__btn u-bg-pri-70 u-text-btn u-c-white u-bg-pri-70">開始預約行程</button>
+        <button class="booking__btn u-bg-pri-70 u-text-btn--400 u-c-white u-bg-pri-70">開始預約行程</button>
       </div>
     </div>
   </div>
   <hr class="divider divider--1200">
   <!-- Attraction info -->
   <div class="l-attraction-info">
-    <div class="info-section u-text-content u-c-sec-70">平安鐘祈求大家的平安，這是為了紀念921地震週年的設計，在喧鬧的廣場上每個小時鳴鐘，保佑平安，祈禱臺灣不會再發生這樣的天災。雙手合十加上108個黃色的琉璃乳丁，隨著緩緩流下的水，在底下的一個小噴泉噴出。雙手合十的意義，一個是祈福，一個是包容，教我們要包容這樣的改變，撫平這樣的傷口。下面的水緩緩流出，代表著人的生命力是不斷地延續下去。緩緩地鐘聲，卻帶來心中的寧靜。 這個平安鐘是由建築師姚仁喜與琉璃創作家王俠軍共同設計，長6公尺、寬5公尺，以鑄銅製成，由法鼓山文教基金會全額出資。平安鐘點綴都市景觀，不時提醒大家，面對刻骨銘心的災難痛苦，更應該有謙卑的一顆心。</div>
+    <div class="info-section u-text-content u-c-sec-70 u-line-height--2" id="description"></div>
     <div class="info-section">
       <div class="info-section__title u-text-body--bold u-c-sec-70">景點地址</div>
-      <div class="u-text-content u-c-sec-70" id="address">臺北市 大安區忠孝東路4段</div>
+      <div class="u-text-content u-c-sec-70" id="address"></div>
     </div>
     <div class="info-section">
       <div class="info-section__title u-text-body--bold u-c-sec-70">交通方式</div>
-      <div class="u-text-content u-c-sec-70" id="transportations">捷運站名：忠孝復興站4號出口1.公車：204、212、212直、232、232副、262、262(區間)、278、299、521、605、605(副)、605(新台五線)、667、903、忠孝新幹線至頂好市場站 2.車位：太平洋崇光百貨地下停車場或市民大道附近地下停車場</div>
+      <div class="u-text-content u-c-sec-70 u-line-height--2" id="transport"></div>
     </div>
   </div>
   <!-- Footer -->
@@ -116,6 +140,126 @@
     <div class="footer__text u-text-body--bold u-c-white">COPYRIGHT © 2021 台北一日遊</div>
   </div>
   <script defer>
+    // 透過url尋找當前頁面資料
+    const path_part = window.location.pathname.split("/").filter(Boolean);
+    // pathname 只取「路徑」部分，不含網域、不含 ?、不含 #。
+    // filter 會把陣列每個元素丟進去測試，回傳「通過條件」的元素。把空字串 ""（以及其他 falsy 值）過濾掉
+    const attrraction_id = path_part[1];
+
+    async function get_data(url) {
+      const res = await fetch(url);
+      const ct = res.headers.get('content-type') || '';
+      const body = ct.includes('application/json') ? await res.json() : await res.text();
+
+      if (!res.ok){
+        const err = new Error (`HTTP ${res.status}`);
+        err.status = res.status;
+        err.payload = body;
+        throw err;
+      }
+      return body;
+    }
+
+
+    const name = document.querySelector('.profile__name');
+    const cat_mrt = document.querySelector('.profile__cat-mrt');
+    const description = document.querySelector('#description');
+    const address = document.querySelector('#address');
+    const transport = document.querySelector('#transport');
+
+    const radio_morning = document.querySelector('input[type="radio"][value="morning"]');
+    const radio_afternoon = document.querySelector('input[type="radio"][value="afternoon"]');
+    const booking_price = document.querySelector('.booking__price');
+
+    const track = document.querySelector('.carousel__track');
+    const prev_btn = document.querySelector('.carousel__nav--prev');
+    const next_btn = document.querySelector('.carousel__nav--next');
+    const indicator = document.querySelector('.carousel__indicator');
+
+    let photos = [];
+    let idx = 0;
+
+    function build_slide() {
+      photos.forEach((p) => {
+        const slide = document.createElement('div');
+        slide.classList = "carousel__slide";
+        const img = document.createElement('img');
+        img.classList = "carousel__img";
+        img.src = p;
+        slide.append(img);
+        track.append(slide);
+      });
+      // build indicator
+      const counts = photos.length;
+      for (let i = 0; i < counts; i++){
+        const seg = document.createElement('div');
+        seg.classList = "carousel__indicator-seg";
+        indicator.append(seg);
+      }
+    }
+
+    function render() {
+      // 水平移動畫面
+      const w = track.clientWidth;
+      track.style.transform = `translateX(${-idx * w}px)`;
+      // 檢查按鈕狀態
+      if (idx === 0){
+        prev_btn.disabled;
+      }
+      else if (idx === photos.length - 1){
+        next_btn.disabled;
+      }
+      // 更新分段進度條畫面
+      const segs = document.querySelectorAll('.carousel__indicator-seg');
+      segs.forEach((seg, i) => {
+        seg.classList.remove('is-active');
+        if (i === idx){
+          seg.classList.add('is-active');
+        }
+      });
+    }
+
+    async function startup(){
+      try{
+        const result = await get_data(`/api/attraction/${attrraction_id}`);
+        // Text information
+        name.textContent = result.data.name;
+        cat_mrt.textContent = result.data.name + " at " + result.data.mrt;
+        description.textContent = result.data.description;
+        address.textContent = result.data.address;
+        transport.textContent = result.data.transport;
+        console.log(result.data);
+        // booking time and price
+        radio_morning.addEventListener('change', () => {
+          booking_price.textContent = "新台幣2000元";
+        });
+        radio_afternoon.addEventListener('change', () => {
+          booking_price.textContent = "新台幣2500元";
+        });
+        
+        // 建立相片切換功能
+        photos = result.data.images;
+        build_slide();
+        render();
+        // 綁定按鈕功能
+        prev_btn.addEventListener('click', () => {
+          if (idx === 0) return;
+          idx -= 1;
+          render();
+        });
+
+        next_btn.addEventListener('click', () => {
+          if (idx === photos.length - 1) return;
+          idx += 1;
+          render();
+        });
+        
+      }catch(e){
+        console.log(e);
+      }
+      
+    }
+    startup();
 
   </script>
 </body>
