@@ -1,0 +1,179 @@
+.divider{
+    border: 0px;
+    border-top: 1px solid #E8E8E8;
+}
+
+.divider--1200{
+    border: 0px;
+    border-top: 1px solid #E8E8E8;
+    max-width:1200px; width:100%; margin: 40px auto;
+}
+
+.l-attraction{
+    max-width: 1200px; width: 100%;
+    height: 400px; margin: 40px auto;
+    padding: 0px 15px;
+    display: flex;
+}
+
+.carousel{
+    max-width: 540px; width: 100%;
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+    margin-right: 30px;
+    border-radius: 5px;
+}
+
+.carousel__track{
+    height: 100%;
+    display: flex;
+    transition: transform 280ms ease;  /* 目的：當 JS 改變 track.style.transform（例如 translateX）時，自動產生平滑動畫。 */
+}
+
+.carousel__slide{
+    flex: 0 0 100%;    /* ０不允許長大 ０不允許被壓縮 １００％父層容器的寬度 */
+    /* 固定 slide 都「剛好一頁寬」，而且永遠不被擠壓。*/
+    height: 100%;
+}
+
+.carousel__img{
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    /* 讓圖片跟 slide 一樣大，在圖片框固定為 100% 寬高的前提下，保持圖片比例並「填滿框」，必要時裁切。*/
+}
+
+.carousel__nav{
+    position: absolute; opacity: 75%;
+    padding: 0px; margin: 0px; border: 0px;
+    background:none; 
+    display: flex; align-items: center;
+}
+.carousel__btn{width: 36px; height: 36px;}
+
+.carousel__nav--prev{top: 182px; left: 10px;}
+.carousel__nav--next{top: 182px; right: 10px;}
+
+.carousel__indicator{
+    position: absolute;
+    bottom: 0px; left: 0px; right: 0px;
+    height: 5px;
+    display: flex;
+    opacity: 75%;
+}
+.carousel__indicator-seg{
+    flex: 1;
+    background: #ffffff;
+}
+
+.carousel__indicator-seg.is-active{
+    background: #000000;
+}
+
+
+
+
+.profile{
+    max-width: 600px; width: 100%;
+}
+
+.profile__name{
+    margin-bottom: 15px; height: 33px;
+    display: flex; align-items: center;
+}
+.profile__cat-mrt{
+    margin-bottom: 20px; height: 22px;
+    display: flex; align-items: center;
+}
+
+.booking{
+    width: 100%;
+    height: 302px;
+    border: 0px; border-radius: 5px;
+    padding: 15px 20px;
+}
+.booking__field{
+    margin-bottom: 15px;
+    display: flex; align-items: center;
+}
+.booking__field--h24{height: 24px;}
+.booking__field--h22{height: 22px;}
+
+.booking__label{margin-right: 5px;}
+.booking__date{
+    width: 193px; height: 35px;
+    border: 0px;
+    padding: 5px 0px 5px 10px;
+}
+.booking__date::-webkit-calendar-picker-indicator{
+    width: 24px; height: 24px; 
+    padding-right: 10px;
+    /* 修改日曆圖示 */ 
+}
+
+.booking__time-group{
+    display: flex; align-items: center;
+}
+.time-option{display: flex; align-items: center; margin-right: 5px;}
+
+.time-option__radio{
+    appearance: none;
+    width: 22px; height: 22px;
+    margin: 0px 4px 0px 5px;
+    background: #ffffff;
+    border-radius: 50%;
+}
+
+.time-option__radio:checked{
+    background: #448899;
+    border: 2px solid #ffffff;
+}
+
+.booking__btn{
+    padding: 10px 20px; margin-top: 10px;
+    border: 0px; border-radius: 5px;
+}
+
+.l-attraction-info{
+    margin: auto; padding: 10px;
+    max-width: 1200px; width: 100%;
+}
+
+.info-section{
+    margin-bottom: 20px;
+}
+.info-section__title{height: 32px; display: flex; align-items: center;}
+
+@media (max-width: 899px){
+    .divider{display: none;}
+    .l-attraction{
+        width: 100%;
+        flex-direction: column;
+        gap: 20px;
+        height: auto;
+        padding: 0px; margin: 0px;
+    }
+    .carousel{
+        max-width: none;
+        width: 95%;
+        margin: 0 auto;
+        height: 350px;
+    }
+    .profile{
+        max-width: none;
+        width: 95%;
+        margin: 0px auto;
+    }
+    .booking__field--h24{height: 48px; line-height: 1.5;}
+}
+
+@media (max-width: 360px){
+    .carousel{
+        width: 100%;
+        border-radius: 0px;
+    }
+    .profile{
+        width: 100%;
+        padding: 0px 10px;
+    }
+}
