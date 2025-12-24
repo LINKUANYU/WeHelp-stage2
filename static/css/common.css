@@ -1,5 +1,7 @@
 /* HTML tags */
-html{font-family: "Noto Sans TC"}
+html{
+  font-family: "Noto Sans TC", -apple-system, system-ui, "PingFang TC", "Microsoft JhengHei", sans-serif;
+}
 body{margin: 0px;}
 hr{margin: 0px;}
 
