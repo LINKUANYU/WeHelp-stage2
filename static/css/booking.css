@@ -1,0 +1,63 @@
+.booking-headline{
+    width: 1000px; height: 27px;
+    display: block;
+    margin: 40px auto 30px auto
+}
+.order{
+    width: 980px; height: 200px;
+    margin: 0 auto;
+    position: relative;
+    display: flex; gap: 30px;
+}
+.delete-icon{
+    position: absolute;
+    top: 0px; right: 0px;
+}
+.order__img{
+    width: 250px; height: 200px;
+    overflow: hidden;
+}
+.order__img--icon{
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+}
+.order__detail{
+    width: 700px; height: 170px;
+}
+.order__title{height: 24px; margin-bottom: 20px;}
+.order__field{
+    height: 24px; margin-bottom: 10px;
+    display: flex; align-items: center;
+}
+.contact{
+    width: 980px; height: 227px;
+    margin: 0 auto;
+}
+.contact__title{height: 24px; margin-bottom: 20px; display: flex; align-items: center;}
+.contact__field{
+    height: 38px; margin-bottom: 15px;
+    display: flex; align-items: center;
+}
+.contact__input{
+    border: 1px solid #E8E8E8; border-radius: 5px;
+    padding: 10px; height: 38px;
+    max-width: 200px; width: 100%;
+}
+
+.contact__info{height: 24px; display: flex; align-items: center;}
+
+.payment{
+    width: 980px; height: 188px;
+    margin: 0 auto;
+}
+.payment__title{height: 24px; margin-bottom: 20px; display: flex; align-items: center;}
+.payment__field{
+    height: 38px; margin-bottom: 15px;
+    display: flex; align-items: center;
+}
+
+.payment__input{
+    border: 1px solid #E8E8E8; border-radius: 5px;
+    padding: 10px; height: 38px;
+    max-width: 200px; width: 100%;
+}

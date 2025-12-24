@@ -34,7 +34,14 @@ hr{margin: 0px;}
 .nav__btn{
     height: 34px; padding: 10px; border: 0;
 }
+.divider{
+    border: 0px;
+    border-top: 1px solid #E8E8E8;
+}
 
+.divider--1200{
+    max-width:1200px; width:100%; margin: 40px auto;
+}
 
 
 /* Footer */
@@ -99,7 +106,7 @@ position: absolute
 .auth__submit{
     border: 0px; border-radius: 5px; 
     width: 100%; padding: 15px 20px;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
 }
 
 .auth__hint{
