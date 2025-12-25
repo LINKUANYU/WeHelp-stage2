@@ -1,10 +1,10 @@
 .booking-headline{
-    width: 1000px; height: 27px;
-    display: block;
+    max-width: 1000px; width: 100%; height: 27px;
+    display: flex; align-items: center;
     margin: 40px auto 30px auto
 }
 .order{
-    width: 980px; height: 200px;
+    max-width: 980px; width: 100%; height: 200px;
     margin: 0 auto;
     position: relative;
     display: flex; gap: 30px;
@@ -22,7 +22,7 @@
     object-fit: cover; object-position: center;
 }
 .order__detail{
-    width: 700px; height: 170px;
+    max-width: 700px; width: 100%; height: 170px;
 }
 .order__title{height: 24px; margin-bottom: 20px;}
 .order__field{
@@ -30,7 +30,7 @@
     display: flex; align-items: center;
 }
 .contact{
-    width: 980px; height: 227px;
+    max-width: 980px; width: 100%; height: 227px;
     margin: 0 auto;
 }
 .contact__title{height: 24px; margin-bottom: 20px; display: flex; align-items: center;}
@@ -44,10 +44,13 @@
     max-width: 200px; width: 100%;
 }
 
-.contact__info{height: 24px; display: flex; align-items: center;}
+.contact__info{
+    min-height: 24px; line-height: 1.5;
+    display: flex; align-items: center;
+}
 
 .payment{
-    width: 980px; height: 188px;
+    max-width: 980px; width: 100%; height: 188px;
     margin: 0 auto;
 }
 .payment__title{height: 24px; margin-bottom: 20px; display: flex; align-items: center;}
@@ -60,4 +63,46 @@
     border: 1px solid #E8E8E8; border-radius: 5px;
     padding: 10px; height: 38px;
     max-width: 200px; width: 100%;
+}
+
+.confirmation{
+    max-width: 980px; width: 100%; height: 100px;
+    margin: 0px auto 40px auto;
+    display: flex; flex-direction: column;
+}
+
+.confirmation__title{
+    margin-left: auto;
+    width: 174px; height: 20px;
+    text-align: end;
+    margin-bottom: 22px;
+}
+
+.confirmation__btn{
+    margin-left: auto;
+    border: 0px; border-radius: 5px;
+    padding: 10px 20px;
+}
+
+@media (max-width: 1200px){
+    .booking-headline{padding: 0px 10px;}
+    .order{padding: 0px 10px;}
+    .delete-icon{right: 10px;}
+    .contact{padding: 0px 10px;}
+    .payment{padding: 0px 10px;}
+    .confirmation{padding: 0px 10px;}
+}
+
+@media (max-width: 360px){
+    .order{
+        flex-direction: column;
+        height: 430px;
+
+    }
+    .order__img{width: 100%;}
+    .delete-icon{top: auto; bottom: 0px;}
+    .order__detail{height: 200px;}
+    .divider--sp{margin: 30px auto 40px auto;}
+    .contact{height: 256px;}
+    .contact__info{margin-top: 5px;}
 }
