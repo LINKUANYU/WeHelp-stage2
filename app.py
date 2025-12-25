@@ -24,6 +24,8 @@ async def thankyou(request: Request):
 	return FileResponse("./static/thankyou.html", media_type="text/html")
 
 
+
+
 # API
 @app.get("/api/mrts")
 def mrt(cur = Depends(get_cur)):

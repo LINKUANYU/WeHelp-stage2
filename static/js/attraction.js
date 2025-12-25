@@ -1,5 +1,7 @@
 // import function
 import { get_data } from "./common.js";
+import { login } from "./common.js";
+login();
 
 // 透過url尋找當前頁面資料
 const path_part = window.location.pathname.split("/").filter(Boolean);

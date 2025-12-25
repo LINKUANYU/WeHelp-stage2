@@ -1,5 +1,7 @@
 // import function
 import { get_data } from "./common.js";
+import { login } from "./common.js";
+login();
 
 const bar = document.querySelector('.listBar');
 const listBar_list = bar.querySelector('.listBar__list');
@@ -86,7 +88,7 @@ async function startup(){
 startup();
 
 
-// ＊＊＊ 以下為建立「attraction card ＋ 滾動讀取更多」邏輯 ＊＊＊
+// ＊＊＊ 以下為建立 「attraction card ＋ 滾動讀取更多」邏輯 ＊＊＊
 // 運作邏輯：啟動觀察 -> 被偵測到 -> 讀取更多 -> 按條件抓資料 -> 建立卡片
 
 // initial condition
