@@ -1,7 +1,5 @@
 // import function
-import { get_data } from "./common.js";
-import { login } from "./common.js";
-login();
+import { get_data, login_signup } from "./common.js";
 
 // 透過url尋找當前頁面資料
 const path_part = window.location.pathname.split("/").filter(Boolean);
@@ -106,6 +104,8 @@ async function startup(){
     }catch(e){
     console.log(e);
     }
+    // 登入／註冊功能
+    login_signup();
     
 }
 startup();

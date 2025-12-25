@@ -1,7 +1,5 @@
 // import function
-import { get_data } from "./common.js";
-import { login } from "./common.js";
-login();
+import { get_data, login_signup } from "./common.js";
 
 const bar = document.querySelector('.listBar');
 const listBar_list = bar.querySelector('.listBar__list');
@@ -84,6 +82,8 @@ async function startup(){
         listBar_list.scrollBy({left: step(), behavior: "smooth"});
     });
 
+    // 登入／註冊功能
+    login_signup();
 }
 startup();
 

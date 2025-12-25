@@ -21,13 +21,15 @@
         <img class="modal__close-icon" src="/static/icon/close.png">
       </div>
       <div class="modal__body">
-        <div class="modal__title u-text-headline3 u-c-sec-70">登入會員帳號</div>
-        <input class="auth__input auth__input--email" placeholder="輸入電子信箱">
-        <input class="auth__input auth__input--password" placeholder="輸入密碼">
-        <button class="auth__submit u-bg-pri-70 u-c-white u-text-btn">登入帳戶</button>
-        <div class="auth__hint u-c-sec-70 u-text-body">
-          還沒有帳戶？<a class="auth__link--signup">點此註冊</a>
-        </div>
+        <form id="login-form">
+          <div class="modal__title u-text-headline3 u-c-sec-70">登入會員帳號</div>
+          <input class="auth__input" id="login-email" placeholder="輸入電子信箱" name="email">
+          <input class="auth__input" id="login-password" placeholder="輸入密碼" name="password">
+          <button type="submit" class="auth__submit u-bg-pri-70 u-c-white u-text-btn">登入帳戶</button>
+          <div class="auth__hint u-c-sec-70 u-text-body">
+            還沒有帳戶？<div class="auth__link--signup">點此註冊</div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -40,14 +42,16 @@
         <img class="modal__close-icon" src="/static/icon/close.png">
       </div>
       <div class="modal__body">
-        <div class="modal__title u-text-headline3 u-c-sec-70">註冊會員帳號</div>
-        <input class="auth__input auth__input--name" placeholder="輸入姓名">
-        <input class="auth__input auth__input--email" placeholder="輸入電子信箱">
-        <input class="auth__input auth__input--password" placeholder="輸入密碼">
-        <button class="auth__submit u-bg-pri-70 u-c-white u-text-btn">註冊新帳戶</button>
-        <div class="auth__hint u-c-sec-70 u-text-body">
-          已經有帳戶了？<a class="auth__link--login">點此登入</a>
-        </div>
+        <form id="signup-form">
+          <div class="modal__title u-text-headline3 u-c-sec-70">註冊會員帳號</div>
+          <input class="auth__input" id="signup-name" placeholder="輸入姓名" name="name">
+          <input class="auth__input" id="signup-email" placeholder="輸入電子信箱" name="email">
+          <input class="auth__input" id="signup-password" placeholder="輸入密碼" name="password">
+          <button type="submit" class="auth__submit u-bg-pri-70 u-c-white u-text-btn">註冊新帳戶</button>
+          <div class="auth__hint u-c-sec-70 u-text-body">
+            已經有帳戶了？<div class="auth__link--login">點此登入</div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
