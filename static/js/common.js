@@ -1,5 +1,5 @@
 export async function get_data(url, option) {
-    const res = await fetch(url);
+    const res = await fetch(url, option);
     const ct = res.headers.get('content-type') || '';
     const body = ct.includes('application/json') ? await res.json() : await res.text();
 

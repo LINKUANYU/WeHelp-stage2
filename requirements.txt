@@ -2,3 +2,5 @@ mysql-connector-python
 fastapi
 uvicorn
 python-dotenv
+# for form
+python-multipart
