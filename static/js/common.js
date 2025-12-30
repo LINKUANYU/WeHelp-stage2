@@ -75,8 +75,10 @@ export function login_signup(){
             }); 
 
             console.log(res);
-            console.log("Login success");  // 待修改
+            console.log("Login success");
             login_modal.classList.add('is-hidden');
+            const token = res.token;
+            localStorage.setItem("access_token", token);
         }catch(e){
             console.log(e);
             login_msg.classList.remove('is-hidden');
@@ -114,6 +116,23 @@ export function login_signup(){
             signup_msg.textContent = e.detail;
         }
     });
+}
 
+// get_current_user
+export async function get_user(){
+    const token = localStorage.getItem("access_token");
+    if (!token){
+        console.log("未登入")
+        return null
+    }
+    try{
+        const res = await fetch("/api/user/auth", {
+            headers:{Authorization: `Bearer ${token}`,},
+        });
 
+        const result = await res.json();
+        console.log(result);
+    }catch(e){
+        console.log(e);
+    }
 }

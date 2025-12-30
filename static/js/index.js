@@ -1,5 +1,5 @@
 // import function
-import { get_data, login_signup } from "./common.js";
+import { get_data, login_signup, get_user } from "./common.js";
 
 const bar = document.querySelector('.listBar');
 const listBar_list = bar.querySelector('.listBar__list');
@@ -84,6 +84,8 @@ async function startup(){
 
     // 登入／註冊功能
     login_signup();
+    // check user
+    get_user();
 }
 startup();
 
