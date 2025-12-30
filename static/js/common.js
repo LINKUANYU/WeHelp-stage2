@@ -8,16 +8,16 @@ export async function get_data(url, option) {
         const err = new Error (`HTTP ${res.status}`);
         err.status = res.status;
         err.payload = body;
-        err.detail = (body && typeof body === "object" && body.detail) ||
-            (typeof body === "string" && body) ||
-            `Request failed (${res.status})`;
 
         throw err;
     }
     return body;
 }
 
-export function login_signup(){
+export function init_ui_event_listeners(){
+    // 回首頁
+    const nav_brand = document.querySelector('.nav__brand');
+    nav_brand.addEventListener('click', () => {window.location.href = "/";});
     // 登入／註冊 畫面顯示
     const login_modal = document.querySelector('#login-modal');
     const signup_modal = document.querySelector('#signup-modal');
@@ -49,16 +49,21 @@ export function login_signup(){
         login_modal.classList.remove('is-hidden');
         signup_modal.classList.add('is-hidden');
     });
+} 
 
+
+export function auth_api(){
     // 登入／註冊 API
     const login_form = document.querySelector('#login-form');
     const signup_form = document.querySelector('#signup-form');
-    
+    const login_modal = document.querySelector('#login-modal');
+    const signup_modal = document.querySelector('#signup-modal');
     // 登入 API
     login_form.addEventListener('submit',async (e) => {
         const login_email = document.querySelector('#login-email').value.trim();
         const login_password = document.querySelector('#login-password').value;
         const login_msg = document.querySelector('#login-msg');
+        
         e.preventDefault();
         // 檢查input資料是否完整
         if (!login_email || !login_password){
@@ -69,8 +74,8 @@ export function login_signup(){
         const form = e.currentTarget  // e.currentTarget：真正綁定的那個元素。e.target：事件最初發生的元素，可能會是按鈕
         const fd = new FormData(form)  // 把<form>內該被提交的欄位組成 key/value
         try{
-            const res = await get_data("/api/login", {
-                method: "POST",
+            const res = await get_data("/api/user/auth", {
+                method: "PUT",
                 body: fd
             }); 
 
@@ -79,10 +84,11 @@ export function login_signup(){
             login_modal.classList.add('is-hidden');
             const token = res.token;
             localStorage.setItem("access_token", token);
+            window.location.reload();
         }catch(e){
             console.log(e);
             login_msg.classList.remove('is-hidden');
-            login_msg.textContent = e.detail;
+            login_msg.textContent = e.payload.detail.message;
         }
     });
     
@@ -102,7 +108,7 @@ export function login_signup(){
         const form = e.currentTarget  // e.currentTarget：真正綁定的那個元素。e.target：事件最初發生的元素，可能會是按鈕
         const fd = new FormData(form)  // 把<form>內該被提交的欄位組成 key/value
         try{
-            const res = await get_data("/api/signup", {
+            const res = await get_data("/api/user", {
                 method: "POST",
                 body: fd
             }); 
@@ -110,16 +116,25 @@ export function login_signup(){
             console.log(res);
             console.log("Signup success");
             signup_modal.classList.add('is-hidden');
+            
         }catch(e){
             console.log(e);
             signup_msg.classList.remove('is-hidden');
-            signup_msg.textContent = e.detail;
+            signup_msg.textContent = e.payload.detail.message;
         }
+    });
+    // 登出按鈕
+    const signout_btn = document.querySelector('#signout-btn');
+    signout_btn.addEventListener('click', () => {
+        localStorage.removeItem("access_token");
+        window.location.reload();
     });
 }
 
 // get_current_user
 export async function get_user(){
+    const login_btn = document.querySelector('#login-btn');
+    const signout_btn = document.querySelector('#signout-btn');
     const token = localStorage.getItem("access_token");
     if (!token){
         console.log("未登入")
@@ -132,6 +147,8 @@ export async function get_user(){
 
         const result = await res.json();
         console.log(result);
+        login_btn.classList.add('is-hidden');
+        signout_btn.classList.remove('is-hidden');
     }catch(e){
         console.log(e);
     }

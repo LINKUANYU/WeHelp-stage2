@@ -1,5 +1,5 @@
 // import function
-import { get_data, login_signup, get_user } from "./common.js";
+import { get_data, init_ui_event_listeners, auth_api, get_user } from "./common.js";
 
 const bar = document.querySelector('.listBar');
 const listBar_list = bar.querySelector('.listBar__list');
@@ -82,9 +82,8 @@ async function startup(){
         listBar_list.scrollBy({left: step(), behavior: "smooth"});
     });
 
-    // 登入／註冊功能
-    login_signup();
-    // check user
+    init_ui_event_listeners();
+    auth_api()
     get_user();
 }
 startup();
