@@ -5,6 +5,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 import jwt
 import os
+from dotenv import load_dotenv
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 router = APIRouter()
@@ -15,6 +16,7 @@ def hash_password(plain:str) -> str:
 def verify_password(plain:str, hashed:str) -> bool:
 	return password_context.verify(plain, hashed)
 
+load_dotenv()
 KEY = os.getenv("KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 bearer = HTTPBearer()
