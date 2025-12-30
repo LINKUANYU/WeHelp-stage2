@@ -1,3 +1,4 @@
+
 export async function get_data(url, option) {
     const res = await fetch(url, option);
     const ct = res.headers.get('content-type') || '';
@@ -7,6 +8,10 @@ export async function get_data(url, option) {
         const err = new Error (`HTTP ${res.status}`);
         err.status = res.status;
         err.payload = body;
+        err.detail = (body && typeof body === "object" && body.detail) ||
+            (typeof body === "string" && body) ||
+            `Request failed (${res.status})`;
+
         throw err;
     }
     return body;
@@ -44,18 +49,21 @@ export function login_signup(){
         login_modal.classList.remove('is-hidden');
         signup_modal.classList.add('is-hidden');
     });
-    // 登入／註冊 送出資料
+
+    // 登入／註冊 API
     const login_form = document.querySelector('#login-form');
     const signup_form = document.querySelector('#signup-form');
-
+    
+    // 登入 API
     login_form.addEventListener('submit',async (e) => {
         const login_email = document.querySelector('#login-email').value.trim();
         const login_password = document.querySelector('#login-password').value;
-        
+        const login_msg = document.querySelector('#login-msg');
         e.preventDefault();
         // 檢查input資料是否完整
         if (!login_email || !login_password){
-            alert("請輸入完整資訊");
+            login_msg.classList.remove('is-hidden');
+            login_msg.textContent = "請輸入完整資訊";
             return;
         }
         const form = e.currentTarget  // e.currentTarget：真正綁定的那個元素。e.target：事件最初發生的元素，可能會是按鈕
@@ -71,18 +79,22 @@ export function login_signup(){
             login_modal.classList.add('is-hidden');
         }catch(e){
             console.log(e);
+            login_msg.classList.remove('is-hidden');
+            login_msg.textContent = e.detail;
         }
     });
-
+    
+    // 註冊 API
     signup_form.addEventListener('submit',async (e) => {
         const signup_name = document.querySelector('#signup-name').value.trim();
         const signup_email = document.querySelector('#signup-email').value.trim();
         const signup_password = document.querySelector('#signup-password').value;
-
+        const signup_msg = document.querySelector('#signup-msg');
         e.preventDefault();
         // 檢查input資料是否完整
         if (!signup_email || !signup_password || !signup_name){
-            alert("請輸入完整資訊");
+            signup_msg.classList.remove('is-hidden');
+            signup_msg.textContent = "請輸入完整資訊";
             return;
         }
         const form = e.currentTarget  // e.currentTarget：真正綁定的那個元素。e.target：事件最初發生的元素，可能會是按鈕
@@ -94,10 +106,12 @@ export function login_signup(){
             }); 
 
             console.log(res);
-            console.log("signup success");  // 待修改
+            console.log("Signup success");
             signup_modal.classList.add('is-hidden');
         }catch(e){
             console.log(e);
+            signup_msg.classList.remove('is-hidden');
+            signup_msg.textContent = e.detail;
         }
     });
 
