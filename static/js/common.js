@@ -144,12 +144,20 @@ export async function get_user(){
         const res = await fetch("/api/user/auth", {
             headers:{Authorization: `Bearer ${token}`,},
         });
-
-        const result = await res.json();
-        console.log(result);
+        const ct = res.headers.get('content-type') || '';
+        const body = ct.includes('application/json') ? await res.json() : await res.text();
+        if (!res.ok){
+            const err = new Error (`HTTP ${res.status}`);
+            err.status = res.status;
+            err.payload = body;
+            throw err;
+        }
+        console.log(body);
         login_btn.classList.add('is-hidden');
         signout_btn.classList.remove('is-hidden');
     }catch(e){
         console.log(e);
+        login_btn.classList.remove('is-hidden');
+        signout_btn.classList.add('is-hidden');
     }
 }
