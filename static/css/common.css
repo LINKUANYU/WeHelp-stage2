@@ -1,5 +1,7 @@
 /* HTML tags */
-html{font-family: "Noto Sans TC"}
+html{
+  font-family: "Noto Sans TC", -apple-system, system-ui, "PingFang TC", "Microsoft JhengHei", sans-serif;
+}
 body{margin: 0px;}
 hr{margin: 0px;}
 
@@ -31,6 +33,14 @@ hr{margin: 0px;}
 
 .nav__btn{
     height: 34px; padding: 10px; border: 0;
+}
+.divider{
+    border: 0px;
+    border-top: 1px solid #E8E8E8;
+}
+
+.divider--1200{
+    max-width:1200px; width:100%; margin: 40px auto;
 }
 
 
@@ -70,21 +80,17 @@ position: absolute
     width: 340px; margin: 80px auto;
     box-shadow: 0px 4px 60px 0px #AAAAAA;
 }
-.modal__content--login{height: 275px;}
-.modal__content--signup{height: 332px;}
 
 .modal__decorator-bar{
     width: 340px; height: 10px;
     background: linear-gradient(90deg, #337788 0%, #66AABB 100%);
 }
 
-.modal__close{
-    position: absolute; right: 10px; top: 20px;
-}
-.modal__body{
-    margin: 15px 15px 0px 15px;
-}
-.modal__title{text-align: center; margin-bottom: 15px;}
+.modal__close{position: absolute; right: 10px; top: 20px;}
+.modal__close-icon{display: block;}
+.modal__body{padding: 15px 15px 16px 15px;}
+
+.modal__title{height:27px; text-align: center; margin-bottom: 15px;}
 .auth__input{
     width: 100%; height: 47px;
     border: 1px solid #CCCCCC; border-radius: 5px;
@@ -97,8 +103,10 @@ position: absolute
 .auth__submit{
     border: 0px; border-radius: 5px; 
     width: 100%; padding: 15px 20px;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
 }
+
+.error-msg{text-align: center; color: red; margin-bottom: 5px}
 
 .auth__hint{
     height: 22px;

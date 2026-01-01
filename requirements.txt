@@ -2,3 +2,10 @@ mysql-connector-python
 fastapi
 uvicorn
 python-dotenv
+# for form
+python-multipart
+# hash password
+passlib[bcrypt]
+argon2_cffi
+
+pyJWT
