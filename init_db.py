@@ -1,3 +1,4 @@
+# insert data into db
 import json
 import os
 import mysql.connector
