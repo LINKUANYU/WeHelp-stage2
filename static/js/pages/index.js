@@ -14,35 +14,50 @@ const search_btn = document.querySelector('.search__btn');
 const card_grid = document.querySelector('.cardGrid');
 const sentinel = document.querySelector('#sentinel');
 
-// 計算每次滑動的位移量，clientWidth：該元素「可視內容看」的寬度
-function step(){
-    return listBar_list.clientWidth * 2 / 3;
-}
+async function startup(){
+    // 1) 全站UI + 事件綁定
+    init_nav_brand();
+    init_auth_modal();
+    bind_login_form();
+    bind_signup_form();
+    bind_signout_btn();
 
-// Fetch List bar
-async function build_list_bar () {
-    try{
-    const search_input = document.querySelector('#search__input');
-    const result = await request("/api/mrts");
-    const data = result.data;
-    data.forEach(d => {
-        // create list bar item
-        const listBar_item = document.createElement('div');
-        listBar_item.classList = "listBar__item u-text-body u-c-sec-70";
-        listBar_item.textContent = d;
-        listBar_list.append(listBar_item);
-        // item function: put mrt into search input
-        listBar_item.addEventListener('click', () => {
-        search_input.value = listBar_item.textContent;
-        // 觸發搜尋
-        const search_btn = document.querySelector('.search__btn');
-        search_btn.click();
-        });
+    // 2) Session
+    await init_session();
+
+    // 3) index頁
+    build_category_menu();
+    build_list_bar();
+    
+    // 建立list bar 按鈕事件，scrollBy：相對捲動，left：水平捲動位移量
+    left_btn.addEventListener('click',() => {
+        listBar_list.scrollBy({left: -step(), behavior: "smooth"});
     });
-    }catch(e){
-        console.log(e)
-    }
+    
+    right_btn.addEventListener('click',() => {
+        listBar_list.scrollBy({left: step(), behavior: "smooth"});
+    });
+
+    // 綁定搜尋按鈕事件
+    search_btn.addEventListener('click', () => {
+        // 清空先前內容，reset condidtion
+        card_grid.innerHTML = "";
+        page = 0;
+        done = false;
+        loadding = false;
+        // observe 重新啟動
+        observer.unobserve(sentinel);
+        observer.observe(sentinel);
+    });
+
+    // 啟動觀察
+    observer.observe(sentinel);
+
 }
+startup();
+
+
+
 
 // Fetch Category Menu
 async function build_category_menu() {
@@ -74,32 +89,35 @@ async function build_category_menu() {
     });
 }
 
-async function startup(){
-    // 1) 全站UI + 事件綁定
-    init_nav_brand();
-    init_auth_modal();
-    bind_login_form();
-    bind_signup_form();
-    bind_signout_btn();
-
-    // 2) Session
-    await init_session();
-
-    // 3) index頁
-    build_category_menu();
-    build_list_bar();
-    // 建立list bar 按鈕事件，scrollBy：相對捲動，left：水平捲動位移量
-    left_btn.addEventListener('click',() => {
-        listBar_list.scrollBy({left: -step(), behavior: "smooth"});
+// Fetch List bar
+async function build_list_bar () {
+    try{
+    const search_input = document.querySelector('#search__input');
+    const result = await request("/api/mrts");
+    const data = result.data;
+    data.forEach(d => {
+        // create list bar item
+        const listBar_item = document.createElement('div');
+        listBar_item.classList = "listBar__item u-text-body u-c-sec-70";
+        listBar_item.textContent = d;
+        listBar_list.append(listBar_item);
+        // item function: put mrt into search input
+        listBar_item.addEventListener('click', () => {
+        search_input.value = listBar_item.textContent;
+        // 觸發搜尋
+        const search_btn = document.querySelector('.search__btn');
+        search_btn.click();
+        });
     });
-    
-    right_btn.addEventListener('click',() => {
-        listBar_list.scrollBy({left: step(), behavior: "smooth"});
-    });
-
+    }catch(e){
+        console.log(e)
+    }
 }
-startup();
 
+// 計算每次滑動的位移量，clientWidth：該元素「可視內容看」的寬度
+function step(){
+    return listBar_list.clientWidth * 2 / 3;
+}
 
 // ＊＊＊ 以下為建立 「attraction card ＋ 滾動讀取更多」邏輯 ＊＊＊
 // 運作邏輯：啟動觀察 -> 被偵測到 -> 讀取更多 -> 按條件抓資料 -> 建立卡片
@@ -123,20 +141,6 @@ const observer = new IntersectionObserver(
 // threshold 門檻，代表「交集比例」的觸發點，threshold: 0：只要有一點點交集就算（最常用於無限滾動），threshold: 1：要完全進入可視範圍才算，也可以用陣列 [0, 0.25, 0.5, 1]：跨越任一比例就觸發
 // rootMargin 把 root 的可視範圍「擴大或縮小」的偏移量（很重要）："200px 0px"：把 root 上下額外擴大 200px（通常用來「提前載入」，不用真的到底才載），也可以是 "200px 0px -80px 0px"：底部縮小 80px（例如你有 fixed footer 遮住內容時）
 
-// 啟動觀察
-observer.observe(sentinel);
-
-
-// 綁定搜尋按鈕事件
-search_btn.addEventListener('click', () => {
-    // 清空先前內容，reset condidtion
-    card_grid.innerHTML = "";
-    page = 0;
-    done = false;
-    loadding = false;
-    // observe 重新啟動
-    observer.observe(sentinel);
-});
 
 // Load more Function
 async function load_more(){

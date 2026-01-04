@@ -1,6 +1,5 @@
 import { login, signup } from "./auth_service.js";
 import { get_error_msg } from "./api.js";
-import { set_token,clear_token } from "./token.js";
 
 export function bind_login_form(){
     const login_form = document.querySelector('#login-form');
@@ -28,11 +27,10 @@ export function bind_login_form(){
         try{
             const res = await login(fd);
             const token = res.token;
-            if (token) set_token(token);
+            if (token) localStorage.setItem("access_token", token);
             if (login_modal) login_modal.classList.add("is-hidden");
             window.location.reload()
         }catch(e){
-            console.log(e);
             if (login_msg){
                 login_msg.classList.remove("is-hidden");
                 login_msg.textContent = get_error_msg(e);
@@ -83,7 +81,7 @@ export function bind_signout_btn(){
     if (!signout_btn) return;
 
     signout_btn.addEventListener('click', () => {
-        clear_token();
+        localStorage.removeItem("access_token");
         window.location.reload();
     });
 }

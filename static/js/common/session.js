@@ -1,9 +1,8 @@
 import { verify_token } from "./auth_service.js";
-import { clear_token, get_token } from "./token.js";
 import { set_auth_buttons } from "./navbar.js";
 
 export async function init_session(){
-    const token = get_token();
+    const token = localStorage.getItem("access_token");
     if (!token) return;
     set_auth_buttons({loading:true});
 
@@ -12,8 +11,7 @@ export async function init_session(){
         set_auth_buttons({logged_in: true, loading: false});
         return;
     }catch(e){
-        console.log(e);
-        clear_token()
+        localStorage.removeItem("access_token");
         set_auth_buttons({logged_in: false, loading: false});
         return;
     }
