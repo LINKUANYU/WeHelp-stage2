@@ -1,5 +1,5 @@
-import { verify_token } from "./auth_service.js";
-import { set_auth_buttons } from "./navbar.js";
+import { verify_token } from "../components/auth_service.js";
+import { set_auth_buttons } from "../components/navbar.js";
 
 export async function init_session(){
     const token = localStorage.getItem("access_token");

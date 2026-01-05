@@ -1,8 +1,6 @@
 // import function
 import { request } from "../common/api.js";
-import { init_nav_brand } from "../common/navbar.js";
-import { init_auth_modal } from "../common/auth_modal.js";
-import { bind_login_form, bind_signup_form, bind_signout_btn } from "../common/auth_form.js";
+import { setup_app_shell } from "../components/init_app_shell.js";
 import { init_session } from "../common/session.js";
 
 // 透過url尋找當前頁面資料
@@ -103,11 +101,7 @@ async function load_attraction(){
 
 async function startup(){
     // 1) 全站UI + 事件綁定
-    init_nav_brand();
-    init_auth_modal();
-    bind_login_form();
-    bind_signup_form();
-    bind_signout_btn();
+    setup_app_shell();
 
     // 2) Session
     await init_session();

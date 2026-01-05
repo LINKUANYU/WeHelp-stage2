@@ -1,3 +1,8 @@
+/* 這份檔案用來做
+１．「台北一日遊」事件綁定
+２．檢查使用者狀態後回饋 登入／登出 ＵＩ (export 到 session.js)
+*/
+
 export function init_nav_brand(){
     const nav_brand = document.querySelector('.nav__brand');
     if (!nav_brand) return;

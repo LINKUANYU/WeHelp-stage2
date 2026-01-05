@@ -1,4 +1,5 @@
-import { request, auth_headers } from "./api.js";
+/* 這份檔案用來做 註冊／登入／驗證token 的 API 內容 */
+import { request, auth_headers } from "../common/api.js";
 
 export async function login(fd) {
     return request("/api/user/auth", {

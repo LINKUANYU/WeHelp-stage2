@@ -1,5 +1,7 @@
+/* 這份檔案用來做 註冊／登入／登出的功能事件綁定 */
+
 import { login, signup } from "./auth_service.js";
-import { get_error_msg } from "./api.js";
+import { get_error_msg } from "../common/api.js";
 
 export function bind_login_form(){
     const login_form = document.querySelector('#login-form');

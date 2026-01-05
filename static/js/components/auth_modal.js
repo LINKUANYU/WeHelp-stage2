@@ -1,3 +1,5 @@
+/* 這份檔案用來做 modal 的切換事件綁定 */
+
 export function init_auth_modal(){
     const login_modal = document.querySelector("#login-modal");
     const signup_modal = document.querySelector("#signup-modal");
@@ -28,15 +30,16 @@ export function init_auth_modal(){
 
     if (to_signup){
         to_signup.addEventListener("click", () => {
-            login_modal.add("is-hidden");
-            signup_modal.remove("is-hidden");
+            console.log("ok");
+            login_modal.classList.add("is-hidden");
+            signup_modal.classList.remove("is-hidden");
         });
     }
 
     if (to_login){
         to_login.addEventListener("click", () => {
-            login_modal.remove("is-hidden");
-            signup_modal.add("is-hidden");
+            login_modal.classList.remove("is-hidden");
+            signup_modal.classList.add("is-hidden");
         });
     }
 
