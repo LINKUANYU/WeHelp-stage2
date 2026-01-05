@@ -1,7 +1,6 @@
 /* 這份檔案用來做 註冊／登入／登出的功能事件綁定 */
 
-import { login, signup } from "./auth_service.js";
-import { get_error_msg } from "../common/api.js";
+import { get_error_msg, request } from "../common/api.js";
 
 export function bind_login_form(){
     const login_form = document.querySelector('#login-form');
@@ -27,7 +26,10 @@ export function bind_login_form(){
         const fd = new FormData(e.currentTarget);
 
         try{
-            const res = await login(fd);
+            const res = await request("/api/user/auth", {
+                method: "PUT",
+                body: fd
+            });
             const token = res.token;
             if (token) localStorage.setItem("access_token", token);
             if (login_modal) login_modal.classList.add("is-hidden");
@@ -66,7 +68,10 @@ export function bind_signup_form(){
         const fd = new FormData(e.currentTarget);
 
         try{
-            await signup(fd);
+            await request("/api/user", {
+                method: "POST",
+                body: fd
+            });
             if (signup_modal) signup_modal.classList.add("is-hidden");
         }catch(e){
             console.log(e);
