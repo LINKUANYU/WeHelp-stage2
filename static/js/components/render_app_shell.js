@@ -85,7 +85,7 @@ function footer_render({mount = document.body} = {}){
     mount.insertAdjacentHTML("beforeend", footer_html());
 }
 
-export function render_all(){
+export function render_app_shell(){
     top_render();
     footer_render();
 }
