@@ -19,7 +19,7 @@ def verify_password(plain:str, hashed:str) -> bool:
 load_dotenv()
 KEY = os.getenv("KEY")
 ALGORITHM = os.getenv("ALGORITHM")
-bearer = HTTPBearer()
+bearer = HTTPBearer(auto_error=False) # 為了自定義進來沒token錯誤顯示
 
 def create_access_token(user_id:int, email:str, name:str) -> str:
 	payload = {
@@ -31,7 +31,9 @@ def create_access_token(user_id:int, email:str, name:str) -> str:
 	}
 	return jwt.encode(payload, KEY, algorithm=ALGORITHM)
 
-def verify_token(creds: HTTPAuthorizationCredentials = Depends(bearer)) -> dict:
+def verify_token(creds: HTTPAuthorizationCredentials | None = Depends(bearer)) -> dict:
+	if creds is None or not creds.credentials:
+		raise HTTPException(status_code=403, detail={"error":True, "message":"未登入系統，拒絕存取"})
 	token = creds.credentials
 	try:
 		return jwt.decode(token, KEY, algorithms=[ALGORITHM])

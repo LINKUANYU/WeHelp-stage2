@@ -11,3 +11,101 @@ Booking 流程：
 
 """
 
+from fastapi import *
+from deps import get_conn, get_cur
+from routers.auth import verify_token
+from mysql.connector import Error, IntegrityError, DataError
+import json
+
+router = APIRouter()
+
+@router.get("/api/booking")
+def get_booking(
+    user = Depends(verify_token),
+    cur = Depends(get_cur)
+    ):
+    user_id = int(user["sub"])
+    try:
+        cur.execute("""
+            SELECT 
+                b.spot_id AS id,
+                b.booking_date AS date,
+                b.booking_time AS time,
+                b.price AS price,
+                s.name AS name,
+                s.address AS address,
+                s.images AS images
+            FROM booking AS b 
+            JOIN spot AS s ON b.spot_id = s.id 
+            WHERE b.member_id = %s
+        """, (user_id,))
+        row = cur.fetchone()
+        # No booking data
+        if not row:
+            return {"data": None}
+        # 處理image裡的JSON字串
+        row_images = row.get("images")
+        # 如果沒有就設為空陣列
+        if not row_images:
+            row["images"] = []
+        # 如果有，且型別是str，就用json.load去解析，並取代掉原本row裡的資料
+        elif isinstance(row_images, str):
+            row["images"] = json.loads(row_images)
+        first_img = row["images"][0] if row["images"] else None
+        return {
+            "data": {
+                "attraction": {
+                    "id": row["id"],
+                    "name": row["name"],
+                    "address": row["address"],
+                    "image": first_img
+                },
+                "date": row["date"],
+                "time": row["time"],
+                "price": row["price"]
+                }
+            }
+    except Error:
+        raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
+
+
+
+@router.post("/api/booking")
+def add_booking(
+    attraction_id: int = Form(...),
+    date: str = Form(...),
+    time: str = Form(...),
+    price: int = Form(...),
+    user = Depends(verify_token),
+    conn = Depends(get_conn),
+    ):
+    user_id = int(user["sub"])
+    cur = conn.cursor(dictionary = True)
+    try:
+        cur.execute("""
+            INSERT INTO booking (member_id, spot_id, booking_date, booking_time, price)
+            VALUES (%s, %s, %s, %s, %s) AS new
+            ON DUPLICATE KEY UPDATE
+                spot_id = new.spot_id,
+                booking_date = new.booking_date,
+                booking_time = new.booking_time,
+                price = new.price;
+        """, (user_id, attraction_id, date, time, price))
+        conn.commit()
+        return {"ok": True}
+    except (IntegrityError, DataError) as e:
+        conn.rollback()
+        raise HTTPException(status_code=400, detail={"error":True, "message":"建立失敗，輸入不正確"})        
+    except Error:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
+    finally:
+        cur.close()
+    # IntegrityError：違反資料完整性／約束
+    # 典型是 UNIQUE、FOREIGN KEY、NOT NULL、CHECK 之類的約束沒過。
+
+    # DataError：資料型別或範圍不對
+    # 典型是 日期格式不合法、數值超出範圍、資料太長、被截斷。
+
+@router.delete("/api/booking")
+def delete_booking():
