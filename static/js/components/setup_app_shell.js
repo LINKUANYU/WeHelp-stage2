@@ -5,18 +5,13 @@
 */
 
 import { render_app_shell } from "./render_app_shell.js";
-import { bind_login_form, bind_signup_form, bind_signout_btn } from "./auth_form.js";
-import { init_auth_modal } from "./auth_modal.js";
-import { init_nav_brand } from "./navbar.js";
+import { init_navbar } from "./init_navbar.js"
+import { bind_auth } from "./bind_auth.js";
 
 export function setup_app_shell(){
     render_app_shell();
-    init_nav_brand();
-    init_auth_modal();
-    bind_login_form();
-    bind_signup_form();
-    bind_signout_btn();
-    
+    init_navbar();
+    bind_auth();
 }
 
 /* 

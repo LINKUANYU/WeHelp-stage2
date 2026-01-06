@@ -2,7 +2,13 @@
 
 import { get_error_msg, request } from "../common/api.js";
 
-export function bind_login_form(){
+export function bind_auth(){
+    bind_login_form();
+    bind_signup_form();
+    bind_signout_btn();
+}
+
+function bind_login_form(){
     const login_form = document.querySelector('#login-form');
     if (!login_form) return;
 
@@ -43,7 +49,7 @@ export function bind_login_form(){
     });
 }
 
-export function bind_signup_form(){
+function bind_signup_form(){
     const signup_form = document.querySelector('#signup-form');
     if (!signup_form) return;
 
@@ -83,7 +89,7 @@ export function bind_signup_form(){
     });
 }
 
-export function bind_signout_btn(){
+function bind_signout_btn(){
     const signout_btn = document.querySelector('#signout-btn');
     if (!signout_btn) return;
 

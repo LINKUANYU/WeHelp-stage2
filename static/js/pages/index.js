@@ -1,7 +1,7 @@
 // import function
 import { request } from "../common/api.js";
-import { setup_app_shell } from "../components/init_app_shell.js";
-import { init_session } from "../common/session.js";
+import { setup_app_shell } from "../components/setup_app_shell.js";
+import { apply_session_ui } from "../components/apply_session_ui.js";
 
 const bar = document.querySelector('.listBar');
 const listBar_list = bar.querySelector('.listBar__list');
@@ -16,10 +16,9 @@ async function startup(){
     // 1) 全站UI + 事件綁定
     setup_app_shell();
 
-    // 2) Session
-    await init_session();
-
-    // 3) index頁
+    // 2) UI related with session
+    await apply_session_ui();
+    // 3) 本頁
     build_category_menu();
     build_list_bar();
     

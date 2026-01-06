@@ -1,6 +1,26 @@
-/* 這份檔案用來做 modal 的切換事件綁定 */
+/* 這份檔案用來做 
+1.「台北一日遊」事件綁定 
+2. 前往booking頁面事件綁定
+3. auth modal 的切換事件綁定
+*/
 
-export function init_auth_modal(){
+
+export function init_navbar(){
+    init_nav_brand();
+    init_auth_modal();
+}
+
+function init_nav_brand(){
+    // Homepage
+    const nav_brand = document.querySelector('.nav__brand');
+    if (!nav_brand) return;
+
+    nav_brand.addEventListener('click', () => {
+        window.location.href = "/";
+    });
+}
+
+function init_auth_modal(){
     const login_modal = document.querySelector("#login-modal");
     const signup_modal = document.querySelector("#signup-modal");
     const login_btn = document.querySelector("#login-btn");

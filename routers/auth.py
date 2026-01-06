@@ -31,11 +31,10 @@ def create_access_token(user_id:int, email:str, name:str) -> str:
 	}
 	return jwt.encode(payload, KEY, algorithm=ALGORITHM)
 
-def get_current_user(creds: HTTPAuthorizationCredentials = Depends(bearer)) -> dict:
+def verify_token(creds: HTTPAuthorizationCredentials = Depends(bearer)) -> dict:
 	token = creds.credentials
 	try:
-		payload = jwt.decode(token, KEY, algorithms=[ALGORITHM])
-		return payload
+		return jwt.decode(token, KEY, algorithms=[ALGORITHM])
 	except jwt.ExpiredSignatureError:
 		raise HTTPException(status_code=401, detail={"error":True, "message":"Token expired"})
 	except jwt.InvalidTokenError:
@@ -112,7 +111,7 @@ def login(
 # 回傳格式（預設）：{"detail": <你給的 detail>}
 
 @router.get("/api/user/auth")
-def user_auth(user = Depends(get_current_user)):
+def get_current_user(user = Depends(verify_token)):
 	id = user["sub"]
 	name = user["name"]
 	email = user["email"]

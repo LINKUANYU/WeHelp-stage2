@@ -1,7 +1,8 @@
 // import function
 import { request } from "../common/api.js";
-import { setup_app_shell } from "../components/init_app_shell.js";
-import { init_session } from "../common/session.js";
+import { setup_app_shell } from "../components/setup_app_shell.js";
+import { apply_session_ui } from "../components/apply_session_ui.js";
+
 
 // 透過url尋找當前頁面資料
 const path_part = window.location.pathname.split("/").filter(Boolean);
@@ -103,10 +104,10 @@ async function startup(){
     // 1) 全站UI + 事件綁定
     setup_app_shell();
 
-    // 2) Session
-    await init_session();
+    // 2) UI related with session
+    await apply_session_ui();
     
-    // 3) index頁
+    // 3) 本頁
     load_attraction();
     // booking time and price
     radio_morning.addEventListener('change', () => {
