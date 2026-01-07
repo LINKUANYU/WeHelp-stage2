@@ -4,6 +4,12 @@
     margin: 40px auto 30px auto;
     line-height: 1.5;
 }
+#booking-empty-msg{
+    max-width: 1000px; width: 100%; height: 27px;
+    display: flex; align-items: center;
+    margin: 0px auto 40px auto;
+    line-height: 1.5;
+}
 .order{
     max-width: 980px; width: 100%; height: 200px;
     margin: 0 auto;
@@ -96,6 +102,7 @@
 
 @media (max-width: 1200px){
     .booking-headline{padding: 0px 10px;}
+    #booking-empty-msg{padding: 0px 10px;}
     .order{padding: 0px 10px;}
     .delete-icon{right: 10px;}
     .contact{padding: 0px 10px;}

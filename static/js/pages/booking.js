@@ -45,7 +45,7 @@ function build_booking_html(data, user){
     const price = data.data.price;
     return `
   <div class="order">
-    <button class="delete-icon u-bg-white">
+    <button class="delete-icon u-bg-white" id="delete-booking-btn">
       <img src="/static/icon/icon_delete.png">
     </button>
     <div class="order__img">
@@ -118,7 +118,23 @@ function render_booking_html({mount = document.querySelector('.l-footer')} = {},
 }
 
 function bind_delete_booking(){
-
+    const delete_btn = document.querySelector('#delete-booking-btn');
+    if (!delete_btn){
+        document.querySelector('#booking-empty-msg').classList.remove('is-hidden');
+        return;
+    }
+    delete_btn.addEventListener('click', async() => {
+        try{
+            const res = await request("/api/booking", {
+                method: "DELETE",
+                headers: auth_headers()
+            });
+            if (res.ok) window.location.reload();
+            return
+        }catch(e){
+            console.log(get_error_msg(e));
+        }
+    });
 }
 
 async function startup(){
@@ -133,7 +149,8 @@ async function startup(){
         return
     }
     // 本頁渲染
-    setup_booking(user);
+    await setup_booking(user);
+    bind_delete_booking();
 }
 
 startup();
