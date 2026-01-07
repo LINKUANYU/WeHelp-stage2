@@ -1,5 +1,5 @@
 // import function
-import { request } from "../common/api.js";
+import { auth_headers, request } from "../common/api.js";
 import { setup_app_shell } from "../components/setup_app_shell.js";
 import { apply_session_ui } from "../components/apply_session_ui.js";
 
@@ -100,6 +100,57 @@ async function load_attraction(){
 
 }
 
+// booking btn event
+function bind_booking_submit_btn(){
+    const booking_submit_btn = document.querySelector('#booking-submit-btn');
+    booking_submit_btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        const data = booking_data();
+        if (!data) return; // booking_data 驗證失敗
+
+        const {date, time, price} = data;
+        try{
+            const res = request("/api/booking", {
+                method: "POST",
+                headers: auth_headers({"content-type": "application/json"}),
+                body: JSON.stringify({date, time, price})
+            });
+            if (res.ok){
+                window.location.href = "/booking";
+            }
+        }catch(e){
+            console.log(e);
+        }
+    });
+}
+
+function booking_data(){
+    const date = document.querySelector('.booking__date').value;
+    const time = document.querySelector('input[name="time"]:checked').value;
+    const price = Number(document.querySelector('.booking__price').dataset.price);
+    if (!date){
+        alert("請選擇日期");
+    }
+    if (!time){
+        alert("請選擇上半天／下半天");
+    }
+    return {date, time, price}
+}
+
+function bind_booking_price(){
+    document.querySelectorAll('input[name="time"]').forEach((radio) => {
+        radio.addEventListener('change', (e) => {  // 當radio 被選中，從unchecked -> checked 值發生變化，觸發change事件。
+            const time = e.target.value;  // e.target.value 等於此刻被選中的 radio 的 value，也就是morning/afternoon
+            const price_el = document.querySelector('.booking__price');
+            price = (time === "morning") ? 2000 : 2500;
+            price_el.textContent = `新台幣${price}`;
+            price_el.dataset.price = String(price); // 存在標籤上的屬性，方便之後送data到後端
+        });
+    });
+}
+
+
 async function startup(){
     // 1) 全站UI + 事件綁定
     setup_app_shell();
@@ -109,13 +160,8 @@ async function startup(){
     
     // 3) 本頁
     load_attraction();
-    // booking time and price
-    radio_morning.addEventListener('change', () => {
-        booking_price.textContent = "新台幣2000元";
-    });
-    radio_afternoon.addEventListener('change', () => {
-        booking_price.textContent = "新台幣2500元";
-    });
+    bind_booking_price();
+    bind_booking_submit_btn()
 
 }
 startup();

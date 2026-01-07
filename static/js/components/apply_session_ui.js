@@ -15,10 +15,10 @@ export async function apply_session_ui(){
 
 function init_nav_booking(){
     // booking
-    const booking_btn = document.querySelector('#booking-btn');
-    if (!booking_btn) return;
+    const to_booking_btn = document.querySelector('#to-booking-btn');
+    if (!to_booking_btn) return;
 
-    booking_btn.addEventListener('click', async () => {
+    to_booking_btn.addEventListener('click', async () => {
         const {logged_in} = await get_session();  // 點擊時再確認一次登入狀態
         if (!logged_in){
             const login_btn = document.querySelector('#login-btn');

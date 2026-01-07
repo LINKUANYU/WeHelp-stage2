@@ -55,7 +55,7 @@ function top_html(){
         <div class="nav">
         <div class="nav__brand u-text-headline2 u-c-pri-70">台北一日遊</div>
         <div class="nav__menu">
-            <button class="nav__btn u-text-body u-c-sec-70 u-bg-white" id="booking-btn">預定行程</button>
+            <button class="nav__btn u-text-body u-c-sec-70 u-bg-white" id="to-booking-btn">預定行程</button>
             <button class="nav__btn u-text-body u-c-sec-70 u-bg-white" id="login-btn">登入/註冊</button>
             <button class="nav__btn is-hidden u-text-body u-c-sec-70 u-bg-white" id="signout-btn">登出系統</button>
         </div>
