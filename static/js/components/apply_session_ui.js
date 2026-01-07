@@ -7,9 +7,10 @@
 import { get_session } from "../common/session.js";
 
 export async function apply_session_ui(){
-    const {logged_in} = await get_session();
+    const {logged_in, user} = await get_session();
     set_auth_buttons(logged_in); // only UI
     init_nav_booking();
+    return {logged_in, user} // 提供給各站使用
 }
 
 

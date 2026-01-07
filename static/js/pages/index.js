@@ -16,8 +16,8 @@ async function startup(){
     // 1) 全站UI + 事件綁定
     setup_app_shell();
 
-    // 2) UI related with session
-    await apply_session_ui();
+    // 2) UI related with session + User info
+    const {logged_in, user} = await apply_session_ui();
     // 3) 本頁
     build_category_menu();
     build_list_bar();
