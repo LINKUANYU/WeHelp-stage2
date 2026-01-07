@@ -93,7 +93,7 @@ def add_booking(
         """, (user_id, attraction_id, date, time, price))
         conn.commit()
         return {"ok": True}
-    except (IntegrityError, DataError) as e:
+    except (IntegrityError, DataError):
         conn.rollback()
         raise HTTPException(status_code=400, detail={"error":True, "message":"建立失敗，輸入不正確"})        
     except Error:
@@ -108,4 +108,21 @@ def add_booking(
     # 典型是 日期格式不合法、數值超出範圍、資料太長、被截斷。
 
 @router.delete("/api/booking")
-def delete_booking():
+def delete_booking(
+    user = Depends(verify_token),
+    conn = Depends(get_conn)
+    ):
+    cur = conn.cursor(dictionary=True)
+    user_id = int(user["sub"])
+
+    try:
+        cur.execute("""
+            DELETE FROM booking WHERE member_id = %s
+        """, (user_id,))
+        conn.commit()
+        return {"ok": True}
+    except Error:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
+    finally:
+        cur.close()
