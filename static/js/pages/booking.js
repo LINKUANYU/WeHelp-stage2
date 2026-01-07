@@ -6,6 +6,8 @@ import { get_session } from "../common/session.js";
 
 
 async function setup_booking(user){
+    // Headline name
+    document.querySelector('.booking-headline').textContent = `您好，${user.name}，待預訂的行程如下：`;
     // 先打get api 拿資料
     const data = await get_booking_data();
     // 然後開始長html
@@ -42,10 +44,10 @@ function build_booking_html(data, user){
     const time = data.data.time;
     const price = data.data.price;
     return `
-      <hr class="divider">
-  <div class="booking-headline u-text-btn--bold u-c-sec-70">您好，${user_name}，待預訂的行程如下：</div>
   <div class="order">
-    <img class="delete-icon" src="/static/icon/icon_delete.png">
+    <button class="delete-icon u-bg-white">
+      <img src="/static/icon/icon_delete.png">
+    </button>
     <div class="order__img">
       <img class="order__img--icon" src="${attraction_image}">
     </div>
@@ -53,19 +55,19 @@ function build_booking_html(data, user){
       <div class="order__title">台北一日遊：${attraction_name}</div>
       <div class="order__field">
         <div class="u-text-body--bold u-c-sec-70">日期：</div>
-        <div class="order__date u-text-body u-c-sec-70">${date}</div>
+        <div class="order__item u-text-body u-c-sec-70">${date}</div>
       </div>
       <div class="order__field">
         <div class="u-text-body--bold u-c-sec-70">時間：</div>
-        <div class="order__time u-text-body u-c-sec-70">${time}</div>
+        <div class="order__item u-text-body u-c-sec-70">${time}</div>
       </div>
       <div class="order__field">
         <div class="u-text-body--bold u-c-sec-70">費用：</div>
-        <div class="order__price u-text-body u-c-sec-70">新台幣 ${price} 元</div>
+        <div class="order__item u-text-body u-c-sec-70">新台幣 ${price} 元</div>
       </div>
       <div class="order__field">
         <div class="u-text-body--bold u-c-sec-70">地點：</div>
-        <div class="order__location u-text-body u-c-sec-70">${attraction_address}</div>
+        <div class="order__item u-text-body u-c-sec-70">${attraction_address}</div>
       </div>
     </div>
   </div>
@@ -111,8 +113,12 @@ function build_booking_html(data, user){
 }
 
 function render_booking_html({mount = document.querySelector('.l-footer')} = {}, data, user){
-    if (document.querySelector('.booking-headline')) return;
+    if (document.querySelector('.order')) return;
     mount.insertAdjacentHTML("beforebegin", build_booking_html(data, user));
+}
+
+function bind_delete_booking(){
+
 }
 
 async function startup(){
@@ -126,6 +132,7 @@ async function startup(){
         window.location.href = "/";
         return
     }
+    // 本頁渲染
     setup_booking(user);
 }
 

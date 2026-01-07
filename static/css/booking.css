@@ -1,7 +1,8 @@
 .booking-headline{
     max-width: 1000px; width: 100%; height: 27px;
     display: flex; align-items: center;
-    margin: 40px auto 30px auto
+    margin: 40px auto 30px auto;
+    line-height: 1.5;
 }
 .order{
     max-width: 980px; width: 100%; height: 200px;
@@ -10,6 +11,8 @@
     display: flex; gap: 30px;
 }
 .delete-icon{
+    padding: 0px; border: 0px;
+    height: 30px; width:30px;
     position: absolute;
     top: 0px; right: 0px;
 }
@@ -24,10 +27,17 @@
 .order__detail{
     max-width: 700px; width: 100%; height: 170px;
 }
-.order__title{height: 24px; margin-bottom: 20px;}
+.order__title{min-height: 24px; margin-bottom: 20px; line-height: 1.5;}
 .order__field{
-    height: 24px; margin-bottom: 10px;
-    display: flex; align-items: center;
+    min-height: 24px; margin-bottom: 10px;
+    display: flex; align-items: baseline;
+}
+.order__field > div:first-child{
+    flex: 0 0 auto; white-space: nowrap;
+}
+.order__item{
+    flex: 1 1 auto; min-width: 0; 
+    overflow-wrap: anywhere; line-height: 1.5;
 }
 .contact{
     max-width: 980px; width: 100%; height: 227px;
@@ -93,7 +103,7 @@
     .confirmation{padding: 0px 10px;}
 }
 
-@media (max-width: 360px){
+@media (max-width: 600px){
     .order{
         flex-direction: column;
         height: 430px;
