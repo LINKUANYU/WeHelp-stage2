@@ -72,10 +72,10 @@ def get_booking(
 
 @router.post("/api/booking")
 def add_booking(
-    attraction_id: int = Form(...),
-    date: str = Form(...),
-    time: str = Form(...),
-    price: int = Form(...),
+    attraction_id: int = Body(...),
+    date: str = Body(...),
+    time: str = Body(...),
+    price: int = Body(...), 
     user = Depends(verify_token),
     conn = Depends(get_conn),
     ):

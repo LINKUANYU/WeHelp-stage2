@@ -23,7 +23,7 @@ function init_nav_booking(){
         if (!logged_in){
             const login_btn = document.querySelector('#login-btn');
             login_btn.click();
-            return
+            return;
         }else{
             window.location.href = "/booking";
         }

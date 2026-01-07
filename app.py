@@ -1,7 +1,7 @@
 from fastapi import *
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from routers import attractions, auth
+from routers import attractions, auth, booking
 import os 
 from dotenv import load_dotenv
 import mysql.connector
@@ -13,6 +13,7 @@ app=FastAPI()
 app.mount("/static", StaticFiles(directory="static"))
 
 app.include_router(attractions.router)
+app.include_router(booking.router)
 app.include_router(auth.router)
 
 # Static Pages (Never Modify Code in this Block)

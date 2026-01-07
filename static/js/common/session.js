@@ -27,3 +27,4 @@ export async function fetch_current_user(){
         headers: auth_headers()
     })
 }
+

@@ -29,10 +29,17 @@ function init_auth_modal(){
     const to_signup = document.querySelector(".auth__link--signup");
     const to_login = document.querySelector(".auth__link--login");
 
+    const login_msg = document.querySelector('#login-msg');
+    const signup_msg = document.querySelector('#signup-msg');
+
     if (!login_modal || !signup_modal || !login_btn) return;
 
     login_btn.addEventListener('click', () => {
         login_modal.classList.toggle("is-hidden");
+
+        // 清空前一筆錯誤訊息
+        login_msg.classList.add("is-hidden");
+        if (login_msg) login_msg.textContent = "";
     });
 
     const close_all = () => {
@@ -50,9 +57,12 @@ function init_auth_modal(){
 
     if (to_signup){
         to_signup.addEventListener("click", () => {
-            console.log("ok");
             login_modal.classList.add("is-hidden");
             signup_modal.classList.remove("is-hidden");
+            
+            // 清空前一筆錯誤訊息
+            signup_msg.classList.add("is-hidden");
+            if (signup_msg) signup_msg.textContent = "";
         });
     }
 
@@ -60,7 +70,12 @@ function init_auth_modal(){
         to_login.addEventListener("click", () => {
             login_modal.classList.remove("is-hidden");
             signup_modal.classList.add("is-hidden");
+
+            // 清空前一筆錯誤訊息
+            login_msg.classList.add("is-hidden");
+            if (login_msg) login_msg.textContent = "";
         });
     }
 
 }
+

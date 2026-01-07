@@ -80,7 +80,6 @@ function bind_signup_form(){
             });
             if (signup_modal) signup_modal.classList.add("is-hidden");
         }catch(e){
-            console.log(e);
             if (signup_msg){
                 signup_msg.classList.remove("is-hidden");
                 signup_msg.textContent = get_error_msg(e);

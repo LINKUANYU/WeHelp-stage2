@@ -1,14 +1,15 @@
 // import function
-import { auth_headers, request } from "../common/api.js";
+import { auth_headers, get_error_msg, request } from "../common/api.js";
 import { setup_app_shell } from "../components/setup_app_shell.js";
 import { apply_session_ui } from "../components/apply_session_ui.js";
+import { get_session } from "../common/session.js";
 
 
 // 透過url尋找當前頁面資料
 const path_part = window.location.pathname.split("/").filter(Boolean);
 // pathname 只取「路徑」部分，不含網域、不含 ?、不含 #。
 // filter 會把陣列每個元素丟進去測試，回傳「通過條件」的元素。把空字串 ""（以及其他 falsy 值）過濾掉
-const attrraction_id = path_part[1];
+const attraction_id = path_part[1];
 
 
 const name = document.querySelector('.profile__name');
@@ -68,7 +69,7 @@ function render() {
 
 async function load_attraction(){
     try{
-        const result = await request(`/api/attraction/${attrraction_id}`);
+        const result = await request(`/api/attraction/${attraction_id}`);
         // Text information
         name.textContent = result.data.name;
         cat_mrt.textContent = result.data.name + " at " + result.data.mrt;
@@ -103,39 +104,55 @@ async function load_attraction(){
 // booking btn event
 function bind_booking_submit_btn(){
     const booking_submit_btn = document.querySelector('#booking-submit-btn');
-    booking_submit_btn.addEventListener('click', (e) => {
+    booking_submit_btn.addEventListener('click', async(e) => {
         e.preventDefault();
-        
+        // 先驗證是否登入
+        const {logged_in} = await get_session();
+        if (!logged_in){
+            const login_btn = document.querySelector('#login-btn');
+            login_btn.click();
+            return;
+        }
+
         const data = booking_data();
         if (!data) return; // booking_data 驗證失敗
 
-        const {date, time, price} = data;
+        const {attraction_id, date, time, price} = data;
+        console.log(data);
         try{
-            const res = request("/api/booking", {
+            const res = await request("/api/booking", {
                 method: "POST",
                 headers: auth_headers({"content-type": "application/json"}),
-                body: JSON.stringify({date, time, price})
+                body: JSON.stringify({attraction_id, date, time, price})
             });
             if (res.ok){
                 window.location.href = "/booking";
             }
         }catch(e){
-            console.log(e);
+            console.log(get_error_msg(e));
         }
     });
 }
 
 function booking_data(){
-    const date = document.querySelector('.booking__date').value;
-    const time = document.querySelector('input[name="time"]:checked').value;
+    const path_part = window.location.pathname.split("/").filter(Boolean);
+    const attraction_id = Number(path_part[1]);
+    const date = document.querySelector('.booking__date').value; // 沒選日期也會是""
+    const time_el = document.querySelector('input[name="time"]:checked');
     const price = Number(document.querySelector('.booking__price').dataset.price);
+    
     if (!date){
         alert("請選擇日期");
+        return
     }
-    if (!time){
+    if (!time_el){
         alert("請選擇上半天／下半天");
+        return
     }
-    return {date, time, price}
+
+    const time = time_el.value;
+
+    return {attraction_id, date, time, price}
 }
 
 function bind_booking_price(){
@@ -143,7 +160,7 @@ function bind_booking_price(){
         radio.addEventListener('change', (e) => {  // 當radio 被選中，從unchecked -> checked 值發生變化，觸發change事件。
             const time = e.target.value;  // e.target.value 等於此刻被選中的 radio 的 value，也就是morning/afternoon
             const price_el = document.querySelector('.booking__price');
-            price = (time === "morning") ? 2000 : 2500;
+            const price = (time === "morning") ? 2000 : 2500;
             price_el.textContent = `新台幣${price}`;
             price_el.dataset.price = String(price); // 存在標籤上的屬性，方便之後送data到後端
         });

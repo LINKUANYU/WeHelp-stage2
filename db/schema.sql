@@ -36,10 +36,10 @@ CREATE TABLE IF NOT EXISTS `booking`(
     UNIQUE KEY uk_booking_member (member_id),
     KEY idx_booking_spot (spot_id),
 
-    CONSTRAINT fk_booking_member,
+    CONSTRAINT fk_booking_member
         FOREIGN KEY (member_id) REFERENCES members (id)
-        ON DELETE DELETE ON UPDATE CASCADE
-    CONSTRAINT fk_booking_spot,
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_booking_spot
         FOREIGN KEY (spot_id) REFERENCES spot (id)
-        ON DELETE DELETE ON UPDATE CASCADE
+        ON DELETE CASCADE ON UPDATE CASCADE
 )ENGINE=InnoDB;

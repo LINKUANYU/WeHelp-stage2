@@ -33,7 +33,7 @@ def create_access_token(user_id:int, email:str, name:str) -> str:
 
 def verify_token(creds: HTTPAuthorizationCredentials | None = Depends(bearer)) -> dict:
 	if creds is None or not creds.credentials:
-		raise HTTPException(status_code=403, detail={"error":True, "message":"未登入系統，拒絕存取"})
+		raise HTTPException(status_code=403, detail={"error":True, "message":"未登入系統，請先登入"})
 	token = creds.credentials
 	try:
 		return jwt.decode(token, KEY, algorithms=[ALGORITHM])
