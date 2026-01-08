@@ -52,6 +52,7 @@ function build_booking_html(data, user){
     const date = data.data.date;
     const time = data.data.time;
     const price = data.data.price;
+    const time_text = (time === "morning") ? "早上 9 點到下午 4 點" : "下午 5 點到晚上 9 點";
     return `
   <div class="order">
     <button class="delete-icon u-bg-white" id="delete-booking-btn">
@@ -68,7 +69,7 @@ function build_booking_html(data, user){
       </div>
       <div class="order__field">
         <div class="u-text-body--bold u-c-sec-70">時間：</div>
-        <div class="order__item u-text-body u-c-sec-70">${time}</div>
+        <div class="order__item u-text-body u-c-sec-70">${time_text}</div>
       </div>
       <div class="order__field">
         <div class="u-text-body--bold u-c-sec-70">費用：</div>
