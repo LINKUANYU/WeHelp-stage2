@@ -12,84 +12,85 @@
 </head>
 <body>
   <!-- JS 動態生成 header & nav -->
-   
-  <hr class="divider">
-  <!-- Atrractions card -->
-  <div class="l-attraction">
-    <div class="carousel">
-      <!-- Fetch API 後傳入建立 photo -->
-      <div class="carousel__track">
-      <!-- 
-      ＊＊觀念補充＊＊ 
-      結構設計 Viewport（窗框）→ Track（軌道）→ Slide（單格）→ Img（圖片）
-        Track：是一條「長條軌道」，裡面放很多張 slide。切換照片就是把 track 往左移。可被 translateX 移動
-        Slide：是「一格一格的版位」，每格固定佔 viewport 的 100% 寬；這樣 index 才能穩定對應位移距離。
-        Img：圖片本體，不管原始比例，用 object-fit 規則在 slide 內填滿。
-  
-        <div class="carousel__slide">
-          <img class="carousel__img">
-        </div>  
-      -->
+  <main>
+    <hr class="divider">
+    <!-- Atrractions card -->
+    <div class="attraction">
+      <div class="carousel">
+        <!-- Fetch API 後傳入建立 photo -->
+        <div class="carousel__track">
+        <!-- 
+        ＊＊觀念補充＊＊ 
+        結構設計 Viewport（窗框）→ Track（軌道）→ Slide（單格）→ Img（圖片）
+          Track：是一條「長條軌道」，裡面放很多張 slide。切換照片就是把 track 往左移。可被 translateX 移動
+          Slide：是「一格一格的版位」，每格固定佔 viewport 的 100% 寬；這樣 index 才能穩定對應位移距離。
+          Img：圖片本體，不管原始比例，用 object-fit 規則在 slide 內填滿。
+    
+          <div class="carousel__slide">
+            <img class="carousel__img">
+          </div>  
+        -->
 
-      </div>
-
-      <!-- Button -->
-      <button class="carousel__nav carousel__nav--prev" type="button">
-        <img class="carousel__btn" src="/static/icon/left-btn.png">
-      </button>
-      <button class="carousel__nav carousel__nav--next" type="button">
-        <img class="carousel__btn" src="/static/icon/right-btn.png">
-      </button>
-
-      <div class="carousel__indicator">
-        <!-- Fetch API 後傳入 <div class="carousel__indicator-seg"></div> -->
-      </div>
-
-    </div>
-    <div class="profile">
-      <div class="profile__name u-text-headline3 u-c-sec-70"></div>
-      <div class="profile__cat-mrt u-text-body--400 u-c-sec-70"></div>
-      <div class="booking u-bg-sec-20">
-        <div class="booking__field booking__field--h22 u-text-body--bold u-c-sec-70">訂購導覽行程</div>
-        <div class="booking__field booking__field--h24 u-text-body--400 u-c-sec-70">以此景點為中心的一日行程，帶您探索城市角落故事</div>
-        <div class="booking__field">
-          <div class="booking__label u-text-body--bold u-c-sec-70">選擇日期：</div>
-          <input class="booking__date" type="date">
         </div>
-        <div class="booking__field">
-          <div class="booking__label u-text-body--bold u-c-sec-70">選擇時間：</div>
-          <div class="booking__time-group">
-            <label class="time-option">
-              <input type="radio" class="time-option__radio" name="time" value="morning">
-              <span class="u-text-body--400 u-c-sec-70">上半天</span>
-            </label>
-            <label class="time-option">
-              <input type="radio" class="time-option__radio" name="time" value="afternoon">
-              <span class="u-text-body--400 u-c-sec-70">下半天</span>
-            </label>
+
+        <!-- Button -->
+        <button class="carousel__nav carousel__nav--prev" type="button">
+          <img class="carousel__btn" src="/static/icon/left-btn.png">
+        </button>
+        <button class="carousel__nav carousel__nav--next" type="button">
+          <img class="carousel__btn" src="/static/icon/right-btn.png">
+        </button>
+
+        <div class="carousel__indicator">
+          <!-- Fetch API 後傳入 <div class="carousel__indicator-seg"></div> -->
+        </div>
+
+      </div>
+      <div class="profile">
+        <div class="profile__name u-text-headline3 u-c-sec-70"></div>
+        <div class="profile__cat-mrt u-text-body--400 u-c-sec-70"></div>
+        <div class="booking u-bg-sec-20">
+          <div class="booking__field booking__field--h22 u-text-body--bold u-c-sec-70">訂購導覽行程</div>
+          <div class="booking__field booking__field--h24 u-text-body--400 u-c-sec-70">以此景點為中心的一日行程，帶您探索城市角落故事</div>
+          <div class="booking__field">
+            <div class="booking__label u-text-body--bold u-c-sec-70">選擇日期：</div>
+            <input class="booking__date" type="date">
           </div>
+          <div class="booking__field">
+            <div class="booking__label u-text-body--bold u-c-sec-70">選擇時間：</div>
+            <div class="booking__time-group">
+              <label class="time-option">
+                <input type="radio" class="time-option__radio" name="time" value="morning">
+                <span class="u-text-body--400 u-c-sec-70">上半天</span>
+              </label>
+              <label class="time-option">
+                <input type="radio" class="time-option__radio" name="time" value="afternoon">
+                <span class="u-text-body--400 u-c-sec-70">下半天</span>
+              </label>
+            </div>
+          </div>
+          <div class="booking__field booking__field--h22">
+            <div class="booking__label u-text-body--bold u-c-sec-70">導覽費用：</div>
+            <div class="booking__price u-text-body--400 u-c-sec-70"></div>
+          </div>
+          <button class="booking__btn u-bg-pri-70 u-text-btn--400 u-c-white u-bg-pri-70" id="booking-submit-btn">開始預約行程</button>
         </div>
-        <div class="booking__field booking__field--h22">
-          <div class="booking__label u-text-body--bold u-c-sec-70">導覽費用：</div>
-          <div class="booking__price u-text-body--400 u-c-sec-70"></div>
-        </div>
-        <button class="booking__btn u-bg-pri-70 u-text-btn--400 u-c-white u-bg-pri-70" id="booking-submit-btn">開始預約行程</button>
       </div>
     </div>
-  </div>
-  <hr class="divider divider--1200">
-  <!-- Attraction info -->
-  <div class="l-attraction-info">
-    <div class="info-section u-text-content u-c-sec-70 u-line-height--2" id="description"></div>
-    <div class="info-section">
-      <div class="info-section__title u-text-body--bold u-c-sec-70">景點地址：</div>
-      <div class="u-text-content u-c-sec-70" id="address"></div>
+    <hr class="divider divider--1200">
+    <!-- Attraction info -->
+    <div class="attraction-info">
+      <div class="info-section u-text-content u-c-sec-70 u-line-height--2" id="description"></div>
+      <div class="info-section">
+        <div class="info-section__title u-text-body--bold u-c-sec-70">景點地址：</div>
+        <div class="u-text-content u-c-sec-70" id="address"></div>
+      </div>
+      <div class="info-section">
+        <div class="info-section__title u-text-body--bold u-c-sec-70">交通方式：</div>
+        <div class="u-text-content u-c-sec-70 u-line-height--2" id="transport"></div>
+      </div>
     </div>
-    <div class="info-section">
-      <div class="info-section__title u-text-body--bold u-c-sec-70">交通方式：</div>
-      <div class="u-text-content u-c-sec-70 u-line-height--2" id="transport"></div>
-    </div>
-  </div>
+  </main>
   <!-- JS 動態生成 footer -->
   
   <script type="module" src="/static/js/pages/attraction.js"></script>    

@@ -10,9 +10,18 @@ async function setup_booking(user){
     document.querySelector('.booking-headline').textContent = `您好，${user.name}，待預訂的行程如下：`;
     // 先打get api 拿資料
     const data = await get_booking_data();
-    // 然後開始長html
-    if (!data) return  // 沒資料不用長
-    render_booking_html({}, data, user);
+    // 如果沒有資料
+    if (!data){  
+      // 顯示「無資料」
+      document.querySelector('.empty-msg').classList.remove('is-hidden');
+      return;
+    }else{
+      // 隱藏「無資料」
+      document.querySelector('.empty-msg').classList.add('is-hidden');
+      // 開始長html
+      render_booking_html({}, data, user);
+      bind_delete_booking();
+    }
 }
 
 async function get_booking_data(){
@@ -112,17 +121,13 @@ function build_booking_html(data, user){
     `.trim()
 }
 
-function render_booking_html({mount = document.querySelector('.l-footer')} = {}, data, user){
+function render_booking_html({mount = document.querySelector('.booking-headline')} = {}, data, user){
     if (document.querySelector('.order')) return;
-    mount.insertAdjacentHTML("beforebegin", build_booking_html(data, user));
+    mount.insertAdjacentHTML("afterend", build_booking_html(data, user));
 }
 
 function bind_delete_booking(){
     const delete_btn = document.querySelector('#delete-booking-btn');
-    if (!delete_btn){
-        document.querySelector('#booking-empty-msg').classList.remove('is-hidden');
-        return;
-    }
     delete_btn.addEventListener('click', async() => {
         try{
             const res = await request("/api/booking", {
@@ -150,7 +155,7 @@ async function startup(){
     }
     // 本頁渲染
     await setup_booking(user);
-    bind_delete_booking();
+    
 }
 
 startup();
