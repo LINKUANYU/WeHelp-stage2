@@ -20,6 +20,7 @@ async function setup_booking(user){
       document.querySelector('.empty-msg').classList.add('is-hidden');
       // 開始長html
       render_booking_html({}, data, user);
+      // 綁定刪除按鈕事件
       bind_delete_booking();
     }
 }
@@ -149,7 +150,7 @@ async function startup(){
     // 2) UI related with session + User info
     const {logged_in, user} = await apply_session_ui();
     // 3) 本頁
-    // 沒登入的不能key url進來
+    // 沒登入的不能從url進來
     if (!logged_in){
         window.location.href = "/";
         return
