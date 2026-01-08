@@ -4,26 +4,26 @@
 3. auth modal 的切換事件綁定
 */
 
-import { get_session } from "../common/session.js";
+import { getSession } from "../common/session.js";
 
-export async function apply_session_ui(){
-    const {logged_in, user} = await get_session();
-    set_auth_buttons(logged_in); // only UI
-    init_nav_booking();
-    return {logged_in, user} // 提供給各站使用
+export async function applySessionUi(){
+    const {loggedIn, user} = await getSession();
+    setAuthButtons(loggedIn); // only UI
+    initNavBooking();
+    return {loggedIn, user} // 提供給各站使用
 }
 
 
-function init_nav_booking(){
+function initNavBooking(){
     // booking
-    const to_booking_btn = document.querySelector('#to-booking-btn');
-    if (!to_booking_btn) return;
+    const toBookingBtn = document.querySelector('#to-booking-btn');
+    if (!toBookingBtn) return;
 
-    to_booking_btn.addEventListener('click', async () => {
-        const {logged_in} = await get_session();  // 點擊時再確認一次登入狀態
-        if (!logged_in){
-            const login_btn = document.querySelector('#login-btn');
-            login_btn.click();
+    toBookingBtn.addEventListener('click', async () => {
+        const {loggedIn} = await getSession();  // 點擊時再確認一次登入狀態
+        if (!loggedIn){
+            const loginBtn = document.querySelector('#login-btn');
+            loginBtn.click();
             return;
         }else{
             window.location.href = "/booking";
@@ -32,16 +32,16 @@ function init_nav_booking(){
 }
 
 
-export function set_auth_buttons(logged_in) {
-    const login_btn = document.querySelector("#login-btn");
-    const signout_btn = document.querySelector("#signout-btn");
-    if (!login_btn || !signout_btn) return;
+export function setAuthButtons(loggedIn) {
+    const loginBtn = document.querySelector("#login-btn");
+    const signoutBtn = document.querySelector("#signout-btn");
+    if (!loginBtn || !signoutBtn) return;
 
-    if (logged_in) {
-        login_btn.classList.add("is-hidden");
-        signout_btn.classList.remove("is-hidden");
+    if (loggedIn) {
+        loginBtn.classList.add("is-hidden");
+        signoutBtn.classList.remove("is-hidden");
     } else {
-        login_btn.classList.remove("is-hidden");
-        signout_btn.classList.add("is-hidden");
+        loginBtn.classList.remove("is-hidden");
+        signoutBtn.classList.add("is-hidden");
     }
 }

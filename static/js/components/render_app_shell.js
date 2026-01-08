@@ -3,7 +3,7 @@
 最後傳出去給 init 做渲染
 */
 
-function top_html(){
+function headerHtml(){
     return `
     <header>
         <!-- login modal -->
@@ -66,7 +66,7 @@ function top_html(){
     `.trim();
 }
 
-function footer_html(){
+function footerHtml(){
     return `
     <!-- Footer -->
     <footer>
@@ -77,19 +77,19 @@ function footer_html(){
     `.trim();
 }
 
-function top_render({mount = document.body} = {}){
+function headerRender({mount = document.body} = {}){
     // 避免重複生成
-    if (document.querySelector('.l-header') || document.querySelector('.modal')) return;
-    mount.insertAdjacentHTML("afterbegin", top_html());
+    if (document.querySelector('header') || document.querySelector('.modal')) return;
+    mount.insertAdjacentHTML("afterbegin", headerHtml());
 }
 
-function footer_render({mount = document.body} = {}){
+function footerRender({mount = document.body} = {}){
     // 避免重複生成
-    if (document.querySelector('.l-footer')) return;
-    mount.insertAdjacentHTML("beforeend", footer_html());
+    if (document.querySelector('footer')) return;
+    mount.insertAdjacentHTML("beforeend", footerHtml());
 }
 
-export function render_app_shell(){
-    top_render();
-    footer_render();
+export function renderAppShell(){
+    headerRender();
+    footerRender();
 }

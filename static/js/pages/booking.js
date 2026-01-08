@@ -1,15 +1,15 @@
 // import function
-import { auth_headers, get_error_msg, request } from "../common/api.js";
-import { setup_app_shell } from "../components/setup_app_shell.js";
-import { apply_session_ui } from "../components/apply_session_ui.js";
-import { get_session } from "../common/session.js";
+import { authHeaders, getErrorMsg, request } from "../common/api.js";
+import { setupAppShell } from "../components/setup_app_shell.js";
+import { applySessionUi } from "../components/apply_session_ui.js";
+import { getSession } from "../common/session.js";
 
 
-async function setup_booking(user){
+async function setupBooking(user){
     // Headline name
     document.querySelector('.booking-headline').textContent = `您好，${user.name}，待預訂的行程如下：`;
     // 先打get api 拿資料
-    const data = await get_booking_data();
+    const data = await getBookingData();
     // 如果沒有資料
     if (!data){  
       // 顯示「無資料」
@@ -19,17 +19,17 @@ async function setup_booking(user){
       // 隱藏「無資料」
       document.querySelector('.empty-msg').classList.add('is-hidden');
       // 開始長html
-      render_booking_html({}, data, user);
+      renderBookingHtml({}, data, user);
       // 綁定刪除按鈕事件
-      bind_delete_booking();
+      bindDeleteBooking();
     }
 }
 
-async function get_booking_data(){
+async function getBookingData(){
     try{
         const res = await request("/api/booking", {
             method: "GET",
-            headers: auth_headers()
+            headers: authHeaders()
         });
         if (!res.data){
             // 沒有資料不用長html
@@ -39,38 +39,38 @@ async function get_booking_data(){
         }
         
     }catch(e){
-        console.log(get_error_msg(e));
+        console.log(getErrorMsg(e));
     }
 }
 
-function build_booking_html(data, user){
-    const user_name = user.name;
-    const user_email = user.email;
-    const attraction_id = data.data.attraction.id;
-    const attraction_name = data.data.attraction.name;
-    const attraction_address = data.data.attraction.address;
-    const attraction_image = data.data.attraction.image;
+function buildBookingHtml(data, user){
+    const userName = user.name;
+    const userEmail = user.email;
+    const attractionId = data.data.attraction.id;
+    const attractionName = data.data.attraction.name;
+    const attractionAddress = data.data.attraction.address;
+    const attractionImage = data.data.attraction.image;
     const date = data.data.date;
     const time = data.data.time;
     const price = data.data.price;
-    const time_text = (time === "morning") ? "早上 9 點到下午 4 點" : "下午 5 點到晚上 9 點";
+    const timeText = (time === "morning") ? "早上 9 點到下午 4 點" : "下午 5 點到晚上 9 點";
     return `
   <div class="order">
     <button class="delete-icon u-bg-white" id="delete-booking-btn">
       <img src="/static/icon/icon_delete.png">
     </button>
     <div class="order__img">
-      <img class="order__img--icon" src="${attraction_image}">
+      <img class="order__img--icon" src="${attractionImage}">
     </div>
     <div class="order__detail u-text-body--bold u-c-pri-70">
-      <div class="order__title">台北一日遊：${attraction_name}</div>
+      <div class="order__title">台北一日遊：${attractionName}</div>
       <div class="order__field">
         <div class="u-text-body--bold u-c-sec-70">日期：</div>
         <div class="order__item u-text-body u-c-sec-70">${date}</div>
       </div>
       <div class="order__field">
         <div class="u-text-body--bold u-c-sec-70">時間：</div>
-        <div class="order__item u-text-body u-c-sec-70">${time_text}</div>
+        <div class="order__item u-text-body u-c-sec-70">${timeText}</div>
       </div>
       <div class="order__field">
         <div class="u-text-body--bold u-c-sec-70">費用：</div>
@@ -78,7 +78,7 @@ function build_booking_html(data, user){
       </div>
       <div class="order__field">
         <div class="u-text-body--bold u-c-sec-70">地點：</div>
-        <div class="order__item u-text-body u-c-sec-70">${attraction_address}</div>
+        <div class="order__item u-text-body u-c-sec-70">${attractionAddress}</div>
       </div>
     </div>
   </div>
@@ -87,11 +87,11 @@ function build_booking_html(data, user){
     <div class="contact__title u-text-btn--bold u-c-sec-70">您的聯絡資訊</div>
     <div class="contact__field">
       <div class="u-text-body--400 u-c-sec-70">聯絡姓名：</div>
-      <input class="contact__input contact__input--name u-text-body u-c-sec-70" value="${user_name}">
+      <input class="contact__input contact__input--name u-text-body u-c-sec-70" value="${userName}">
     </div>
     <div class="contact__field">
       <div class="u-text-body--400 u-c-sec-70">聯絡信箱：</div>
-      <input class="contact__input contact__input--email u-text-body u-c-sec-70" value="${user_email}">
+      <input class="contact__input contact__input--email u-text-body u-c-sec-70" value="${userEmail}">
     </div>
     <div class="contact__field">
       <div class="u-text-body--400 u-c-sec-70">手機號碼：</div>
@@ -123,40 +123,40 @@ function build_booking_html(data, user){
     `.trim()
 }
 
-function render_booking_html({mount = document.querySelector('.booking-headline')} = {}, data, user){
+function renderBookingHtml({mount = document.querySelector('.booking-headline')} = {}, data, user){
     if (document.querySelector('.order')) return;
-    mount.insertAdjacentHTML("afterend", build_booking_html(data, user));
+    mount.insertAdjacentHTML("afterend", buildBookingHtml(data, user));
 }
 
-function bind_delete_booking(){
-    const delete_btn = document.querySelector('#delete-booking-btn');
-    delete_btn.addEventListener('click', async() => {
+function bindDeleteBooking(){
+    const deleteBtn = document.querySelector('#delete-booking-btn');
+    deleteBtn.addEventListener('click', async() => {
         try{
             const res = await request("/api/booking", {
                 method: "DELETE",
-                headers: auth_headers()
+                headers: authHeaders()
             });
             if (res.ok) window.location.reload();
             return
         }catch(e){
-            console.log(get_error_msg(e));
+            console.log(getErrorMsg(e));
         }
     });
 }
 
 async function startup(){
     // 1) 全站UI + 事件綁定
-    setup_app_shell();
+    setupAppShell();
     // 2) UI related with session + User info
-    const {logged_in, user} = await apply_session_ui();
+    const {loggedIn, user} = await applySessionUi();
     // 3) 本頁
     // 沒登入的不能從url進來
-    if (!logged_in){
+    if (!loggedIn){
         window.location.href = "/";
         return
     }
     // 本頁渲染
-    await setup_booking(user);
+    await setupBooking(user);
     
 }
 

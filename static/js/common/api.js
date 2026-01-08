@@ -14,11 +14,11 @@ export async function request(url, option = {}){
     return body;
 }
 
-export function get_error_msg(err){
+export function getErrorMsg(err){
     return err.payload.detail.message;
 }
 
-export function auth_headers(extra = {}){
+export function authHeaders(extra = {}){
     const headers = new Headers(extra);  // 如果有傳入別的Header 就建立
     const token = localStorage.getItem("access_token"); 
     if (token) headers.set("Authorization", `bearer ${token}`); // 在Header內多建立一個key, value

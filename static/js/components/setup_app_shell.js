@@ -4,14 +4,14 @@
 輸出給各html的 script startup 做執行
 */
 
-import { render_app_shell } from "./render_app_shell.js";
-import { init_navbar } from "./init_navbar.js"
-import { bind_auth } from "./bind_auth.js";
+import { renderAppShell } from "./render_app_shell.js";
+import { initNavbar } from "./init_navbar.js"
+import { bindAuth } from "./bind_auth.js";
 
-export function setup_app_shell(){
-    render_app_shell();
-    init_navbar();
-    bind_auth();
+export function setupAppShell(){
+    renderAppShell();
+    initNavbar();
+    bindAuth();
 }
 
 /* 

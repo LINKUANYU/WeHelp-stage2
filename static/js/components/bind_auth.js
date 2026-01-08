@@ -1,30 +1,30 @@
 /* 這份檔案用來做 註冊／登入／登出的功能事件綁定 */
 
-import { get_error_msg, request } from "../common/api.js";
+import { getErrorMsg, request } from "../common/api.js";
 
-export function bind_auth(){
-    bind_login_form();
-    bind_signup_form();
-    bind_signout_btn();
+export function bindAuth(){
+    bindLoginForm();
+    bindSignupForm();
+    bindSignoutBtn();
 }
 
-function bind_login_form(){
-    const login_form = document.querySelector('#login-form');
-    if (!login_form) return;
+function bindLoginForm(){
+    const loginForm = document.querySelector('#login-form');
+    if (!loginForm) return;
 
-    const login_modal = document.querySelector('#login-modal')
-    const login_msg = document.querySelector('#login-msg');
+    const loginModal = document.querySelector('#login-modal')
+    const loginMsg = document.querySelector('#login-msg');
 
-    login_form.addEventListener('submit', async (e) => {
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const login_email = document.querySelector('#login-email').value.trim();
-        const login_password = document.querySelector('#login-password').value;
+        const loginEmail = document.querySelector('#login-email').value.trim();
+        const loginPassword = document.querySelector('#login-password').value;
 
-        if (!login_email || !login_password){
-            if (login_msg){
-                login_msg.classList.remove("is-hidden");
-                login_msg.textContent = "請輸入完整資訊";
+        if (!loginEmail || !loginPassword){
+            if (loginMsg){
+                loginMsg.classList.remove("is-hidden");
+                loginMsg.textContent = "請輸入完整資訊";
             }
             return;
         }
@@ -38,35 +38,35 @@ function bind_login_form(){
             });
             const token = res.token;
             if (token) localStorage.setItem("access_token", token);
-            if (login_modal) login_modal.classList.add("is-hidden");
+            if (loginModal) loginModal.classList.add("is-hidden");
             window.location.reload()
         }catch(e){
-            if (login_msg){
-                login_msg.classList.remove("is-hidden");
-                login_msg.textContent = get_error_msg(e);
+            if (loginMsg){
+                loginMsg.classList.remove("is-hidden");
+                loginMsg.textContent = getErrorMsg(e);
             }
         }
     });
 }
 
-function bind_signup_form(){
-    const signup_form = document.querySelector('#signup-form');
-    if (!signup_form) return;
+function bindSignupForm(){
+    const signupForm = document.querySelector('#signup-form');
+    if (!signupForm) return;
 
-    const signup_modal = document.querySelector('#signup-modal');
-    const signup_msg = document.querySelector('#signup-msg');
+    const signupModal = document.querySelector('#signup-modal');
+    const signupMsg = document.querySelector('#signup-msg');
 
-    signup_form.addEventListener('submit', async (e) => {
+    signupForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const signup_name = document.querySelector("#signup-name").value.trim();
-        const signup_email = document.querySelector("#signup-email").value.trim();
-        const signup_password = document.querySelector("#signup-password").value;
+        const signupName = document.querySelector("#signup-name").value.trim();
+        const signupEmail = document.querySelector("#signup-email").value.trim();
+        const signupPassword = document.querySelector("#signup-password").value;
 
-        if (!signup_email || !signup_password || !signup_name) {
-            if (signup_msg) {
-                signup_msg.classList.remove("is-hidden");
-                signup_msg.textContent = "請輸入完整資訊";
+        if (!signupEmail || !signupPassword || !signupName) {
+            if (signupMsg) {
+                signupMsg.classList.remove("is-hidden");
+                signupMsg.textContent = "請輸入完整資訊";
             }
             return;
         }
@@ -78,21 +78,21 @@ function bind_signup_form(){
                 method: "POST",
                 body: fd
             });
-            if (signup_modal) signup_modal.classList.add("is-hidden");
+            if (signupModal) signupModal.classList.add("is-hidden");
         }catch(e){
-            if (signup_msg){
-                signup_msg.classList.remove("is-hidden");
-                signup_msg.textContent = get_error_msg(e);
+            if (signupMsg){
+                signupMsg.classList.remove("is-hidden");
+                signupMsg.textContent = getErrorMsg(e);
             }
         }
     });
 }
 
-function bind_signout_btn(){
-    const signout_btn = document.querySelector('#signout-btn');
-    if (!signout_btn) return;
+function bindSignoutBtn(){
+    const signoutBtn = document.querySelector('#signout-btn');
+    if (!signoutBtn) return;
 
-    signout_btn.addEventListener('click', () => {
+    signoutBtn.addEventListener('click', () => {
         localStorage.removeItem("access_token");
         window.location.reload();
     });

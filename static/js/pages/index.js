@@ -1,40 +1,40 @@
 // import function
 import { request } from "../common/api.js";
-import { setup_app_shell } from "../components/setup_app_shell.js";
-import { apply_session_ui } from "../components/apply_session_ui.js";
+import { setupAppShell } from "../components/setup_app_shell.js";
+import { applySessionUi } from "../components/apply_session_ui.js";
 
 const bar = document.querySelector('.listBar');
-const listBar_list = bar.querySelector('.listBar__list');
-const left_btn = bar.querySelector('#listBar-left-btn');
-const right_btn = bar.querySelector('#listBar-right-btn');
-const category_menu = document.querySelector('.category__menu');
-const search_btn = document.querySelector('.search__btn');
-const card_grid = document.querySelector('.cardGrid');
+const listBarList = bar.querySelector('.listBar__list');
+const leftBtn = bar.querySelector('#listBar-left-btn');
+const rightBtn = bar.querySelector('#listBar-right-btn');
+const categoryMenu = document.querySelector('.category__menu');
+const searchBtn = document.querySelector('.search__btn');
+const cardGrid = document.querySelector('.cardGrid');
 const sentinel = document.querySelector('#sentinel');
 
 async function startup(){
     // 1) 全站UI + 事件綁定
-    setup_app_shell();
+    setupAppShell();
 
     // 2) UI related with session + User info
-    const {logged_in, user} = await apply_session_ui();
+    const {loggedIn, user} = await applySessionUi();
     // 3) 本頁
-    build_category_menu();
-    build_list_bar();
+    buildCategoryMenu();
+    buildListBar();
     
     // 建立list bar 按鈕事件，scrollBy：相對捲動，left：水平捲動位移量
-    left_btn.addEventListener('click',() => {
-        listBar_list.scrollBy({left: -step(), behavior: "smooth"});
+    leftBtn.addEventListener('click',() => {
+        listBarList.scrollBy({left: -step(), behavior: "smooth"});
     });
     
-    right_btn.addEventListener('click',() => {
-        listBar_list.scrollBy({left: step(), behavior: "smooth"});
+    rightBtn.addEventListener('click',() => {
+        listBarList.scrollBy({left: step(), behavior: "smooth"});
     });
 
     // 綁定搜尋按鈕事件
-    search_btn.addEventListener('click', () => {
+    searchBtn.addEventListener('click', () => {
         // 清空先前內容，reset condidtion
-        card_grid.innerHTML = "";
+        cardGrid.innerHTML = "";
         page = 0;
         done = false;
         loadding = false;
@@ -53,53 +53,53 @@ startup();
 
 
 // Fetch Category Menu
-async function build_category_menu() {
+async function buildCategoryMenu() {
     try{
     const result = await request("/api/categories");
     const data = result.data;
     data.forEach(d => {
         // create menu
-        const category_item = document.createElement('div');
-        category_item.classList = "category__item u-text-category";
-        category_item.textContent = d;
-        category_menu.append(category_item);
+        const categoryItem = document.createElement('div');
+        categoryItem.classList = "category__item u-text-category";
+        categoryItem.textContent = d;
+        categoryMenu.append(categoryItem);
     });
     }catch(e){
         console.log(e);
     }
-    const search_categories_btn = document.querySelector('.search__categories-btn');
+    const searchCategoriesBtn = document.querySelector('.search__categories-btn');
     // category menu panel event
-    search_categories_btn.addEventListener('click', () => {
-    category_menu.classList.toggle('is-hidden');
+    searchCategoriesBtn.addEventListener('click', () => {
+    categoryMenu.classList.toggle('is-hidden');
     });
     // panel item replace btn text event
-    const category__items = document.querySelectorAll('.category__item');
-    category__items.forEach((item) => {
+    const categoryItems = document.querySelectorAll('.category__item');
+    categoryItems.forEach((item) => {
         item.addEventListener('click', () => {
-            search_categories_btn.textContent = item.textContent + "▼";
-            category_menu.classList.toggle('is-hidden');
+            searchCategoriesBtn.textContent = item.textContent + "▼";
+            categoryMenu.classList.toggle('is-hidden');
         });
     });
 }
 
 // Fetch List bar
-async function build_list_bar () {
+async function buildListBar () {
     try{
-    const search_input = document.querySelector('#search__input');
+    const searchInput = document.querySelector('#search__input');
     const result = await request("/api/mrts");
     const data = result.data;
     data.forEach(d => {
         // create list bar item
-        const listBar_item = document.createElement('div');
-        listBar_item.classList = "listBar__item u-text-body u-c-sec-70";
-        listBar_item.textContent = d;
-        listBar_list.append(listBar_item);
+        const listBarItem = document.createElement('div');
+        listBarItem.classList = "listBar__item u-text-body u-c-sec-70";
+        listBarItem.textContent = d;
+        listBarList.append(listBarItem);
         // item function: put mrt into search input
-        listBar_item.addEventListener('click', () => {
-        search_input.value = listBar_item.textContent;
+        listBarItem.addEventListener('click', () => {
+        searchInput.value = listBarItem.textContent;
         // 觸發搜尋
-        const search_btn = document.querySelector('.search__btn');
-        search_btn.click();
+        const searchBtn = document.querySelector('.search__btn');
+        searchBtn.click();
         });
     });
     }catch(e){
@@ -109,7 +109,7 @@ async function build_list_bar () {
 
 // 計算每次滑動的位移量，clientWidth：該元素「可視內容看」的寬度
 function step(){
-    return listBar_list.clientWidth * 2 / 3;
+    return listBarList.clientWidth * 2 / 3;
 }
 
 // ＊＊＊ 以下為建立 「attraction card ＋ 滾動讀取更多」邏輯 ＊＊＊
@@ -145,39 +145,39 @@ async function load_more(){
     observer.unobserve(sentinel);
     
     // 對應finally，確保還有下一頁資料可讀取的話，到finally再變成true
-    let should_resume = false;
+    let shouldResume = false;
 
     try{
-    const result = await get_attractions(page);
+    const result = await getAttractions(page);
     const data = result.data;
     // 如果找不到資料
     if (!data || data.length === 0) {
-        const no_data = document.createElement('h1');
-        no_data.textContent = "NO DATA";
-        card_grid.append(no_data);
+        const noData = document.createElement('h1');
+        noData.textContent = "NO DATA";
+        cardGrid.append(noData);
         // 停止boserve
         done = true;
         observer.disconnect();
         return;
     }
     // 有資料，開始建card
-    build_attractions_card(data);
+    buildAttractionsCard(data);
 
-    const next_page = result.nextPage;
+    const nextPage = result.nextPage;
     // 如果沒有下一頁了，停止observe
-    if (next_page === null){
+    if (nextPage === null){
         done = true;
         observer.disconnect();
     } else {
         // 有下一頁的話將頁碼更新
-        page = next_page;
-        should_resume = true
+        page = nextPage;
+        shouldResume = true
     }
     } finally {
         loadding = false;
         // 1. 如果還有下一頁資料就重啟observe
         // 2. 避免就算card內長出來的東西不夠把sentinel推出交集，前面解掉後面重啟，確保再觸發
-        if (should_resume) {
+        if (shouldResume) {
             observer.observe(sentinel);
         }
     }
@@ -185,16 +185,16 @@ async function load_more(){
 
 
 // Fetch attractions API
-async function get_attractions(page = 0) {
+async function getAttractions(page = 0) {
     // 找 category
-    const search__categories_btn = document.querySelector('.search__categories-btn');
-    let category = search__categories_btn.textContent.replace("▼","");
+    const searchCategoriesBtn = document.querySelector('.search__categories-btn');
+    let category = searchCategoriesBtn.textContent.replace("▼","");
     if (category === "全部分類"){
         category = null;
     }
     // 找 keyword
-    const search_input = document.querySelector('.search__input');
-    const keyword = search_input.value.trim();    
+    const searchInput = document.querySelector('.search__input');
+    const keyword = searchInput.value.trim();    
 
     // 組織url
     let url = `/api/attractions?page=${page}`;
@@ -217,41 +217,41 @@ async function get_attractions(page = 0) {
 }
 
 // Build Attractions HTML
-function build_attractions_card(data){
-    const card_grid = document.querySelector('.cardGrid');
+function buildAttractionsCard(data){
+    const cardGrid = document.querySelector('.cardGrid');
     data.forEach(d => {
     // card__media
-    const card_title_text = document.createElement('div');
-    card_title_text.classList = "card__titleText u-text-body--bold u-c-white";
-    card_title_text.textContent = d.name;
-    const card_title = document.createElement('div');
-    card_title.classList = "card__title";
-    card_title.append(card_title_text);
-    const card_img = document.createElement('img');
-    card_img.classList = "card__img";
-    card_img.src = d.images[0];
-    const card_media = document.createElement('div');
-    card_media.classList = "card__media";
-    card_media.append(card_img);
-    card_media.append(card_title);
+    const cardTitleText = document.createElement('div');
+    cardTitleText.classList = "card__titleText u-text-body--bold u-c-white";
+    cardTitleText.textContent = d.name;
+    const cardTitle = document.createElement('div');
+    cardTitle.classList = "card__title";
+    cardTitle.append(cardTitleText);
+    const cardImg = document.createElement('img');
+    cardImg.classList = "card__img";
+    cardImg.src = d.images[0];
+    const cardMedia = document.createElement('div');
+    cardMedia.classList = "card__media";
+    cardMedia.append(cardImg);
+    cardMedia.append(cardTitle);
     // card__detail
-    const card_info_mrt = document.createElement('div');
-    card_info_mrt.classList = "card__info card__info--mrt u-text-body u-c-sec-50";
-    card_info_mrt.textContent = d.mrt;
-    const card_info_category = document.createElement('div');
-    card_info_category.classList = "card__info card__info--category u-text-body u-c-sec-50";
-    card_info_category.textContent = d.category;
-    const card_detail = document.createElement('div');
-    card_detail.classList = "card__detail";
-    card_detail.append(card_info_mrt);
-    card_detail.append(card_info_category);
+    const cardInfoMrt = document.createElement('div');
+    cardInfoMrt.classList = "card__info card__info--mrt u-text-body u-c-sec-50";
+    cardInfoMrt.textContent = d.mrt;
+    const cardInfoCategory = document.createElement('div');
+    cardInfoCategory.classList = "card__info card__info--category u-text-body u-c-sec-50";
+    cardInfoCategory.textContent = d.category;
+    const cardDetail = document.createElement('div');
+    cardDetail.classList = "card__detail";
+    cardDetail.append(cardInfoMrt);
+    cardDetail.append(cardInfoCategory);
     // card
     const card = document.createElement('a');
     card.classList = "card u-c-white";
     card.href = `/attraction/${d.id}`;
-    card.append(card_media);
-    card.append(card_detail);
+    card.append(cardMedia);
+    card.append(cardDetail);
     // insert card
-    card_grid.append(card);
+    cardGrid.append(card);
     });
 }

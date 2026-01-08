@@ -5,75 +5,75 @@
 */
 
 
-export function init_navbar(){
-    init_nav_brand();
-    init_auth_modal();
+export function initNavbar(){
+    initNavBrand();
+    initAuthModal();
 }
 
-function init_nav_brand(){
+function initNavBrand(){
     // Homepage
-    const nav_brand = document.querySelector('.nav__brand');
-    if (!nav_brand) return;
+    const navBrand = document.querySelector('.nav__brand');
+    if (!navBrand) return;
 
-    nav_brand.addEventListener('click', () => {
+    navBrand.addEventListener('click', () => {
         window.location.href = "/";
     });
 }
 
-function init_auth_modal(){
-    const login_modal = document.querySelector("#login-modal");
-    const signup_modal = document.querySelector("#signup-modal");
-    const login_btn = document.querySelector("#login-btn");
-    const modal_close = document.querySelectorAll(".modal__close");
-    const modal_backdrop = document.querySelectorAll(".modal__backdrop");
-    const to_signup = document.querySelector(".auth__link--signup");
-    const to_login = document.querySelector(".auth__link--login");
+function initAuthModal(){
+    const loginModal = document.querySelector("#login-modal");
+    const signupModal = document.querySelector("#signup-modal");
+    const loginBtn = document.querySelector("#login-btn");
+    const modalClose = document.querySelectorAll(".modal__close");
+    const modalBackdrop = document.querySelectorAll(".modal__backdrop");
+    const toSignup = document.querySelector(".auth__link--signup");
+    const toLogin = document.querySelector(".auth__link--login");
 
-    const login_msg = document.querySelector('#login-msg');
-    const signup_msg = document.querySelector('#signup-msg');
+    const loginMsg = document.querySelector('#login-msg');
+    const signupMsg = document.querySelector('#signup-msg');
 
-    if (!login_modal || !signup_modal || !login_btn) return;
+    if (!loginModal || !signupModal || !loginBtn) return;
 
-    login_btn.addEventListener('click', () => {
-        login_modal.classList.toggle("is-hidden");
+    loginBtn.addEventListener('click', () => {
+        loginModal.classList.toggle("is-hidden");
 
         // 清空前一筆錯誤訊息
-        login_msg.classList.add("is-hidden");
-        if (login_msg) login_msg.textContent = "";
+        loginMsg.classList.add("is-hidden");
+        if (loginMsg) loginMsg.textContent = "";
     });
 
-    const close_all = () => {
-        login_modal.classList.add("is-hidden");
-        signup_modal.classList.add("is-hidden");
+    const closeAll = () => {
+        loginModal.classList.add("is-hidden");
+        signupModal.classList.add("is-hidden");
     };
 
-    modal_close.forEach((m) => {
-        m.addEventListener('click', close_all);
+    modalClose.forEach((m) => {
+        m.addEventListener('click', closeAll);
     });
 
-    modal_backdrop.forEach((m) => {
-        m.addEventListener('click', close_all);
+    modalBackdrop.forEach((m) => {
+        m.addEventListener('click', closeAll);
     });
 
-    if (to_signup){
-        to_signup.addEventListener("click", () => {
-            login_modal.classList.add("is-hidden");
-            signup_modal.classList.remove("is-hidden");
+    if (toSignup){
+        toSignup.addEventListener("click", () => {
+            loginModal.classList.add("is-hidden");
+            signupModal.classList.remove("is-hidden");
             
             // 清空前一筆錯誤訊息
-            signup_msg.classList.add("is-hidden");
-            if (signup_msg) signup_msg.textContent = "";
+            signupMsg.classList.add("is-hidden");
+            if (signupMsg) signupMsg.textContent = "";
         });
     }
 
-    if (to_login){
-        to_login.addEventListener("click", () => {
-            login_modal.classList.remove("is-hidden");
-            signup_modal.classList.add("is-hidden");
+    if (toLogin){
+        toLogin.addEventListener("click", () => {
+            loginModal.classList.remove("is-hidden");
+            signupModal.classList.add("is-hidden");
 
             // 清空前一筆錯誤訊息
-            login_msg.classList.add("is-hidden");
-            if (login_msg) login_msg.textContent = "";
+            loginMsg.classList.add("is-hidden");
+            if (loginMsg) loginMsg.textContent = "";
         });
     }
 

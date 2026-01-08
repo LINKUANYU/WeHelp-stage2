@@ -4,27 +4,27 @@
 ３．檢查 token 簽章
 */
 
-import { request, auth_headers } from "./api.js";
+import { request, authHeaders } from "./api.js";
 
-export async function get_session(){
+export async function getSession(){
     const token = localStorage.getItem("access_token");
     if (!token){
-      return {logged_in: false, user: null} // 回物件大專案好擴充與維護
+      return {loggedIn: false, user: null} // 回物件大專案好擴充與維護
     }
 
     try{
-        const res = await fetch_current_user();
+        const res = await fetchCurrentUser();
         const user = res.data;
-        return {logged_in: true, user}
+        return {loggedIn: true, user}
     }catch(e){
         localStorage.removeItem("access_token");
-        return {logged_in: false, user: null};
+        return {loggedIn: false, user: null};
     }
 }
 
-export async function fetch_current_user(){
+export async function fetchCurrentUser(){
     return request("/api/user/auth", {
-        headers: auth_headers()
+        headers: authHeaders()
     })
 }
 

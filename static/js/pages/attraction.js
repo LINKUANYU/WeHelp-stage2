@@ -1,8 +1,8 @@
 // import function
-import { auth_headers, get_error_msg, request } from "../common/api.js";
-import { setup_app_shell } from "../components/setup_app_shell.js";
-import { apply_session_ui } from "../components/apply_session_ui.js";
-import { get_session } from "../common/session.js";
+import { authHeaders, getErrorMsg, request } from "../common/api.js";
+import { setupAppShell } from "../components/setup_app_shell.js";
+import { applySessionUi } from "../components/apply_session_ui.js";
+import { getSession } from "../common/session.js";
 
 
 // 透過url尋找當前頁面資料
@@ -59,7 +59,7 @@ async function renderAttractionPage(){
         photos = result.data.images;
         buildSlide();
     }catch(e){
-        console.log(get_error_msg(e));
+        console.log(getErrorMsg(e));
     }
 }
 
@@ -113,10 +113,10 @@ function bindBookingSubmitBtn(){
     bookingSubmitBtn.addEventListener('click', async(e) => {
         e.preventDefault();
         // 先驗證是否登入
-        const {logged_in} = await get_session(); // 點擊按鈕時再次確認當下的session
-        if (!logged_in){
-            const login_btn = document.querySelector('#login-btn');
-            login_btn.click();
+        const {loggedIn} = await getSession(); // 點擊按鈕時再次確認當下的session
+        if (!loggedIn){
+            const loginBtn = document.querySelector('#login-btn');
+            loginBtn.click();
             return;
         }
 
@@ -128,14 +128,14 @@ function bindBookingSubmitBtn(){
         try{
             const res = await request("/api/booking", {
                 method: "POST",
-                headers: auth_headers({"content-type": "application/json"}),
+                headers: authHeaders({"content-type": "application/json"}),
                 body: JSON.stringify({attraction_id, date, time, price}) // attraction_id 是全域變數
             });
             if (res.ok){
                 window.location.href = "/booking";
             }
         }catch(e){
-            console.log(get_error_msg(e));
+            console.log(getErrorMsg(e));
         }
     });
 }
@@ -156,10 +156,10 @@ function buildBookingPayload(){
 
 async function startup(){
     // 1) 全站UI + 事件綁定
-    setup_app_shell();
+    setupAppShell();
 
     // 2) UI related with session + User info
-    await apply_session_ui();
+    await applySessionUi();
     
     // 3) 本頁
     await renderAttractionPage();
