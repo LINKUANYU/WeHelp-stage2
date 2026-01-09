@@ -1,6 +1,6 @@
 from fastapi import *
 from deps import get_conn, get_cur
-from mysql.connector import Error, IntegrityError, errorcode
+from mysql.connector import Error
 from typing import Annotated
 import json
 
