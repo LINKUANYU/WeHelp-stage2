@@ -1,8 +1,4 @@
-/*  這份檔案用來做
-１．檢查使用者session狀態
-２．檢查完後回饋給 UI 看要顯示 登入還是登出按鈕
-３．檢查 token 簽章
-*/
+/*  這份檔案用來做檢查使用者session狀態*/
 
 import { request, authHeaders } from "./api.js";
 

@@ -1,6 +1,6 @@
 /*
 這份檔案用來長共用的 HTML，包含header, footer, login-modal, singup-modal
-最後傳出去給 init 做渲染
+最後傳出去給各setup
 */
 
 function headerHtml(){

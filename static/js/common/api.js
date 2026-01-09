@@ -1,3 +1,8 @@
+/* 這份檔案用來做
+1. 統一fetch API request、response、error msg 
+2. 組織fetch 使用的 Headers
+*/
+
 export async function request(url, option = {}){
     const res = await fetch(url, option);
 
