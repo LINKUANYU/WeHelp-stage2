@@ -2,6 +2,7 @@
 import { authHeaders, getErrorMsg, request } from "../common/api.js";
 import { setupAppShell } from "../components/setup_app_shell.js";
 import { applySessionUi } from "../components/apply_session_ui.js";
+import { initTapPay } from "../TapPay.js";
 
 async function startup(){
     // 1) 全站UI + 事件綁定
@@ -18,6 +19,8 @@ async function startup(){
     await fetchAndRenderBooking(user);
     // 綁定刪除按鈕事件
     bindDeleteBooking();
+    // 綁定金流
+    initTapPay();
 }
 
 startup();
@@ -123,21 +126,21 @@ function buildBookingHtml(data, user){
     <div class="payment__title u-text-btn--bold u-c-sec-70">信用卡付款資訊</div>
     <div class="payment__field">
       <div class="u-text-body--400 u-c-sec-70">卡片號碼：</div>
-      <input class="payment__input payment__input--number">
+      <div class="tpfield" id="card-number"></div>
     </div>
     <div class="payment__field">
       <div class="u-text-body--400 u-c-sec-70">過期時間：</div>
-      <input class="payment__input payment__input--expiry">
+      <div class="tpfield" id="card-expiration-date"></div>
     </div>
     <div class="payment__field">
       <div class="u-text-body--400 u-c-sec-70">驗證密碼：</div>
-      <input class="payment__input payment__input--cvv">
+      <div class="tpfield" id="card-ccv"></div>
     </div>
   </div>
   <hr class="divider divider--1200">
   <div class="confirmation">
     <div class="confirmation__title u-text-body--bold u-c-sec-70">總價：新台幣 ${price} 元</div>
-    <button class="confirmation__btn u-text-btn--400 u-c-white u-bg-pri-70">確認訂購並付款</button>
+    <button class="confirmation__btn u-text-btn--400 u-c-white u-bg-pri-70" id="pay-btn" type="submit" disabled>確認訂購並付款</button>
   </div>
     `.trim()
 }
