@@ -4,7 +4,7 @@
 // 利用 TPDirect.setupSDK 設定參數
 // 使用 TPDirect.card.setup 設定外觀
 // TPDirect.card.onUpdated 取得 TapPay Fields 狀態
-// 綁定按鈕事件利用 TPDirect.card.getPrime 來取得 prime 字串
+// 綁定按鈕事件利用 TPDirect.card.getPrime 來取得 prime 字串(放在booking.js)
 
 let tappayInited = false;
 
@@ -82,7 +82,11 @@ export function initTapPay(){
         }
     })
 
-
+    const payBtn = document.querySelector("#pay-btn");
+    if (!payBtn) {
+        console.error("#pay-btn not found");
+        return;
+    }
 
     // 3. onUpdate
     TPDirect.card.onUpdate(function (update) {
@@ -143,42 +147,33 @@ export function initTapPay(){
     // 此方法可得到 TapPay Fields 卡片資訊的輸入狀態
     // 與 TPDirect.card.onUpdate Callback 物件相同
 
-    // 5. Get Prime
-    // call TPDirect.card.getPrime when user submit form to get tappay prime
-    const payBtn = document.querySelector("#pay-btn");
-    if (!payBtn) {
-        console.error("#pay-btn not found");
-        return;
-    }
-
-    payBtn.addEventListener("click", onSubmit);
-    payBtn.disabled = true; // 預設先關閉，等 canGetPrime 再開
 }
 
 
-function onSubmit(event) {
-    event.preventDefault()
-
+// 5. Get Prime 
+// call TPDirect.card.getPrime when user submit form to get tappay prime
+export function getPrime(){
     // 取得 TapPay Fields 的 status
     const tappayStatus = TPDirect.card.getTappayFieldsStatus()
 
     // 確認是否可以 getPrime
     if (tappayStatus.canGetPrime === false) {
-        alert('can not get prime')
-        return
+        return Promise.reject(new Error("can not get prime"));
     }
-
-    // Get prime
-    TPDirect.card.getPrime((result) => {
-        if (result.status !== 0) {
-            alert('get prime error ' + result.msg)
-            return
-        }
-        alert('get prime 成功，prime: ' + result.card.prime)
-
-        // send prime to your server, to pay with Pay by Prime API .
-        // Pay By Prime Docs: https://docs.tappaysdk.com/tutorial/zh/back.html#pay-by-prime-api
+    // 如果可以就包裝成 promise 回傳 prime
+    return new Promise((resolve, reject) => {
+        TPDirect.card.getPrime((result) => {
+            if (result.status !== 0) {
+                alert('get prime error ' + result.msg);
+                reject(new Error (`get prime error: ${result.msg}`));
+                return;
+            }
+            alert('get prime 成功，prime: ' + result.card.prime);
+            resolve(result.card.prime);
+        })
     })
+    // send prime to your server, to pay with Pay by Prime API .
+    // Pay By Prime Docs: https://docs.tappaysdk.com/tutorial/zh/back.html#pay-by-prime-api
 }
 
 

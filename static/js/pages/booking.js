@@ -2,7 +2,7 @@
 import { authHeaders, getErrorMsg, request } from "../common/api.js";
 import { setupAppShell } from "../components/setup_app_shell.js";
 import { applySessionUi } from "../components/apply_session_ui.js";
-import { initTapPay } from "../TapPay.js";
+import { getPrime, initTapPay } from "../TapPay.js";
 
 async function startup(){
     // 1) 全站UI + 事件綁定
@@ -21,6 +21,7 @@ async function startup(){
     bindDeleteBooking();
     // 綁定金流
     initTapPay();
+    bindPayBtn();
 }
 
 startup();
@@ -168,5 +169,71 @@ function bindDeleteBooking(){
     });
 }
 
+function bindPayBtn(){
+  const payBtn = document.querySelector("#pay-btn");
+  if (!payBtn) {
+      console.error("#pay-btn not found");
+      return;
+  }
+
+  payBtn.disabled = true; // 預設先關閉，等 canGetPrime 再開
+
+  payBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    try{
+      const data = await getBookingData();
+      const attractionId = Number(data.data.attraction.id);
+      const attractionName = data.data.attraction.name;
+      const attractionAddress = data.data.attraction.address;
+      const attractionImage = data.data.attraction.image;
+      const tripDate = data.data.date;
+      const tripTime = data.data.time;
+      const orderPrice = Number(data.data.price);
+      const contactName = document.querySelector('.contact__input--name').value.trim();
+      const contactEmail = document.querySelector('.contact__input--email').value.trim();
+      const contactPhone = document.querySelector('.contact__input--phone').value.trim();
+      
+      if (!contactName || !contactEmail || !contactPhone) {alert('請輸入完整資訊'); return}
+    
+      // get prime
+      const prime = await getPrime();
+      // 收集其他資訊送至後端
+      const payload = {
+        "prime": prime,
+        "order": {
+          "price": orderPrice,
+          "trip": {
+            "attraction": {
+              "id": attractionId,
+              "name": attractionName,
+              "address": attractionAddress,
+              "image": attractionImage
+            },
+            "date": tripDate,
+            "time": tripTime
+          },
+          "contact": {
+            "name": contactName,
+            "email": contactEmail,
+            "phone": contactPhone
+          }
+        }
+      }
+      // 送出API給我的後端
+      const res = await request("/api/orders", {
+        method: "POST",
+        headers: authHeaders({"content-type": "application/json"}),
+        body: JSON.stringify(payload)
+      });
+      // 得到回應之後...TODO
+      
+    }catch(e){
+      console.log(e);
+    }finally{
+      payBtn.disabled = false;
+    }
+  });
+}
 
 
