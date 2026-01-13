@@ -4,9 +4,12 @@
 // 利用 TPDirect.setupSDK 設定參數
 // 使用 TPDirect.card.setup 設定外觀
 // TPDirect.card.onUpdated 取得 TapPay Fields 狀態
-// 利用 TPDirect.card.getPrime 來取得 prime 字串
+// 綁定按鈕事件利用 TPDirect.card.getPrime 來取得 prime 字串
+
+let tappayInited = false;
 
 export function initTapPay(){
+    if (tappayInited) return; // 避免重複初始化
     // 1. 三個 tappay field container (在HTML檔案中)
     // 2. Setup SDK
     TPDirect.setupSDK(166458, 'app_Slp64fmN9qdfUkv4J29ruz5VQ3kpnfT6o1F9lZnSvo0hm9fHV3X4Di3FLvwv', 'sandbox')
@@ -79,14 +82,7 @@ export function initTapPay(){
         }
     })
 
-    const payBtn = document.querySelector("#pay-btn");
-    if (!payBtn) {
-        console.error("#pay-btn not found");
-        return;
-    }
 
-    payBtn.addEventListener("click", onSubmit);
-    payBtn.disabled = true; // 預設先關閉，等 canGetPrime 再開
 
     // 3. onUpdate
     TPDirect.card.onUpdate(function (update) {
@@ -101,38 +97,46 @@ export function initTapPay(){
             // submitButton.setAttribute('disabled', true)
             payBtn.setAttribute('disabled', true);
         }
-                                                
+
+        /* Change card type display when card type change */
+        /* ============================================== */
         // cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unknown']
-        if (update.cardType === 'visa') {
-            // Handle card type visa.
-        }
+        const cardtypeEl = document.querySelector('#cardtype');
+        let newType = update.cardType === 'unknown' ? '' : update.cardType
+        cardtypeEl.textContent = newType.toUpperCase();
+
+
+        /* Change form-group style when tappay field status change */
+        /* ======================================================= */
+        const cardNumberGroup = document.querySelector('.card-number-group');
+        const expireationDateGroup = document.querySelector('.expiration-date-group');
+        const ccvGroup = document.querySelector('.ccv-group');
 
         // number 欄位是錯誤的
         if (update.status.number === 2) {
-            // setNumberFormGroupToError()
+            setNumberFormGroupToError(cardNumberGroup);
         } else if (update.status.number === 0) {
-            // setNumberFormGroupToSuccess()
+            setNumberFormGroupToSuccess(cardNumberGroup);
         } else {
-            // setNumberFormGroupToNormal()
+            setNumberFormGroupToNormal(cardNumberGroup);
         }
         
         if (update.status.expiry === 2) {
-            // setNumberFormGroupToError()
+            setNumberFormGroupToError(expireationDateGroup);
         } else if (update.status.expiry === 0) {
-            // setNumberFormGroupToSuccess()
+            setNumberFormGroupToSuccess(expireationDateGroup);
         } else {
-            // setNumberFormGroupToNormal()
+            setNumberFormGroupToNormal(expireationDateGroup);
         }
         
         if (update.status.ccv === 2) {
-            // setNumberFormGroupToError()
+            setNumberFormGroupToError(ccvGroup);
         } else if (update.status.ccv === 0) {
-            // setNumberFormGroupToSuccess()
+            setNumberFormGroupToSuccess(ccvGroup);
         } else {
-            // setNumberFormGroupToNormal()
+            setNumberFormGroupToNormal(ccvGroup);
         }
     })
-
 
     // 4. Get Tappay Fields Status
     TPDirect.card.getTappayFieldsStatus()
@@ -141,29 +145,54 @@ export function initTapPay(){
 
     // 5. Get Prime
     // call TPDirect.card.getPrime when user submit form to get tappay prime
-    // $('form').on('submit', onSubmit)
-    function onSubmit(event) {
-        event.preventDefault()
+    const payBtn = document.querySelector("#pay-btn");
+    if (!payBtn) {
+        console.error("#pay-btn not found");
+        return;
+    }
 
-        // 取得 TapPay Fields 的 status
-        const tappayStatus = TPDirect.card.getTappayFieldsStatus()
+    payBtn.addEventListener("click", onSubmit);
+    payBtn.disabled = true; // 預設先關閉，等 canGetPrime 再開
+}
 
-        // 確認是否可以 getPrime
-        if (tappayStatus.canGetPrime === false) {
-            alert('can not get prime')
+
+function onSubmit(event) {
+    event.preventDefault()
+
+    // 取得 TapPay Fields 的 status
+    const tappayStatus = TPDirect.card.getTappayFieldsStatus()
+
+    // 確認是否可以 getPrime
+    if (tappayStatus.canGetPrime === false) {
+        alert('can not get prime')
+        return
+    }
+
+    // Get prime
+    TPDirect.card.getPrime((result) => {
+        if (result.status !== 0) {
+            alert('get prime error ' + result.msg)
             return
         }
+        alert('get prime 成功，prime: ' + result.card.prime)
 
-        // Get prime
-        TPDirect.card.getPrime((result) => {
-            if (result.status !== 0) {
-                alert('get prime error ' + result.msg)
-                return
-            }
-            alert('get prime 成功，prime: ' + result.card.prime)
+        // send prime to your server, to pay with Pay by Prime API .
+        // Pay By Prime Docs: https://docs.tappaysdk.com/tutorial/zh/back.html#pay-by-prime-api
+    })
+}
 
-            // send prime to your server, to pay with Pay by Prime API .
-            // Pay By Prime Docs: https://docs.tappaysdk.com/tutorial/zh/back.html#pay-by-prime-api
-        })
-    }
+
+function setNumberFormGroupToError(el) {
+    el.classList.add('has-error');
+    el.classList.remove('has-success');
+}
+
+function setNumberFormGroupToSuccess(el) {
+    el.classList.remove('has-error');
+    el.classList.add('has-success');
+}
+
+function setNumberFormGroupToNormal(el) {
+    el.classList.remove('has-error');
+    el.classList.remove('has-success');
 }

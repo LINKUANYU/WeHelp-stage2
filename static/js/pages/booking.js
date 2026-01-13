@@ -124,15 +124,16 @@ function buildBookingHtml(data, user){
   <hr class="divider divider--1200">
   <div class="payment">
     <div class="payment__title u-text-btn--bold u-c-sec-70">信用卡付款資訊</div>
-    <div class="payment__field">
+    <div class="payment__field card-number-group">
       <div class="u-text-body--400 u-c-sec-70">卡片號碼：</div>
       <div class="tpfield" id="card-number"></div>
+      <span id="cardtype"></span>
     </div>
-    <div class="payment__field">
+    <div class="payment__field expiration-date-group">
       <div class="u-text-body--400 u-c-sec-70">過期時間：</div>
       <div class="tpfield" id="card-expiration-date"></div>
     </div>
-    <div class="payment__field">
+    <div class="payment__field ccv-group">
       <div class="u-text-body--400 u-c-sec-70">驗證密碼：</div>
       <div class="tpfield" id="card-ccv"></div>
     </div>
