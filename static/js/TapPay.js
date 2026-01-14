@@ -8,7 +8,8 @@
 
 let tappayInited = false;
 
-export function initTapPay(){
+export function initTapPay(data){
+    if (!data) return; // 沒有預定行程資料
     if (tappayInited) return; // 避免重複初始化
     // 1. 三個 tappay field container (在HTML檔案中)
     // 2. Setup SDK
@@ -168,7 +169,6 @@ export function getPrime(){
                 reject(new Error (`get prime error: ${result.msg}`));
                 return;
             }
-            alert('get prime 成功，prime: ' + result.card.prime);
             resolve(result.card.prime);
         })
     })

@@ -5,23 +5,27 @@ import { applySessionUi } from "../components/apply_session_ui.js";
 import { getPrime, initTapPay } from "../TapPay.js";
 
 async function startup(){
-    // 1) 全站UI + 事件綁定
-    setupAppShell();
-    // 2) UI related with session + User info
-    const {loggedIn, user} = await applySessionUi();
-    // 3) 本頁
-    // 沒登入的不能從url進來
-    if (!loggedIn){
-        window.location.href = "/";
-        return
-    }
-    // 本頁渲染
-    await fetchAndRenderBooking(user);
-    // 綁定刪除按鈕事件
-    bindDeleteBooking();
-    // 綁定金流
-    initTapPay();
-    bindPayBtn();
+  // 1) 全站UI + 事件綁定
+  setupAppShell();
+  // 2) UI related with session + User info
+  const {loggedIn, user} = await applySessionUi();
+  // 3) 本頁
+  // 沒登入的不能從url進來
+  if (!loggedIn){
+    window.location.href = "/";
+    return
+  }
+  // 本頁渲染
+  const data = await fetchAndRenderBooking(user);
+  if (!data){
+    console.log("無預訂行程，停止初始化金流、刪除按鈕事件綁定");
+    return;
+  }
+  // 綁定刪除按鈕事件
+  bindDeleteBooking(data);
+  // 綁定金流
+  initTapPay(data);
+  bindPayBtn(data);
 }
 
 startup();
@@ -39,13 +43,14 @@ async function fetchAndRenderBooking(user){
     if (!data){  
       // 顯示「無資料」
       document.querySelector('.empty-msg').classList.remove('is-hidden');
-      return;
+      return null;
     }else{
       // 隱藏「無資料」
       document.querySelector('.empty-msg').classList.add('is-hidden');
       // 開始長html
       renderBookingHtml({}, data, user);
     }
+    return data;
 }
 
 async function getBookingData(){
@@ -152,30 +157,27 @@ function renderBookingHtml({mount = document.querySelector('.booking-headline')}
     mount.insertAdjacentHTML("afterend", buildBookingHtml(data, user));
 }
 
-function bindDeleteBooking(){
-    const deleteBtn = document.querySelector('#delete-booking-btn');
-    if (!deleteBtn) return;
-    deleteBtn.addEventListener('click', async() => {
-        try{
-            const res = await request("/api/booking", {
-                method: "DELETE",
-                headers: authHeaders()
-            });
-            if (res.ok) window.location.reload();
-            return
-        }catch(e){
-            console.log(getErrorMsg(e));
-        }
-    });
+function bindDeleteBooking(data){
+  if (!data) return // 沒有預定行程資料
+  const deleteBtn = document.querySelector('#delete-booking-btn');
+  deleteBtn.addEventListener('click', async() => {
+      try{
+          const res = await request("/api/booking", {
+              method: "DELETE",
+              headers: authHeaders()
+          });
+          if (res.ok) window.location.reload();
+          return
+      }catch(e){
+          console.log(getErrorMsg(e));
+      }
+  });
 }
 
-function bindPayBtn(){
+function bindPayBtn(data){
+  if (!data) return; // 沒有預定行程資料
+  
   const payBtn = document.querySelector("#pay-btn");
-  if (!payBtn) {
-      console.error("#pay-btn not found");
-      return;
-  }
-
   payBtn.disabled = true; // 預設先關閉，等 canGetPrime 再開
 
   payBtn.addEventListener("click", async (e) => {
@@ -227,7 +229,8 @@ function bindPayBtn(){
         body: JSON.stringify(payload)
       });
       // 得到回應之後...TODO
-      
+      const order_no = res.data.order_no;
+      window.location.href = `/thankyou?number=${order_no}`
     }catch(e){
       console.log(e);
     }finally{

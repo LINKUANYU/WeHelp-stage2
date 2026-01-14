@@ -1,0 +1,12 @@
+.thankyou-headline{
+    max-width: 1000px; width: 100%; height: 27px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 40px auto 30px auto;
+    line-height: 1.5;
+}
+.thankyou-msg{
+    max-width: 1000px; width: 100%; height: 27px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0px auto 40px auto;
+    line-height: 1.5;
+}
