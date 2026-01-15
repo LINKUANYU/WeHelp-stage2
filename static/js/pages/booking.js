@@ -2,26 +2,53 @@
 import { authHeaders, getErrorMsg, request } from "../common/api.js";
 import { setupAppShell } from "../components/setup_app_shell.js";
 import { applySessionUi } from "../components/apply_session_ui.js";
-import { getSession } from "../common/session.js";
+import { getPrime, initTapPay } from "../common/TapPay.js";
+
+async function startup(){
+  // 1) 全站UI + 事件綁定
+  setupAppShell();
+  // 2) UI related with session + User info
+  const {loggedIn, user} = await applySessionUi();
+  // 3) 本頁
+  // 沒登入的不能從url進來
+  if (!loggedIn){
+    window.location.href = "/";
+    return
+  }
+  // 本頁渲染
+  const data = await getBookingData();
+  RenderBookingPage(user, data);
+  // 如果沒有預定行程停止後續事件
+  if (!data){
+    console.log("無預訂行程，停止初始化金流、刪除按鈕事件綁定");
+    return;
+  }
+  // 綁定刪除按鈕事件
+  bindDeleteBooking();
+  // 綁定金流
+  initTapPay();
+  bindPayBtn(data);
+}
+
+startup();
 
 
-async function setupBooking(user){
+
+
+
+async function RenderBookingPage(user, data){
     // Headline name
     document.querySelector('.booking-headline').textContent = `您好，${user.name}，待預訂的行程如下：`;
-    // 先打get api 拿資料
-    const data = await getBookingData();
     // 如果沒有資料
     if (!data){  
       // 顯示「無資料」
       document.querySelector('.empty-msg').classList.remove('is-hidden');
-      return;
+      return null;
     }else{
       // 隱藏「無資料」
       document.querySelector('.empty-msg').classList.add('is-hidden');
       // 開始長html
-      renderBookingHtml({}, data, user);
-      // 綁定刪除按鈕事件
-      bindDeleteBooking();
+      mountBookingContent({}, data, user);
     }
 }
 
@@ -43,7 +70,7 @@ async function getBookingData(){
     }
 }
 
-function buildBookingHtml(data, user){
+function buildAndRenderBookingContent(data, user){
     const userName = user.name;
     const userEmail = user.email;
     const attractionId = data.data.attraction.id;
@@ -102,63 +129,113 @@ function buildBookingHtml(data, user){
   <hr class="divider divider--1200">
   <div class="payment">
     <div class="payment__title u-text-btn--bold u-c-sec-70">信用卡付款資訊</div>
-    <div class="payment__field">
+    <div class="payment__field card-number-group">
       <div class="u-text-body--400 u-c-sec-70">卡片號碼：</div>
-      <input class="payment__input payment__input--number">
+      <div class="tpfield" id="card-number"></div>
+      <span id="cardtype"></span>
     </div>
-    <div class="payment__field">
+    <div class="payment__field expiration-date-group">
       <div class="u-text-body--400 u-c-sec-70">過期時間：</div>
-      <input class="payment__input payment__input--expiry">
+      <div class="tpfield" id="card-expiration-date"></div>
     </div>
-    <div class="payment__field">
+    <div class="payment__field ccv-group">
       <div class="u-text-body--400 u-c-sec-70">驗證密碼：</div>
-      <input class="payment__input payment__input--cvv">
+      <div class="tpfield" id="card-ccv"></div>
     </div>
   </div>
   <hr class="divider divider--1200">
   <div class="confirmation">
     <div class="confirmation__title u-text-body--bold u-c-sec-70">總價：新台幣 ${price} 元</div>
-    <button class="confirmation__btn u-text-btn--400 u-c-white u-bg-pri-70">確認訂購並付款</button>
+    <button class="confirmation__btn u-text-btn--400 u-c-white u-bg-pri-70" id="pay-btn" type="submit" disabled>確認訂購並付款</button>
   </div>
     `.trim()
 }
 
-function renderBookingHtml({mount = document.querySelector('.booking-headline')} = {}, data, user){
+function mountBookingContent({mount = document.querySelector('.booking-headline')} = {}, data, user){
     if (document.querySelector('.order')) return;
-    mount.insertAdjacentHTML("afterend", buildBookingHtml(data, user));
+    mount.insertAdjacentHTML("afterend", buildAndRenderBookingContent(data, user));
 }
 
-function bindDeleteBooking(){
-    const deleteBtn = document.querySelector('#delete-booking-btn');
-    deleteBtn.addEventListener('click', async() => {
-        try{
-            const res = await request("/api/booking", {
-                method: "DELETE",
-                headers: authHeaders()
-            });
-            if (res.ok) window.location.reload();
-            return
-        }catch(e){
-            console.log(getErrorMsg(e));
-        }
-    });
+function bindDeleteBooking(data){
+  if (!data) return // 沒有預定行程資料
+  const deleteBtn = document.querySelector('#delete-booking-btn');
+  deleteBtn.addEventListener('click', async() => {
+      try{
+          const res = await request("/api/booking", {
+              method: "DELETE",
+              headers: authHeaders()
+          });
+          if (res.ok) window.location.reload();
+          return
+      }catch(e){
+          console.log(getErrorMsg(e));
+      }
+  });
 }
 
-async function startup(){
-    // 1) 全站UI + 事件綁定
-    setupAppShell();
-    // 2) UI related with session + User info
-    const {loggedIn, user} = await applySessionUi();
-    // 3) 本頁
-    // 沒登入的不能從url進來
-    if (!loggedIn){
-        window.location.href = "/";
-        return
-    }
-    // 本頁渲染
-    await setupBooking(user);
+function bindPayBtn(data){
+  const payBtn = document.querySelector("#pay-btn");
+  payBtn.disabled = true; // 預設先關閉，等 canGetPrime 再開
+
+  payBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    try{
+      const attractionId = Number(data.data.attraction.id);
+      const attractionName = data.data.attraction.name;
+      const attractionAddress = data.data.attraction.address;
+      const attractionImage = data.data.attraction.image;
+      const tripDate = data.data.date;
+      const tripTime = data.data.time;
+      const orderPrice = Number(data.data.price);
+      const contactName = document.querySelector('.contact__input--name').value.trim();
+      const contactEmail = document.querySelector('.contact__input--email').value.trim();
+      const contactPhone = document.querySelector('.contact__input--phone').value.trim();
+      
+      if (!contactName || !contactEmail || !contactPhone) {alert('請輸入完整資訊'); return}
     
+      // get prime
+      const prime = await getPrime();
+      // 收集其他資訊送至後端
+      const payload = {
+        "prime": prime,
+        "order": {
+          "price": orderPrice,
+          "trip": {
+            "attraction": {
+              "id": attractionId,
+              "name": attractionName,
+              "address": attractionAddress,
+              "image": attractionImage
+            },
+            "date": tripDate,
+            "time": tripTime
+          },
+          "contact": {
+            "name": contactName,
+            "email": contactEmail,
+            "phone": contactPhone
+          }
+        }
+      }
+      // 送出API給我的後端
+      const res = await request("/api/orders", {
+        method: "POST",
+        headers: authHeaders({"content-type": "application/json"}),
+        body: JSON.stringify(payload)
+      });
+      // 得到回應之後引導至thankyou page
+      const orderNo = res.data.order_no;
+      const paymentStatus = res.data.payment.status;
+      const paymentMsg = (paymentStatus === 0) ? "交易成功" : "交易失敗";
+      alert(paymentMsg);
+      window.location.href = `/thankyou?number=${orderNo}`
+    }catch(e){
+      console.log(e);
+    }finally{
+      payBtn.disabled = false;
+    }
+  });
 }
 
-startup();
 

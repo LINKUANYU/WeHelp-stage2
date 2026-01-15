@@ -4,13 +4,11 @@ import { setupAppShell } from "../components/setup_app_shell.js";
 import { applySessionUi } from "../components/apply_session_ui.js";
 import { getSession } from "../common/session.js";
 
-
 // 透過url尋找當前頁面資料
 const pathPart = window.location.pathname.split("/").filter(Boolean);
 // pathname 只取「路徑」部分，不含網域、不含 ?、不含 #。
 // filter 會把陣列每個元素丟進去測試，回傳「通過條件」的元素。把空字串 ""（以及其他 falsy 值）過濾掉
-const attraction_id = pathPart[1];
-
+const attractionId = pathPart[1];
 
 const name = document.querySelector('.profile__name');
 const mrt = document.querySelector('.profile__cat-mrt');
@@ -25,6 +23,46 @@ const indicator = document.querySelector('.carousel__indicator');
 
 let photos = [];
 let idx = 0;
+
+async function startup(){
+    // 1) 全站UI + 事件綁定
+    setupAppShell();
+
+    // 2) UI related with session + User info
+    const {loggedIn, user} = await applySessionUi();
+    
+    // 3) 本頁
+    await fetchAndRenderAttractionPage();
+    bindSlide();
+    bindBookingPrice();
+    bindBookingSubmitBtn();
+
+    moveSlide();  // 初始化按鈕disable & indicator active
+}
+
+startup();
+
+
+
+
+
+async function fetchAndRenderAttractionPage(){
+    // get attraction data
+    try{
+        const result = await request(`/api/attraction/${attractionId}`);
+        // fill html information 
+        name.textContent = result.data.name;
+        mrt.textContent = result.data.name + " at " + result.data.mrt;
+        description.textContent = result.data.description;
+        address.textContent = result.data.address;
+        transport.textContent = result.data.transport;
+        // 建立相片slide
+        photos = result.data.images;
+        buildSlide();
+    }catch(e){
+        console.log(getErrorMsg(e));
+    }
+}
 
 function buildSlide() {
     photos.forEach((p) => {
@@ -45,23 +83,6 @@ function buildSlide() {
     }
 }
 
-async function renderAttractionPage(){
-    // get attraction data
-    try{
-        const result = await request(`/api/attraction/${attraction_id}`);
-        // fill html information 
-        name.textContent = result.data.name;
-        mrt.textContent = result.data.name + " at " + result.data.mrt;
-        description.textContent = result.data.description;
-        address.textContent = result.data.address;
-        transport.textContent = result.data.transport;
-        // 建立相片slide
-        photos = result.data.images;
-        buildSlide();
-    }catch(e){
-        console.log(getErrorMsg(e));
-    }
-}
 
 function bindSlide(){
     // 綁定按鈕功能
@@ -129,7 +150,7 @@ function bindBookingSubmitBtn(){
             const res = await request("/api/booking", {
                 method: "POST",
                 headers: authHeaders({"content-type": "application/json"}),
-                body: JSON.stringify({attraction_id, date, time, price}) // attraction_id 是全域變數
+                body: JSON.stringify({attraction_id: attractionId, date: date, time: time, price: price})
             });
             if (res.ok){
                 window.location.href = "/booking";
@@ -152,22 +173,3 @@ function buildBookingPayload(){
 
     return {date, time, price}
 }
-
-
-async function startup(){
-    // 1) 全站UI + 事件綁定
-    setupAppShell();
-
-    // 2) UI related with session + User info
-    await applySessionUi();
-    
-    // 3) 本頁
-    await renderAttractionPage();
-    bindSlide();
-    bindBookingPrice();
-    bindBookingSubmitBtn();
-
-    moveSlide();  // 初始化按鈕disable & indicator active
-}
-
-startup();

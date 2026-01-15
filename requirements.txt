@@ -7,5 +7,7 @@ python-multipart
 # hash password
 passlib[bcrypt]
 argon2_cffi
-
+# token
 pyJWT
+# sent request to TapPay
+requests

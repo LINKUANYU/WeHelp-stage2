@@ -77,8 +77,9 @@ def signup(
 	# 判斷是否為「重複鍵」(MySQL 1062)
 	# 回給前端 400＋友善訊息
 
-	except Error:
+	except Error as e:
 		conn.rollback()
+		print(f"[DB Error] Create User Failed: {e}")
 		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
 	finally:
 		cur.close()
@@ -105,6 +106,7 @@ def login(
 		token = create_access_token(data["id"], data["email"], data["name"])
 		return {"token": token}
 	except Error:
+		print(f"[DB Error] Select User Failed: {e}")
 		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
 
 # HTTPException

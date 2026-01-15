@@ -5,13 +5,15 @@
 */
 
 import { renderAppShell } from "./render_app_shell.js";
-import { initNavbar } from "./init_navbar.js"
-import { bindAuth } from "./bind_auth.js";
+import { bindNavBrand } from "./bind_nav_brand.js"
+import { bindNavAuth } from "./bind_nav_auth.js";
+import { bindNavBooking } from "./bind_nav_booking.js";
 
 export function setupAppShell(){
     renderAppShell();
-    initNavbar();
-    bindAuth();
+    bindNavBrand();
+    bindNavAuth();
+    bindNavBooking();
 }
 
 /* 

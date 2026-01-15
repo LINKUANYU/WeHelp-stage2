@@ -1,3 +1,8 @@
+/* 這份檔案用來做
+1. 統一fetch API request、response、error msg 
+2. 組織fetch 使用的 Headers
+*/
+
 export async function request(url, option = {}){
     const res = await fetch(url, option);
 
@@ -21,6 +26,6 @@ export function getErrorMsg(err){
 export function authHeaders(extra = {}){
     const headers = new Headers(extra);  // 如果有傳入別的Header 就建立
     const token = localStorage.getItem("access_token"); 
-    if (token) headers.set("Authorization", `bearer ${token}`); // 在Header內多建立一個key, value
+    if (token) headers.set("Authorization", `Bearer ${token}`); // 在Header內多建立一個key, value
     return headers;
 }

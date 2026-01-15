@@ -22,7 +22,8 @@ def mrt(cur = Depends(get_cur)):
 			result.append(d["mrt"])
 		return {"data": result}
 	except Error as e:
-		return {"error": True, "message": e}
+		print(f"[DB Error] Get Mrt Failed: {e}")
+		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
 
 @router.get("/api/categories")
 def categoies(cur = Depends(get_cur)):
@@ -34,7 +35,8 @@ def categoies(cur = Depends(get_cur)):
 			result.append(d["category"])
 		return {"data": result}
 	except Error as e:
-		return {"error": True, "message": e}
+		print(f"[DB Error] Get Categories Failed: {e}")
+		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
 	
 @router.get("/api/attractions")
 def attractions(
@@ -73,7 +75,8 @@ def attractions(
 		if total == 0:
 			return {"data": None}
 	except Error as e:
-		return {"error": True, "message": e}
+		print(f"[DB Error] Get Attraciotns Total Number Failed: {e}")
+		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
 
 	# 搜尋結果補上每頁顯示的條件
 	sql = sql + " ORDER BY id LIMIT %s OFFSET %s"
@@ -93,7 +96,8 @@ def attractions(
 			elif isinstance(row_image, str):
 				row["images"] = json.loads(row_image)
 	except Error as e:
-		return {"error": True, "message": e}
+		print(f"[DB Error] Get Attraciotns Failed: {e}")
+		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
 	
 	# 如果page超過或找不到資料
 	if not data:
@@ -128,7 +132,8 @@ def attraction_id(
 		elif isinstance(data_image, str):
 			data["images"] = json.loads(data_image)
 	except Error as e:
-		return {"error": True, "message": e}
+		print(f"[DB Error] Get Spot Failed: {e}")
+		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
 	
 	if not data:
 		return {"error": True, "message": "景點編號不正確"}
