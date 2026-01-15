@@ -2,7 +2,7 @@
 import { authHeaders, getErrorMsg, request } from "../common/api.js";
 import { setupAppShell } from "../components/setup_app_shell.js";
 import { applySessionUi } from "../components/apply_session_ui.js";
-import { getPrime, initTapPay } from "../TapPay.js";
+import { getPrime, initTapPay } from "../common/TapPay.js";
 
 async function startup(){
   // 1) 全站UI + 事件綁定
@@ -225,8 +225,11 @@ function bindPayBtn(data){
         body: JSON.stringify(payload)
       });
       // 得到回應之後引導至thankyou page
-      const order_no = res.data.order_no;
-      window.location.href = `/thankyou?number=${order_no}`
+      const orderNo = res.data.order_no;
+      const paymentStatus = res.data.payment.status;
+      const paymentMsg = (paymentStatus === 0) ? "交易成功" : "交易失敗";
+      alert(paymentMsg);
+      window.location.href = `/thankyou?number=${orderNo}`
     }catch(e){
       console.log(e);
     }finally{
