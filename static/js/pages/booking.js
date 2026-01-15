@@ -16,15 +16,17 @@ async function startup(){
     return
   }
   // 本頁渲染
-  const data = await fetchAndRenderBooking(user);
+  const data = await getBookingData();
+  RenderBookingPage(user, data);
+  // 如果沒有預定行程停止後續事件
   if (!data){
     console.log("無預訂行程，停止初始化金流、刪除按鈕事件綁定");
     return;
   }
   // 綁定刪除按鈕事件
-  bindDeleteBooking(data);
+  bindDeleteBooking();
   // 綁定金流
-  initTapPay(data);
+  initTapPay();
   bindPayBtn(data);
 }
 
@@ -34,11 +36,9 @@ startup();
 
 
 
-async function fetchAndRenderBooking(user){
+async function RenderBookingPage(user, data){
     // Headline name
     document.querySelector('.booking-headline').textContent = `您好，${user.name}，待預訂的行程如下：`;
-    // 先打get api 拿資料
-    const data = await getBookingData();
     // 如果沒有資料
     if (!data){  
       // 顯示「無資料」
@@ -48,9 +48,8 @@ async function fetchAndRenderBooking(user){
       // 隱藏「無資料」
       document.querySelector('.empty-msg').classList.add('is-hidden');
       // 開始長html
-      renderBookingHtml({}, data, user);
+      mountBookingContent({}, data, user);
     }
-    return data;
 }
 
 async function getBookingData(){
@@ -71,7 +70,7 @@ async function getBookingData(){
     }
 }
 
-function buildBookingHtml(data, user){
+function buildAndRenderBookingContent(data, user){
     const userName = user.name;
     const userEmail = user.email;
     const attractionId = data.data.attraction.id;
@@ -152,9 +151,9 @@ function buildBookingHtml(data, user){
     `.trim()
 }
 
-function renderBookingHtml({mount = document.querySelector('.booking-headline')} = {}, data, user){
+function mountBookingContent({mount = document.querySelector('.booking-headline')} = {}, data, user){
     if (document.querySelector('.order')) return;
-    mount.insertAdjacentHTML("afterend", buildBookingHtml(data, user));
+    mount.insertAdjacentHTML("afterend", buildAndRenderBookingContent(data, user));
 }
 
 function bindDeleteBooking(data){
@@ -175,8 +174,6 @@ function bindDeleteBooking(data){
 }
 
 function bindPayBtn(data){
-  if (!data) return; // 沒有預定行程資料
-  
   const payBtn = document.querySelector("#pay-btn");
   payBtn.disabled = true; // 預設先關閉，等 canGetPrime 再開
 
@@ -184,7 +181,6 @@ function bindPayBtn(data){
     e.preventDefault();
 
     try{
-      const data = await getBookingData();
       const attractionId = Number(data.data.attraction.id);
       const attractionName = data.data.attraction.name;
       const attractionAddress = data.data.attraction.address;
@@ -228,7 +224,7 @@ function bindPayBtn(data){
         headers: authHeaders({"content-type": "application/json"}),
         body: JSON.stringify(payload)
       });
-      // 得到回應之後...TODO
+      // 得到回應之後引導至thankyou page
       const order_no = res.data.order_no;
       window.location.href = `/thankyou?number=${order_no}`
     }catch(e){

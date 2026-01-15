@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `payment`(
 
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    -- TapPay respone 資訊（方便 debug/客服）
+    -- TapPay respone 資訊（方便 debug）
     `tappay_status` INT NULL,
     `tappay_msg` VARCHAR(255) NULL,
 

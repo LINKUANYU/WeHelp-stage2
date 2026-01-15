@@ -98,6 +98,8 @@ def call_tappay_pay_by_prime(
 ) -> dict:
     
     if not TAPPAY_PARTNER_KEY or not TAPPAY_MERCHANT_ID:
+        # 當一個錯誤發生，且這個錯誤不屬於其他任何特定的類別時，就用 RuntimeError。也有代表「執行環境」有錯誤
+        print("[CRITICAL] Missing TapPay config: TAPPAY_PARTNER_KEY / TAPPAY_MERCHANT_ID")
         raise RuntimeError("Missing TapPay config: TAPPAY_PARTNER_KEY / TAPPAY_MERCHANT_ID")
     
     bank_transaction_id = gen_bank_transaction_id()
@@ -133,9 +135,13 @@ def call_tappay_pay_by_prime(
         # TapPay 通常會回 JSON；若非 JSON 也讓它丟例外，交給上層記錄 UNKNOWN
         return r.json()
     except requests.exceptions.RequestException as e:
-        # 這裡捕捉的是連線失敗，不是支付失敗
-        print(f"TapPay Connection Error {e}")
-        return {"status": -1, "msg": "Connection Error", "tappay_error": str(e)}
+        # 這裡捕捉的是連線失敗，不是支付失敗，上面那一串是 requests 套件裡所有連線錯誤
+        print(f"[TapPay Error] Connection Error {e}")
+        # 預防訊息太長無法存入DB
+        full_err_msg = f"Connection Error {str(e)}"
+        short_err_msg = full_err_msg[:250]
+
+        return {"status": -1, "msg": short_err_msg}
 
 
 # --- API Endpoint ---
@@ -170,7 +176,7 @@ def create_order(
     if not prime:
         raise HTTPException(status_code=400, detail={"error": True, "message": "Missing prime"})
     if amount < 0:
-        raise HTTPException(status_code=400, detail={"error": True, "message": "Invalid amount"})
+        raise HTTPException(status_code=400, detail={"error": True, "message": "Invalid pay amount"})
     if not cardholder_name or not cardholder_email or not cardholder_phone:
         raise HTTPException(status_code=400, detail={"error": True, "message": "Missing contact info"})
     
@@ -195,12 +201,14 @@ def create_order(
         order_id = cur.lastrowid # 取得剛剛建立那筆資料的id
         conn.commit()
 
-    except (IntegrityError, DataError):
+    except (IntegrityError, DataError) as e:
         conn.rollback()
-        raise HTTPException(status_code=400, detail={"error":True, "message":"建立失敗，輸入不正確"})        
-    except Error:
+        print(f"[DB Error] Create Order Failed: {e}")
+        raise HTTPException(status_code=400, detail={"error":True, "message":"訂單建立失敗，輸入不正確"})        
+    except Error as e:
         conn.rollback()
-        raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
+        print(f"[DB Error] Create Order Failed: {e}")
+        raise HTTPException(status_code=500, detail={"error":True, "message":"訂單建立時，資料庫錯誤，請稍後再試"})
     finally:
         cur.close()
         
@@ -251,8 +259,22 @@ def create_order(
     except Error as e:
         # 這裏錯誤代表「可能已經扣錢了，但DB沒更新』
         conn.rollback()
-        print(f"DB error:{e} | Order:{order_no} | PayStatus:{tappay_status}")
-        raise HTTPException(status_code=500 ,detail={"error": True, "message": "Payment processed but system error occurred."})
+        print(f"[CRITICAL PAYMAENT] DB error:{e} | Order:{order_no} | PayStatus:{tappay_status}")
+        raise HTTPException(status_code=500 ,detail={"error": True, "message": "Payment 建立失敗，已走完付款流程（可能已付款成功）"})
+    finally:
+        cur.close()
+
+    # 清空原本購物車內資訊
+    try:
+        cur = conn.cursor(dictionary=True)
+        cur.execute("""
+            DELETE FROM booking WHERE member_id = %s
+        """, (user_id,))
+        conn.commit()
+    except Error as e:
+        conn.rollback()
+        print(f"[DB Error] Delete Booking Failed: {e}")
+        raise HTTPException(status_code=500, detail={"error":True, "message":"刪除預定行程失敗，資料庫錯誤，請稍後再試"})
     finally:
         cur.close()
 
@@ -285,15 +307,20 @@ def get_order(
     user = Depends(verify_token),
     cur = Depends(get_cur)
 ):
+    user_id = int(user["sub"])
 
     try:
         cur.execute("SELECT * FROM orders WHERE order_no = %s", (orderNumber,))
         row = cur.fetchone()
     except Error:
+        print(f"DB {Error} at 尋找訂單號碼")
         raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
-    
+    # 沒有訂單資料
     if not row:
         return {"data": None}
+    # 不能查別人的訂單
+    if row["member_id"] != user_id:
+        raise HTTPException(status_code=403, detail={"error":True, "message":"沒有訪問權限"})
     
     return{
         "data": {

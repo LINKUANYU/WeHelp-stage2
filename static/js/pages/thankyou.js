@@ -37,10 +37,14 @@ async function getOrderDetail(orderNumber){
       method: "GET",
       headers: authHeaders()
     });
-    console.log(res)
     return res.data
   }catch(e){
    console.log(getErrorMsg(e)); 
+   if (e.status === 403){
+    alert("沒有訪問權限");
+    window.location.href = "/";
+    return null
+   }
   }
 }
 

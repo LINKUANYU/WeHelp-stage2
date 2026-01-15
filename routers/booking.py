@@ -65,8 +65,9 @@ def get_booking(
                 "price": row["price"]
                 }
             }
-    except Error:
-        raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
+    except Error as e:
+        print(f"[DB Error] Get Booking Failed: {e}")
+        raise HTTPException(status_code=500, detail={"error":True, "message":"取得預定行程時，資料庫錯誤，請稍後再試"})
 
 
 
@@ -93,12 +94,14 @@ def add_booking(
         """, (user_id, attraction_id, date, time, price))
         conn.commit()
         return {"ok": True}
-    except (IntegrityError, DataError):
+    except (IntegrityError, DataError) as e:
         conn.rollback()
-        raise HTTPException(status_code=400, detail={"error":True, "message":"建立失敗，輸入不正確"})        
-    except Error:
+        print(f"[DB Error] Create Booking Failed: {e}")
+        raise HTTPException(status_code=400, detail={"error":True, "message":"預定行程建立失敗，輸入不正確"})        
+    except Error as e:
         conn.rollback()
-        raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
+        print(f"[DB Error] Create Booking Failed: {e}")
+        raise HTTPException(status_code=500, detail={"error":True, "message":"預定行程建立時，資料庫錯誤，請稍後再試"})
     finally:
         cur.close()
     # IntegrityError：違反資料完整性／約束
@@ -123,6 +126,7 @@ def delete_booking(
         return {"ok": True}
     except Error:
         conn.rollback()
-        raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
+        print(f"[DB Error] Delete Booking Failed: {e}")
+        raise HTTPException(status_code=500, detail={"error":True, "message":"刪除預定行程失敗，資料庫錯誤，請稍後再試"})
     finally:
         cur.close()

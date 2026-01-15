@@ -8,8 +8,7 @@
 
 let tappayInited = false;
 
-export function initTapPay(data){
-    if (!data) return; // 沒有預定行程資料
+export function initTapPay(){
     if (tappayInited) return; // 避免重複初始化
     // 1. 三個 tappay field container (在HTML檔案中)
     // 2. Setup SDK
@@ -161,11 +160,11 @@ export function getPrime(){
     if (tappayStatus.canGetPrime === false) {
         return Promise.reject(new Error("can not get prime"));
     }
-    // 如果可以就包裝成 promise 回傳 prime
+    // 如果可以就包裝成 promise 回傳 prime（因為getPrime 原生不支援await）
+    // new Promise 狀態(Pending, resolve 成功, reject 失敗會給Error抓到)
     return new Promise((resolve, reject) => {
         TPDirect.card.getPrime((result) => {
             if (result.status !== 0) {
-                alert('get prime error ' + result.msg);
                 reject(new Error (`get prime error: ${result.msg}`));
                 return;
             }
