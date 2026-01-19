@@ -92,6 +92,7 @@
 
 .category__item:hover{
     background: #EEEEEE;
+    cursor: pointer;
 }
 
 
@@ -146,7 +147,10 @@
     display: none;
 }
 
-.listBar__item{padding: 5px 15px;}
+.listBar__item{
+    padding: 5px 15px;
+    cursor: pointer;
+}
 
 .listBar__nav--right{
     flex: 0 0 auto;

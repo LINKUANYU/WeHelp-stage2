@@ -7,6 +7,7 @@ import jwt
 import os
 from dotenv import load_dotenv
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from schemas import *
 
 router = APIRouter()
 
@@ -48,13 +49,12 @@ def verify_token(creds: HTTPAuthorizationCredentials | None = Depends(bearer)) -
 
 @router.post("/api/user")
 def signup(
-	name: str = Form(...),
-	email: str = Form(...),
-	password: str = Form(...),
+	user: Signup,
 	conn = Depends(get_conn)
 ):
-	name = name.strip()
-	email = email.strip().lower()
+	name = user.name
+	email = user.email
+	password = user.password
 	
 	if not name or not email or not password:
 		raise HTTPException(status_code=400, detail={"error":True, "message":"請輸入完整資訊"})
@@ -87,13 +87,12 @@ def signup(
 
 @router.put("/api/user/auth")
 def login(
-	email: str = Form(...),
-	password: str = Form(...),
+	user: Login,
 	cur = Depends(get_cur)
 ):
-	email = email.strip().lower()
-	if not email or not password:
-		raise HTTPException(status_code=400, detail={"error":True, "message":"請輸入完整資訊"})
+	
+	email = user.email
+	password = user.password
 	
 	try:
 		cur.execute("SELECT id, name, email, password_hash FROM members WHERE email = %s", (email,))

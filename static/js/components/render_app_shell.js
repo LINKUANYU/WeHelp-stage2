@@ -11,20 +11,18 @@ function headerHtml(){
             <div class="modal__backdrop"></div>
             <div class="modal__content modal__content--login">
             <div class="modal__decorator-bar"></div>
-                <div class="modal__close">
+                <button class="modal__close">
                     <img class="modal__close-icon" src="/static/icon/close.png">
-                </div>
+                </button>
                 <div class="modal__body">
-                    <form id="login-form">
                     <div class="modal__title u-text-headline3 u-c-sec-70">登入會員帳號</div>
                     <input class="auth__input" id="login-email" placeholder="輸入電子信箱" name="email">
                     <input class="auth__input" id="login-password" placeholder="輸入密碼" name="password" type="password">
-                    <button type="submit" class="auth__submit u-bg-pri-70 u-c-white u-text-btn">登入帳戶</button>
+                    <button id="submit-login-btn" class="auth__submit u-bg-pri-70 u-c-white u-text-btn">登入帳戶</button>
                     <div class="is-hidden error-msg" id="login-msg"></div>
                     <div class="auth__hint u-c-sec-70 u-text-body">
-                        還沒有帳戶？<div class="auth__link--signup">點此註冊</div>
+                        還沒有帳戶？<div class="auth__link" id="to-signup">點此註冊</div>
                     </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -33,21 +31,19 @@ function headerHtml(){
             <div class="modal__backdrop"></div>
             <div class="modal__content modal__content--signup">
             <div class="modal__decorator-bar"></div>
-                <div class="modal__close">
+                <button class="modal__close">
                     <img class="modal__close-icon" src="/static/icon/close.png">
-                </div>
+                </button>
                 <div class="modal__body">
-                    <form id="signup-form">
                     <div class="modal__title u-text-headline3 u-c-sec-70">註冊會員帳號</div>
-                    <input class="auth__input" id="signup-name" placeholder="輸入姓名" name="name">
-                    <input class="auth__input" id="signup-email" placeholder="輸入電子信箱" name="email">
-                    <input class="auth__input" id="signup-password" placeholder="輸入密碼" name="password" type="password">
-                    <button type="submit" class="auth__submit u-bg-pri-70 u-c-white u-text-btn">註冊新帳戶</button>
+                    <input class="auth__input" id="signup-name" placeholder="輸入姓名">
+                    <input class="auth__input" id="signup-email" placeholder="輸入電子信箱">
+                    <input class="auth__input" id="signup-password" placeholder="輸入密碼"type="password">
+                    <button id="submit-signup-btn" class="auth__submit u-bg-pri-70 u-c-white u-text-btn">註冊新帳戶</button>
                     <div class="is-hidden error-msg" id="signup-msg"></div>
                     <div class="auth__hint u-c-sec-70 u-text-body">
-                        已經有帳戶了？<div class="auth__link--login">點此登入</div>
+                        已經有帳戶了？<div class="auth__link" id="to-login">點此登入</div>
                     </div>
-                    </form>
                 </div>
             </div>
         </div>

@@ -3,20 +3,20 @@
 import { getErrorMsg, request } from "../common/api.js";
 
 export function bindNavAuth(){
-    bindLoginForm();
-    bindSignupForm();
+    bindLoginBtn();
+    bindSignupBtn();
     bindSignoutBtn();
     bindAuthModal();
 }
 
-function bindLoginForm(){
-    const loginForm = document.querySelector('#login-form');
-    if (!loginForm) return;
+function bindLoginBtn(){
+    const loginBtn = document.querySelector('#submit-login-btn');
+    if (!loginBtn) return;
 
     const loginModal = document.querySelector('#login-modal')
     const loginMsg = document.querySelector('#login-msg');
 
-    loginForm.addEventListener('submit', async (e) => {
+    loginBtn.addEventListener('click', async (e) => {
         e.preventDefault();
 
         const loginEmail = document.querySelector('#login-email').value.trim();
@@ -30,12 +30,16 @@ function bindLoginForm(){
             return;
         }
 
-        const fd = new FormData(e.currentTarget);
+        const body = {
+            "email": loginEmail,
+            "password": loginPassword
+        }
 
         try{
             const res = await request("/api/user/auth", {
                 method: "PUT",
-                body: fd
+                headers: {"content-type": "application/json"},
+                body: JSON.stringify(body)
             });
             const token = res.token;
             if (token) localStorage.setItem("access_token", token);
@@ -50,14 +54,14 @@ function bindLoginForm(){
     });
 }
 
-function bindSignupForm(){
-    const signupForm = document.querySelector('#signup-form');
-    if (!signupForm) return;
+function bindSignupBtn(){
+    const signupBtn = document.querySelector('#submit-signup-btn');
+    if (!signupBtn) return;
 
     const signupModal = document.querySelector('#signup-modal');
     const signupMsg = document.querySelector('#signup-msg');
 
-    signupForm.addEventListener('submit', async (e) => {
+    signupBtn.addEventListener('click', async (e) => {
         e.preventDefault();
 
         const signupName = document.querySelector("#signup-name").value.trim();
@@ -72,12 +76,17 @@ function bindSignupForm(){
             return;
         }
 
-        const fd = new FormData(e.currentTarget);
+        const body = {
+            "name": signupName,
+            "email": signupEmail,
+            "password": signupPassword
+        }
 
         try{
             await request("/api/user", {
                 method: "POST",
-                body: fd
+                headers: {"content-type": "application/json"},
+                body: JSON.stringify(body)
             });
             if (signupModal) signupModal.classList.add("is-hidden");
         }catch(e){
@@ -105,8 +114,8 @@ function bindAuthModal(){
     const loginBtn = document.querySelector("#login-btn");
     const modalClose = document.querySelectorAll(".modal__close");
     const modalBackdrop = document.querySelectorAll(".modal__backdrop");
-    const toSignup = document.querySelector(".auth__link--signup");
-    const toLogin = document.querySelector(".auth__link--login");
+    const toSignup = document.querySelector("#to-signup");
+    const toLogin = document.querySelector("#to-login");
 
     const loginMsg = document.querySelector('#login-msg');
     const signupMsg = document.querySelector('#signup-msg');

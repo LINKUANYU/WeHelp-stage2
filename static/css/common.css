@@ -7,7 +7,8 @@ header{flex: 0 0 auto;}
 main{flex: 0 0 auto;}
 footer{flex: 1 0 auto;}
 hr{margin: 0px;}
-
+a:hover{cursor: pointer;}
+button:hover{cursor: pointer;}
 /* box-sizing: border-box
 當容器足夠寬時，width: 100% 會被 max-width: 1200px 限制住，內容區寬度會變成 1200px；
 接著左右 padding 各 10px 會加上去，所以外寬就變成：1200 + 10 + 10 = 1220px
@@ -33,7 +34,7 @@ hr{margin: 0px;}
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 10px;
 }
-
+.nav__brand:hover{cursor: pointer;}
 .nav__menu{display: flex;}
 
 .nav__btn{
@@ -91,8 +92,12 @@ position: absolute
     background: linear-gradient(90deg, #337788 0%, #66AABB 100%);
 }
 
-.modal__close{position: absolute; right: 10px; top: 20px;}
-.modal__close-icon{display: block;}
+.modal__close{
+    position: absolute; right: 10px; top: 20px;
+    height: 30px; width: 30px; padding: 0px;
+    border: 0px;
+    background: #ffffff;
+}
 .modal__body{padding: 15px 15px 16px 15px;}
 
 .modal__title{height:27px; text-align: center; margin-bottom: 15px;}
@@ -117,6 +122,7 @@ position: absolute
     height: 22px;
     display: flex; align-items: center; justify-content: center;
 }
+.auth__link:hover{cursor: pointer;}
 
 
 
