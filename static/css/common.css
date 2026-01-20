@@ -123,7 +123,13 @@ position: absolute
     display: flex; align-items: center; justify-content: center;
 }
 .auth__link:hover{cursor: pointer;}
+.validation-list{padding-left: 20px; margin: 0px 0px 5px 0px;}
+.validation-item{font-size: 12px;}
+.invalid { color: gray; }
+.invalid::before { content: "○ "; }
 
+.valid { color: green; font-weight: bold; }
+.valid::before { content: "● "; }
 
 
 /* Utility */

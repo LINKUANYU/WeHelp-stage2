@@ -1,25 +1,23 @@
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator, StringConstraints
 import re
+from typing import Annotated
+
+# 把所有 str 都去掉空白 & 加上必填(空字串不行)
+Cleanstr = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
+
 
 class Signup(BaseModel):
     # 姓名：必填、長度2~20
-    name: str = Field(..., min_length=2, max_length=30)
-
+    name: Cleanstr = Field(..., min_length=2, max_length=30)
     # Email：使用 EmailStr 自動驗證(install email-validator)
     email: EmailStr
-
     # 密碼：必填、自定義限制
-    password: str = Field(..., min_length=8)
+    password: Cleanstr = Field(..., min_length=8)
     
-    @field_validator('name') # 指定要檢查哪個欄位
-    @classmethod # 讓函數在物件建立前就能執行
-    def clean_name(cls, v):
-        return v.strip()
-
     @field_validator('email')
     @classmethod
-    def clean_name(cls, v):
-        return v.lower().strip()
+    def email_tolower(cls, v):
+        return v.lower() # Emailstr 已經自己做過strip()
 
     @field_validator('password') 
     @classmethod 
@@ -41,9 +39,9 @@ class Signup(BaseModel):
         
 class Login(BaseModel):
     email: EmailStr
-    password: str
+    password: Cleanstr
 
     @field_validator('email')
     @classmethod
     def clean_name(cls, v):
-        return v.lower().strip()
+        return v.lower()

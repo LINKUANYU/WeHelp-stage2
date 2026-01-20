@@ -39,6 +39,12 @@ function headerHtml(){
                     <input class="auth__input" id="signup-name" placeholder="輸入姓名">
                     <input class="auth__input" id="signup-email" placeholder="輸入電子信箱">
                     <input class="auth__input" id="signup-password" placeholder="輸入密碼"type="password">
+                    <ul class="validation-list is-hidden">
+                        <li id="rule-length" class="validation-item invalid">長度至少 8 位</li>
+                        <li id="rule-number" class="validation-item invalid">至少包含 1 個數字</li>
+                        <li id="rule-capital" class="validation-item invalid">至少包含 1 個大寫字母</li>
+                        <li id="rule-special" class="validation-item invalid">至少包含 1 個特殊符號</li>
+                    </ul>
                     <button id="submit-signup-btn" class="auth__submit u-bg-pri-70 u-c-white u-text-btn">註冊新帳戶</button>
                     <div class="is-hidden error-msg" id="signup-msg"></div>
                     <div class="auth__hint u-c-sec-70 u-text-body">

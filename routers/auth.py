@@ -48,16 +48,10 @@ def verify_token(creds: HTTPAuthorizationCredentials | None = Depends(bearer)) -
 # HTTPAuthorizationCredentials 通常有兩個重要欄位，creds.scheme：字串 "Bearer"，creds.credentials：真正的 token 字串（JWT）
 
 @router.post("/api/user")
-def signup(
-	user: Signup,
-	conn = Depends(get_conn)
-):
+def signup(user: Signup, conn = Depends(get_conn)):
 	name = user.name
 	email = user.email
 	password = user.password
-	
-	if not name or not email or not password:
-		raise HTTPException(status_code=400, detail={"error":True, "message":"請輸入完整資訊"})
 	
 	password_hash = hash_password(password)
 	cur = conn.cursor(dictionary=True)
@@ -71,7 +65,7 @@ def signup(
 	except IntegrityError as e:
 		conn.rollback()
 		if e.errno == errorcode.ER_DUP_ENTRY:
-			raise HTTPException(status_code=400, detail={"error":True, "message":"email已被使用"})
+			raise HTTPException(status_code=400, detail={"error":True, "message":"Email 已被使用"})
 	# 只攔「資料完整性」錯誤（例如 UNIQUE/FK）
 	# 這次交易全部撤回，避免半套資料/鎖卡住
 	# 判斷是否為「重複鍵」(MySQL 1062)
@@ -86,11 +80,7 @@ def signup(
 
 
 @router.put("/api/user/auth")
-def login(
-	user: Login,
-	cur = Depends(get_cur)
-):
-	
+def login(user: Login,cur = Depends(get_cur)):
 	email = user.email
 	password = user.password
 	

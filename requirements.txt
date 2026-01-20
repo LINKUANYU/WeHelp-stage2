@@ -13,4 +13,4 @@ pyJWT
 requests
 
 pydantic
-'pydantic[email]'
+pydantic[email]
