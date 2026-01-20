@@ -114,11 +114,11 @@ function buildAndRenderBookingContent(data, user){
     <div class="contact__title u-text-btn--bold u-c-sec-70">您的聯絡資訊</div>
     <div class="contact__field">
       <div class="u-text-body--400 u-c-sec-70">聯絡姓名：</div>
-      <input class="contact__input contact__input--name u-text-body u-c-sec-70" value="${userName}">
+      <input class="contact__input contact__input--name u-text-body u-c-sec-70" value="${userName}" readonly>
     </div>
     <div class="contact__field">
       <div class="u-text-body--400 u-c-sec-70">聯絡信箱：</div>
-      <input class="contact__input contact__input--email u-text-body u-c-sec-70" value="${userEmail}">
+      <input class="contact__input contact__input--email u-text-body u-c-sec-70" value="${userEmail}" readonly>
     </div>
     <div class="contact__field">
       <div class="u-text-body--400 u-c-sec-70">手機號碼：</div>
@@ -193,7 +193,15 @@ function bindPayBtn(data){
       const contactPhone = document.querySelector('.contact__input--phone').value.trim();
       
       if (!contactName || !contactEmail || !contactPhone) {alert('請輸入完整資訊'); return}
-    
+
+      const phoneRule = /^09\d{8}$/;
+      // 如果沒有 ^: "我是0912345678" 會判定為成功（因為中間含有 09...）。
+      // 如果沒有 $: "09123456789999" 會判定為成功（因為前段符合）。
+      // 加上 ^ 和 $: 唯有「剛好 10 位數且 09 開頭」 的字串才會通過。
+      if (!phoneRule.test(contactPhone)){alert("手機號碼格式錯誤"); return}
+      // .test(要檢查的字串) 是 正規表示式（RegExp）物件 內建的一個方法。
+      // 它的作用非常單純：「檢查一個字串是否符合某種模式（Pattern）」。
+      
       // get prime
       const prime = await getPrime();
       // 收集其他資訊送至後端
@@ -231,7 +239,8 @@ function bindPayBtn(data){
       alert(paymentMsg);
       window.location.href = `/thankyou?number=${orderNo}`
     }catch(e){
-      console.log(e);
+      console.log(getErrorMsg(e));
+      alert(getErrorMsg(e))
     }finally{
       payBtn.disabled = false;
     }

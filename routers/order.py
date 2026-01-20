@@ -34,7 +34,7 @@ from dotenv import load_dotenv
 import time
 import secrets
 import requests
-from pydantic import BaseModel, Field
+from schemas import *
 
 router = APIRouter()
 
@@ -43,35 +43,6 @@ TAPPAY_PARTNER_KEY = os.getenv("TAPPAY_PARTNER_KEY", "")
 TAPPAY_MERCHANT_ID = os.getenv("TAPPAY_MERCHANT_ID", "")
 TAPPAY_ENDPOINT = os.getenv("TAPPAY_ENDPOINT", "https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime")
 TAPPAY_TIMEOUT_SECONDS = int(os.getenv("TAPPAY_TIMEOUT_SECONDS", "30"))
-
-# --- Pydantic Models (讓 FastAPI 自動驗證資料) ---
-class Attraction(BaseModel):
-    id: int
-    name: str
-    address: str
-    image: str
-
-class Contact(BaseModel):
-    name: str
-    email: str
-    phone: str
-
-class Trip(BaseModel):
-    attraction: Attraction # 這裡引用了上面的 Attraction
-    date: str
-    time: str
-
-class OrderDetail(BaseModel):
-    price: int = Field(..., gt=0) # 甚至可以加驗證：必須大於 0
-    trip: Trip       # 引用 Trip
-    contact: Contact # 引用 Contact
-
-# 最外層：接收的 Payload
-class OrderRequest(BaseModel):
-    prime: str
-    order: OrderDetail
-
-
 
 # --- Helper Functions ---
 def gen_order_no(prefix: str = "TP") -> str:
@@ -152,18 +123,17 @@ def create_order(
     conn = Depends(get_conn)
 ):
     user_id = int(user["sub"])
-
     order_no = gen_order_no()
 
     # 拿出前端傳來的參數
     prime = payload.prime
-    order_data = payload.order
-    amount = order_data.price
-    contact = order_data.contact
+    order_detail = payload.order
+    amount = order_detail.price
+    contact = order_detail.contact
     cardholder_name = contact.name
     cardholder_email = contact.email
     cardholder_phone = contact.phone
-    trip = order_data.trip
+    trip = order_detail.trip
     trip_date = trip.date
     trip_time = trip.time
     attraction = trip.attraction
@@ -171,15 +141,13 @@ def create_order(
     attraction_name = attraction.name
     attraction_address = attraction.address
     attraction_image = attraction.image
-
-    # 送給TapPay 必要資料檢查
-    if not prime:
-        raise HTTPException(status_code=400, detail={"error": True, "message": "Missing prime"})
-    if amount < 0:
-        raise HTTPException(status_code=400, detail={"error": True, "message": "Invalid pay amount"})
-    if not cardholder_name or not cardholder_email or not cardholder_phone:
-        raise HTTPException(status_code=400, detail={"error": True, "message": "Missing contact info"})
     
+    # 檢查 contact 與 DB 是否相同
+    user_email = user["email"]
+    user_name = user["name"]
+    if user_name != cardholder_name or user_email != cardholder_email:
+        raise HTTPException(status_code=400, detail={"error":True, "message":"聯絡資訊與登入帳號不符"})
+
     # 建立 order
     try:
         cur = conn.cursor(dictionary=True)
@@ -204,7 +172,7 @@ def create_order(
     except (IntegrityError, DataError) as e:
         conn.rollback()
         print(f"[DB Error] Create Order Failed: {e}")
-        raise HTTPException(status_code=400, detail={"error":True, "message":"訂單建立失敗，輸入不正確"})        
+        raise HTTPException(status_code=400, detail={"error":True, "message":"訂單建立失敗，輸入不正確"})
     except Error as e:
         conn.rollback()
         print(f"[DB Error] Create Order Failed: {e}")
@@ -312,8 +280,8 @@ def get_order(
     try:
         cur.execute("SELECT * FROM orders WHERE order_no = %s", (orderNumber,))
         row = cur.fetchone()
-    except Error:
-        print(f"DB {Error} at 尋找訂單號碼")
+    except Error as e:
+        print(f"DB {e} at 尋找訂單號碼")
         raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
     # 沒有訂單資料
     if not row:

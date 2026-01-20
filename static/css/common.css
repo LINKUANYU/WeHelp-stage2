@@ -132,6 +132,12 @@ position: absolute
 .valid::before { content: "● "; }
 
 
+input[readonly] {
+    background-color: #f3f3f3; /* 淡淡的灰色背景 */
+    color: #666;               /* 文字顏色變淺 */
+    cursor: not-allowed;       /* 滑鼠移上去顯示禁止符號 */
+}
+
 /* Utility */
 .u-text-sloganTitle{ font-size: 28px; font-weight: bold; line-height: 24px;}
 .u-text-headline2{ font-size: 30px; font-weight: bold; line-height: 34px;}
