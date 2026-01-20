@@ -24,7 +24,7 @@ async function startup(){
     return;
   }
   // 綁定刪除按鈕事件
-  bindDeleteBooking();
+  bindDeleteBooking(data);
   // 綁定金流
   initTapPay();
   bindPayBtn(data);
@@ -160,16 +160,16 @@ function bindDeleteBooking(data){
   if (!data) return // 沒有預定行程資料
   const deleteBtn = document.querySelector('#delete-booking-btn');
   deleteBtn.addEventListener('click', async() => {
-      try{
-          const res = await request("/api/booking", {
-              method: "DELETE",
-              headers: authHeaders()
-          });
-          if (res.ok) window.location.reload();
-          return
-      }catch(e){
-          console.log(getErrorMsg(e));
-      }
+    try{
+        const res = await request("/api/booking", {
+            method: "DELETE",
+            headers: authHeaders()
+        });
+        if (res.ok) window.location.reload();
+        return
+    }catch(e){
+        console.log(getErrorMsg(e));
+    }
   });
 }
 

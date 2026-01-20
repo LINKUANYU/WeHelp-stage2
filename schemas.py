@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field, field_validator, StringConstraints
 import re
 from typing import Annotated
+from datetime import date, datetime
 
 # 把所有 str 都去掉空白 & 加上必填(空字串不行)
 Cleanstr = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
@@ -45,3 +46,24 @@ class Login(BaseModel):
     @classmethod
     def clean_name(cls, v):
         return v.lower()
+    
+
+class bookingRequest(BaseModel):
+    attraction_id: int
+    date: Cleanstr
+    time: Cleanstr
+    price: int = Field(..., gt=0) # 價格需大於0
+
+    @field_validator('date')
+    @classmethod
+    def validate_date(cls, v: str):
+        try:
+            # strptime 是將str -> object 並照的%Y-%m-%d的模板
+            # 轉成物件後才可以用各種方法，date()是把時、分、秒捨去，剩年、月、日
+            booking_date = datetime.strptime(v, "%Y-%m-%d").date()
+        except ValueError:
+            raise ValueError("日期格式錯誤，應為 YYYY-MM-DD")
+        
+        if booking_date < date.today():
+            raise ValueError("日期不能為過去的時間")
+        return v

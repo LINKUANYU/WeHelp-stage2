@@ -16,6 +16,7 @@ from deps import get_conn, get_cur
 from routers.auth import verify_token
 from mysql.connector import Error, IntegrityError, DataError
 import json
+from schemas import *
 
 router = APIRouter()
 
@@ -73,14 +74,16 @@ def get_booking(
 
 @router.post("/api/booking")
 def add_booking(
-    attraction_id: int = Body(...),
-    date: str = Body(...),
-    time: str = Body(...),
-    price: int = Body(...), 
+    booking_request: bookingRequest,
     user = Depends(verify_token),
     conn = Depends(get_conn),
     ):
     user_id = int(user["sub"])
+    attraction_id = booking_request.attraction_id
+    date = booking_request.date
+    time = booking_request.time
+    price = booking_request.price
+
     cur = conn.cursor(dictionary = True)
     try:
         cur.execute("""
@@ -124,7 +127,7 @@ def delete_booking(
         """, (user_id,))
         conn.commit()
         return {"ok": True}
-    except Error:
+    except Error as e:
         conn.rollback()
         print(f"[DB Error] Delete Booking Failed: {e}")
         raise HTTPException(status_code=500, detail={"error":True, "message":"刪除預定行程失敗，資料庫錯誤，請稍後再試"})

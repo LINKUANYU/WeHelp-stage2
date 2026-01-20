@@ -133,7 +133,13 @@ function bindBookingSubmitBtn(){
     const bookingSubmitBtn = document.querySelector('#booking-submit-btn');
     bookingSubmitBtn.addEventListener('click', async(e) => {
         e.preventDefault();
-        // 先驗證是否登入
+        // 先檢查日期、時間、價錢是否填寫
+        const input = buildBookingPayload();
+        if (!input) return;
+
+        const {date, time, price} = input;
+
+        // 驗證是否登入
         const {loggedIn} = await getSession(); // 點擊按鈕時再次確認當下的session
         if (!loggedIn){
             const loginBtn = document.querySelector('#login-btn');
@@ -141,10 +147,6 @@ function bindBookingSubmitBtn(){
             return;
         }
 
-        const data = buildBookingPayload();
-        if (!data) return; 
-
-        const {date, time, price} = data;
         // 組織送API
         try{
             const res = await request("/api/booking", {
@@ -157,6 +159,7 @@ function bindBookingSubmitBtn(){
             }
         }catch(e){
             console.log(getErrorMsg(e));
+            alert(getErrorMsg(e))
         }
     });
 }
@@ -167,6 +170,14 @@ function buildBookingPayload(){
     
     if (!date) {alert("請選擇日期"); return}
     if (!timeEl) {alert("請選擇上半天／下半天"); return}
+
+    const selectDate = new Date(date); // 把字串變成物件就可以比大小
+    selectDate.setHours(0, 0, 0, 0); // 把時間歸０，只比日期
+    
+    const today = new Date(); // 今天
+    today.setHours(0, 0, 0, 0);
+
+    if (selectDate < today){alert("日期不能為過去的時間"); return}
 
     const time = timeEl.value;
     const price = (time === "morning") ? 2000 : 2500;
