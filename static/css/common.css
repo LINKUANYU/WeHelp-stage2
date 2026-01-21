@@ -1,3 +1,41 @@
+/* Utility 放在最上面讓下面有些重複得屬性可以覆蓋（line-height） */ 
+.u-text-sloganTitle{ font-size: 28px; font-weight: bold; line-height: 24px;}
+.u-text-headline2{ font-size: 30px; font-weight: bold; line-height: 34px;}
+.u-text-headline3{ font-size: 24px; font-weight: bold; line-height: 24px;}
+.u-text-dialogTitle--bold{ font-size: 24px; font-weight: bold; line-height: 24px;}
+.u-text-dialogTitle{ font-size: 24px; font-weight: normal; line-height: 24px;}
+.u-text-btn--bold{ font-size: 19px; font-weight: bold; line-height: 16px;}
+.u-text-btn{ font-size: 19px; line-height: 16px;}
+.u-text-btn--400{ font-size: 19px; font-weight: 400; line-height: 16px;}
+.u-text-content--bold{ font-size: 19px; font-weight: bold;}
+.u-text-content{ font-size: 16px; font-weight: normal;}
+.u-text-body--bold{ font-size: 16px; font-weight: bold; line-height: 13.3px;}
+.u-text-body{ font-size: 16px; font-weight: 500;line-height: 13.3px;}
+.u-text-body--400{ font-size: 16px; font-weight: 400;line-height: 13.3px;}
+.u-text-category{ font-size: 14px; font-weight: 500;}
+.u-line-height--2{line-height: 2;}
+
+.u-c-pri-70{ color: #448899;}
+.u-c-pri-50{ color: #66AABB;}
+.u-c-pri-20{ color: #AADDDE;}
+
+.u-c-sec-70{ color: #666666;}
+.u-c-sec-50{ color: #757575;}
+.u-c-sec-20{ color: #E8E8E8;}
+.u-c-sec-10{ color: #EEEEEE;}
+.u-c-white{ color: white;}
+
+.u-bg-pri-70{ background-color: #448899;}
+.u-bg-pri-50{ background-color: #66AABB;}
+.u-bg-pri-20{ background-color: #AADDDE;}
+
+.u-bg-sec-70{ background-color: #666666;}
+.u-bg-sec-50{ background-color: #757575;}
+.u-bg-sec-20{ background-color: #E8E8E8;}
+.u-bg-sec-10{ background-color: #EEEEEE;}
+.u-bg-white{ background-color: white;}
+
+
 /* HTML tags */
 html{
   font-family: "Noto Sans TC", -apple-system, system-ui, "PingFang TC", "Microsoft JhengHei", sans-serif;
@@ -71,40 +109,13 @@ button:hover{cursor: pointer;}
 }
 
 
-.divider{
-    border: 0px;
-    border-top: 1px solid #E8E8E8;
-}
-
-.divider--1200{
-    max-width:1200px; width:100%; margin: 40px auto;
-}
-
-
-
-/* Footer */
-.footer-card{
-    width: 100%; height: 100%; min-height: 104px;
-    padding: 40px 0px;
-    display: flex; justify-content: center;
-}
-
-.footer-card__text{padding: 5px 0px;}
-
 /* login and signup modal*/
 .modal{
     position: fixed; z-index: 9999;
     width: 100%; height: 100%;
 }
 
-/* 
-position: fixed
-參考點：瀏覽器視窗（viewport）。不會跟著捲動。你捲動頁面，它仍固定在螢幕同一位置。
-用途：modal、backdrop、sticky toolbar、浮動按鈕等「要蓋在整頁上方」的 UI。
 
-position: absolute
-參考點：最近一個有 position: relative/absolute/fixed/sticky 的祖先元素
-*/
 
 .modal__backdrop{
     position: absolute; z-index: 0;
@@ -155,6 +166,21 @@ position: absolute
 }
 .auth__link:hover{cursor: pointer;}
 
+.headline{
+    width: 100%; min-height: 27px;
+    display: flex; align-items: center;
+    margin: 40px auto 30px auto;
+    line-height: 1.5;
+}
+
+.headline--width1200{max-width: 1200px;}
+
+.headline--width1000{max-width: 1000px;}
+
+@media (max-width: 1200px){
+    .headline{padding: 0px 10px;}
+}
+
 /* signup modal input realtime feedback */
 .validation-list{padding-left: 20px; margin: 0px 0px 5px 0px;}
 .validation-item{font-size: 12px;}
@@ -164,45 +190,27 @@ position: absolute
 .valid { color: green; font-weight: bold; }
 .valid::before { content: "● "; }
 
+/* divider */
+.divider{
+    border: 0px;
+    border-top: 1px solid #E8E8E8;
+}
+
+.divider--1200{
+    max-width:1200px; width:100%; margin: 40px auto;
+}
+
+.margin-20{margin: 20px;}
+
+/* Footer */
+.footer-card{
+    width: 100%; height: 100%; min-height: 104px;
+    padding: 40px 0px;
+    display: flex; justify-content: center;
+}
+
+.footer-card__text{padding: 5px 0px;}
 
 
-
-
-/* Utility */
-.u-text-sloganTitle{ font-size: 28px; font-weight: bold; line-height: 24px;}
-.u-text-headline2{ font-size: 30px; font-weight: bold; line-height: 34px;}
-.u-text-headline3{ font-size: 24px; font-weight: bold; line-height: 24px;}
-.u-text-dialogTitle--bold{ font-size: 24px; font-weight: bold; line-height: 24px;}
-.u-text-dialogTitle{ font-size: 24px; font-weight: normal; line-height: 24px;}
-.u-text-btn--bold{ font-size: 19px; font-weight: bold; line-height: 16px;}
-.u-text-btn{ font-size: 19px; line-height: 16px;}
-.u-text-btn--400{ font-size: 19px; font-weight: 400; line-height: 16px;}
-.u-text-content--bold{ font-size: 19px; font-weight: bold;}
-.u-text-content{ font-size: 16px; font-weight: normal;}
-.u-text-body--bold{ font-size: 16px; font-weight: bold; line-height: 13.3px;}
-.u-text-body{ font-size: 16px; font-weight: 500;line-height: 13.3px;}
-.u-text-body--400{ font-size: 16px; font-weight: 400;line-height: 13.3px;}
-.u-text-category{ font-size: 14px; font-weight: 500;}
-.u-line-height--2{line-height: 2;}
-
-.u-c-pri-70{ color: #448899;}
-.u-c-pri-50{ color: #66AABB;}
-.u-c-pri-20{ color: #AADDDE;}
-
-.u-c-sec-70{ color: #666666;}
-.u-c-sec-50{ color: #757575;}
-.u-c-sec-20{ color: #E8E8E8;}
-.u-c-sec-10{ color: #EEEEEE;}
-.u-c-white{ color: white;}
-
-.u-bg-pri-70{ background-color: #448899;}
-.u-bg-pri-50{ background-color: #66AABB;}
-.u-bg-pri-20{ background-color: #AADDDE;}
-
-.u-bg-sec-70{ background-color: #666666;}
-.u-bg-sec-50{ background-color: #757575;}
-.u-bg-sec-20{ background-color: #E8E8E8;}
-.u-bg-sec-10{ background-color: #EEEEEE;}
-.u-bg-white{ background-color: white;}
 
 .is-hidden{display: none;}

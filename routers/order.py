@@ -312,3 +312,28 @@ def get_order(
             "status": row["status"]
         }
     }
+
+@router.get("/api/order-history")
+def get_order_history(
+    user = Depends(verify_token),
+    cur = Depends(get_cur)
+):
+    user_id = int(user["sub"])
+    print(user_id)
+    try:
+        cur.execute("""
+        SELECT order_no, status, spot_name, spot_address, spot_image,
+                    booking_date, booking_time, price
+        FROM orders WHERE member_id = %s
+        """, (user_id,))
+        
+        rows = cur.fetchall()
+    
+        if not rows:
+            return {"data": False}
+
+        return {"data": rows}
+    except Error as e:
+        print(f"[DB Error] Search Orders Failed: {e}")
+        raise HTTPException(status_code=500, detail={"error":True, "message":"尋找歷史訂單，資料庫錯誤，請稍後再試"})
+    

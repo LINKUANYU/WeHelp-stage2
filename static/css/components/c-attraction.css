@@ -1,0 +1,14 @@
+/* 用在attraction.html & thankyou.html */
+
+.attraction-info{
+    margin: auto; padding: 10px;
+    max-width: 1200px; width: 100%;
+}
+.attraction-info--width1000{
+    max-width: 1000px;
+}
+
+.info-section{
+    margin-bottom: 20px;
+}
+.info-section__title{height: 32px; display: flex; align-items: center;}

@@ -38,7 +38,7 @@ startup();
 
 async function RenderBookingPage(user, data){
     // Headline name
-    document.querySelector('.booking-headline').textContent = `您好，${user.name}，待預訂的行程如下：`;
+    document.querySelector('#booking-headline').textContent = `您好，${user.name}，待預訂的行程如下：`;
     // 如果沒有資料
     if (!data){  
       // 顯示「無資料」
@@ -151,7 +151,7 @@ function buildAndRenderBookingContent(data, user){
     `.trim()
 }
 
-function mountBookingContent({mount = document.querySelector('.booking-headline')} = {}, data, user){
+function mountBookingContent({mount = document.querySelector('#booking-headline')} = {}, data, user){
     if (document.querySelector('.order')) return;
     mount.insertAdjacentHTML("afterend", buildAndRenderBookingContent(data, user));
 }
