@@ -60,7 +60,16 @@ function headerHtml(){
                     <div class="nav__menu">
                         <button class="nav__btn u-text-body u-c-sec-70 u-bg-white" id="to-booking-btn">預定行程</button>
                         <button class="nav__btn u-text-body u-c-sec-70 u-bg-white" id="login-btn">登入/註冊</button>
-                        <button class="nav__btn is-hidden u-text-body u-c-sec-70 u-bg-white" id="signout-btn">登出系統</button>
+                        <button class="nav__btn--account is-hidden u-text-body u-c-sec-70 u-bg-white" id="account-menu-btn">
+                            <img class="account__img" src="/static/icon/profile.png">
+                        </button>
+                        <div class="account-menu is-hidden">
+                            <div class="account-menu__panel u-bg-white">
+                                <button class="account-menu__btn u-text-body u-c-sec-70 u-bg-white" id="to-member-btn">會員中心</button>
+                                <button class="account-menu__btn u-text-body u-c-sec-70 u-bg-white" id="to-purchase-btn">歷史訂單</button>
+                                <button class="account-menu__btn u-text-body u-c-sec-70 u-bg-white" id="signout-btn">登出系統</button>
+                            </div>
+                        </div>
                     </div>
             </div> 
         </div>

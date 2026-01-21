@@ -8,12 +8,14 @@ import { renderAppShell } from "./render_app_shell.js";
 import { bindNavBrand } from "./bind_nav_brand.js"
 import { bindNavAuth } from "./bind_nav_auth.js";
 import { bindNavBooking } from "./bind_nav_booking.js";
+import { bindNavAccount } from "./bind_nav_account.js";
 
 export function setupAppShell(){
     renderAppShell();
     bindNavBrand();
     bindNavAuth();
     bindNavBooking();
+    bindNavAccount()
 }
 
 /* 

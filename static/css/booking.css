@@ -105,6 +105,16 @@
     padding: 10px 20px;
 }
 
+
+/* Contact input */
+input[readonly] {
+    background-color: #f3f3f3; /* 淡淡的灰色背景 */
+    color: #666;               /* 文字顏色變淺 */
+    cursor: not-allowed;       /* 滑鼠移上去顯示禁止符號 */
+}
+
+
+/* TapPay credit card input */
 .has-error .tpfield {
     border-color: #843534;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
@@ -115,6 +125,8 @@
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #67b168;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #67b168;
 }
+
+
 
 
 @media (max-width: 1200px){

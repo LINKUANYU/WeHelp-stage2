@@ -30,6 +30,12 @@ async def booking(request: Request):
 @app.get("/thankyou", include_in_schema=False)
 async def thankyou(request: Request):
 	return FileResponse("./static/thankyou.html", media_type="text/html")
+@app.get("/member", include_in_schema=False)
+async def member(request: Request):
+	return FileResponse("./static/member.html", media_type="text/html")
+@app.get("/purchase", include_in_schema=False)
+async def purchase(request: Request):
+	return FileResponse("./static/purchase.html", media_type="text/html")
 
 @app.on_event("startup")
 def test_db_connection():

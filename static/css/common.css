@@ -35,11 +35,42 @@ button:hover{cursor: pointer;}
     padding: 0 10px;
 }
 .nav__brand:hover{cursor: pointer;}
-.nav__menu{display: flex;}
+.nav__menu{display: flex; position: relative;}
 
 .nav__btn{
     height: 34px; padding: 10px; border: 0;
 }
+
+/* account menu */
+.nav__btn--account{
+    border: 0px; padding: 0px; margin: 0px;
+    height: 34px; width: 34px;
+}
+.account__img{
+    height: 34px; width: 34px;
+}
+
+.account-menu{
+    position: absolute; right: 0px; top: 34px;
+}
+.account-menu:hover .is-hidden{display: block;}
+.account-menu__panel{
+    border: 0px; border-radius: 5px;
+    box-shadow: 0px 0px 20px 0px #AABBCC;
+    display: flex; flex-direction: column; width: 118px;
+}
+.account-menu__btn{
+    border: 0px; border-radius: 5px;
+    padding: 10px 0px 10px 0px;
+
+}
+
+.account-menu__btn:hover{
+    background: #EEEEEE;
+    cursor: pointer;
+}
+
+
 .divider{
     border: 0px;
     border-top: 1px solid #E8E8E8;
@@ -123,6 +154,8 @@ position: absolute
     display: flex; align-items: center; justify-content: center;
 }
 .auth__link:hover{cursor: pointer;}
+
+/* signup modal input realtime feedback */
 .validation-list{padding-left: 20px; margin: 0px 0px 5px 0px;}
 .validation-item{font-size: 12px;}
 .invalid { color: gray; }
@@ -132,11 +165,8 @@ position: absolute
 .valid::before { content: "● "; }
 
 
-input[readonly] {
-    background-color: #f3f3f3; /* 淡淡的灰色背景 */
-    color: #666;               /* 文字顏色變淺 */
-    cursor: not-allowed;       /* 滑鼠移上去顯示禁止符號 */
-}
+
+
 
 /* Utility */
 .u-text-sloganTitle{ font-size: 28px; font-weight: bold; line-height: 24px;}

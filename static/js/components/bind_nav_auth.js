@@ -5,7 +5,6 @@ import { getErrorMsg, request } from "../common/api.js";
 export function bindNavAuth(){
     bindLoginBtn();
     bindSignupBtn();
-    bindSignoutBtn();
     bindAuthModal();
     bindSignupInput();
 }
@@ -107,16 +106,6 @@ function bindSignupBtn(){
                 signupMsg.textContent = getErrorMsg(e);
             }
         }
-    });
-}
-
-function bindSignoutBtn(){
-    const signoutBtn = document.querySelector('#signout-btn');
-    if (!signoutBtn) return;
-
-    signoutBtn.addEventListener('click', () => {
-        localStorage.removeItem("access_token");
-        window.location.reload();
     });
 }
 

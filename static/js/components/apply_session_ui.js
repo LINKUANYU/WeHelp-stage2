@@ -7,20 +7,22 @@ import { getSession } from "../common/session.js";
 
 export async function applySessionUi(){
     const {loggedIn, user} = await getSession();
-    setAuthButtons(loggedIn); // only UI
+    setAuthBtn(loggedIn); // only UI
     return {loggedIn, user} // 提供給各站使用
 }
 
-export function setAuthButtons(loggedIn) {
+function setAuthBtn(loggedIn) {
     const loginBtn = document.querySelector("#login-btn");
-    const signoutBtn = document.querySelector("#signout-btn");
-    if (!loginBtn || !signoutBtn) return;
+    const accountMenuBtn = document.querySelector("#account-menu-btn");
+    if (!loginBtn || !accountMenuBtn) return;
 
     if (loggedIn) {
         loginBtn.classList.add("is-hidden");
-        signoutBtn.classList.remove("is-hidden");
+        accountMenuBtn.classList.remove("is-hidden");
     } else {
         loginBtn.classList.remove("is-hidden");
-        signoutBtn.classList.add("is-hidden");
+        accountMenuBtn.classList.add("is-hidden");
     }
 }
+
+
