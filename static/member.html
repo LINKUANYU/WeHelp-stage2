@@ -7,15 +7,42 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/common.css">
-  <link rel="stylesheet" href="/static/css/booking.css">
-  <link rel="stylesheet" href="/static/css/attraction.css">
-  <title>Thank You</title>
+  <link rel="stylesheet" href="/static/css/member.css">
+  <title>Member</title>
 </head>
 <body>
     <!-- JS 動態生成 header & nav -->
   <main>
-    <hr class="divider">
-    <div class="booking-headline u-text-btn--bold u-c-sec-70"></div>
+    <div class="profile-section u-bg-sec-20">
+      <div class="profile-headline u-text-headline3 u-c-pri-50">變更會員資料</div>
+      <div class="profile__divider"></div>
+      <div class="profile__content">
+        <div class="profile__field">
+          <label class="profile__label u-text-body--bold" for="member-email">使用者信箱</label>
+          <div id="member-email">example@yahoo.com</div>
+        </div>
+        <div class="profile__field">
+          <label class="profile__label u-text-body--bold" for="member-name">姓名</label>
+          <input class="profile__input" id="member-name">
+        </div>
+        <div class="profile__field">
+          <label class="profile__label  u-text-body--bold" for="old-password">舊密碼</label>
+          <input class="profile__input" id="old-password" type="password">
+        </div>
+        <div class="profile__field">
+          <label class="profile__label u-text-body--bold" for="new-password">新密碼</label>
+          <input class="profile__input" id="new-password" type="password">
+        </div>
+        <button class="save-btn">儲存變更</button>
+      </div>
+      <aside class="profile__avatar-zone">
+        <img class="profile__avatar-img">
+        <button class="profile__upload-btn">選擇圖片</button>
+        <p class="u-c-sec-50">檔案大小:最大1MB</p>
+        <p class="u-c-sec-50">檔案限制: .JPEG, .PNG</p>
+      </aside>
+    </div>
+
   </main>
 
   <!-- JS 動態生成 footer -->

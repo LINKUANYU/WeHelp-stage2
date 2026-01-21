@@ -1,0 +1,17 @@
+.profile-section{
+    width: 1200px; margin: auto;
+    padding: 25px;
+    border: 0px; border-radius: 10px;
+}
+
+.profile-headline{text-align: center;}
+
+.profile__divider{
+    border: 0px;
+    border-top: 1px solid gray;
+    margin: 20px 0px 20px 0px;
+}
+
+.profile__field{
+    margin: 10px 0px;
+}

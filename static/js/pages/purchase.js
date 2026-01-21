@@ -76,9 +76,7 @@ function buildAndRenderOrderHistory(data){
       <img class="order__img--icon" src="${attractionImage}">
     </div>
     <div class="order__detail u-text-body--bold u-c-pri-70">
-      <div class="order__title">台北一日遊：${attractionName}，訂單編號 ${orderNo}
-      <div class="unpaid-msg u-text-body--bold">${statusText}</div>
-      </div>
+      <div class="order__title">台北一日遊：${attractionName}，訂單編號 ${orderNo}。<span class="unpaid-msg">${statusText}</span></div>
       <div class="order__field">
         <div class="u-text-body--bold u-c-sec-70">日期：</div>
         <div class="order__item u-text-body u-c-sec-70">${date}</div>
