@@ -13,35 +13,43 @@
 <body>
     <!-- JS 動態生成 header & nav -->
   <main>
-    <div class="profile-section u-bg-sec-20">
-      <div class="profile-headline u-text-headline3 u-c-pri-50">變更會員資料</div>
+    <section class="profile-section u-bg-sec-20">
+      <div class="profile-headline u-text-headline3 u-c-pri-70">變更會員資料</div>
       <div class="profile__divider"></div>
       <div class="profile__content">
-        <div class="profile__field">
-          <label class="profile__label u-text-body--bold" for="member-email">使用者信箱</label>
-          <div id="member-email">example@yahoo.com</div>
+        <div class="profile__form">
+          <div class="profile__field">
+            <label class="profile__label u-text-body--bold u-c-pri-70" for="member-email">使用者信箱</label>
+            <input class="profile__input" id="member-email" value="example@yahoo.com" readonly>
+          </div>
+          <div class="profile__field">
+            <label class="profile__label u-text-body--bold u-c-pri-70" for="member-name">姓名</label>
+            <input class="profile__input" id="member-name">
+          </div>
+          <div class="profile__field">
+            <label class="profile__label  u-text-body--bold u-c-pri-70" for="old-password">舊密碼</label>
+            <input class="profile__input" id="old-password" type="password">
+          </div>
+          <div class="profile__field">
+            <label class="profile__label u-text-body--bold u-c-pri-70" for="new-password">新密碼</label>
+            <input class="profile__input" id="new-password" type="password">
+          </div>
+          <ul class="validation-list">
+              <li class="validation-item invalid rule-length">長度至少 8 位</li>
+              <li class="validation-item invalid rule-number">至少包含 1 個數字</li>
+              <li class="validation-item invalid rule-capital">至少包含 1 個大寫字母</li>
+              <li class="validation-item invalid rule-special">至少包含 1 個特殊符號</li>
+          </ul>
+          <button class="profile__save-btn u-text-btn u-bg-pri-70 u-c-white">儲存變更</button>
         </div>
-        <div class="profile__field">
-          <label class="profile__label u-text-body--bold" for="member-name">姓名</label>
-          <input class="profile__input" id="member-name">
-        </div>
-        <div class="profile__field">
-          <label class="profile__label  u-text-body--bold" for="old-password">舊密碼</label>
-          <input class="profile__input" id="old-password" type="password">
-        </div>
-        <div class="profile__field">
-          <label class="profile__label u-text-body--bold" for="new-password">新密碼</label>
-          <input class="profile__input" id="new-password" type="password">
-        </div>
-        <button class="save-btn">儲存變更</button>
+        <aside class="profile__avatar-zone">
+          <img class="profile__avatar-img" src="/static/icon/profile.png">
+          <button class="profile__upload-btn u-text-btn u-bg-pri-70 u-c-white">選擇圖片</button>
+          <p class="upload-msg u-c-sec-50">檔案大小:最大1MB</p>
+          <p class="upload-msg u-c-sec-50">檔案限制: .JPEG, .PNG</p>
+        </aside>
       </div>
-      <aside class="profile__avatar-zone">
-        <img class="profile__avatar-img">
-        <button class="profile__upload-btn">選擇圖片</button>
-        <p class="u-c-sec-50">檔案大小:最大1MB</p>
-        <p class="u-c-sec-50">檔案限制: .JPEG, .PNG</p>
-      </aside>
-    </div>
+    </section>
 
   </main>
 
