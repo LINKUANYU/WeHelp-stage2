@@ -56,7 +56,7 @@ input[readonly] {
     color: #666;               /* 文字顏色變淺 */
     cursor: not-allowed;       /* 滑鼠移上去顯示禁止符號 */
 }
-.profile__save-btn{
+.profile__submit-btn{
     
     margin-top: 20px;
     padding: 10px 20px;

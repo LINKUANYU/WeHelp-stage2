@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field, field_validator, StringConstraints
 import re
-from typing import Annotated
+from typing import Annotated, Optional
 from datetime import date, datetime
 
 # 把所有 str 都去掉頭尾空白 & 加上必填(空字串不行)
@@ -13,7 +13,7 @@ class Signup(BaseModel):
     # Email：使用 EmailStr 自動驗證(install email-validator)
     email: EmailStr
     # 密碼：必填、自定義限制
-    password: Cleanstr = Field(..., min_length=8)
+    password: str = Field(..., min_length=8)
     
     @field_validator('email')
     @classmethod
@@ -40,12 +40,35 @@ class Signup(BaseModel):
         
 class Login(BaseModel):
     email: EmailStr
-    password: Cleanstr
+    password: str
 
     @field_validator('email')
     @classmethod
     def clean_name(cls, v):
         return v.lower()
+    
+
+class UpdateUser(BaseModel): 
+    name: Cleanstr = Field(..., min_length=2, max_length=30) 
+    old_password: Optional[str] = None # 不一定要改密碼
+    new_password: Optional[str] = None # 不一定要改密碼
+
+    @field_validator('new_password')
+    @classmethod
+    def password_strngth(cls, v: Optional[str]) -> Optional[str]:
+        if not v:
+            return v
+        if len(v) < 8:
+            raise ValueError('密碼長度至少需 8 位')
+        if not re.search(r"[A-Z]", v):
+            raise ValueError('密碼必須至少包含一個大寫字母')
+        if not re.search(r"\d", v):
+            raise ValueError('密碼必須至少包含一個數字')
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", v):
+            raise ValueError('密碼必須至少包含一個特殊符號')
+        
+        return v
+
     
 # --- booking.py ---
 class bookingRequest(BaseModel):

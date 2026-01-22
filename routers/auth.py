@@ -94,7 +94,7 @@ def login(user: Login,cur = Depends(get_cur)):
 		
 		token = create_access_token(data["id"], data["email"], data["name"])
 		return {"token": token}
-	except Error:
+	except Error as e:
 		print(f"[DB Error] Select User Failed: {e}")
 		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
 
@@ -109,3 +109,51 @@ def get_current_user(user = Depends(verify_token)):
 	name = user["name"]
 	email = user["email"]
 	return {"data": {"id": id, "name": name, "email": email}}
+
+@router.patch("/api/user")
+def update_user(
+	payload: UpdateUser, 
+	user = Depends(verify_token),
+	conn = Depends(get_conn)
+):
+	user_id = int(user["sub"])
+	user_email = user["email"]
+	new_name = payload.name
+	new_password = payload.new_password
+	old_password = payload.old_password
+
+	cur = conn.cursor(dictionary=True)
+	try:
+		# 有可能不改密碼，有的話兩個都要有
+		if new_password and not old_password:
+			raise HTTPException(status_code=400, detail={"error":True, "message":"新密碼與舊密碼請輸入完整"})
+		if not new_password and old_password:
+			raise HTTPException(status_code=400, detail={"error":True, "message":"新密碼與舊密碼請輸入完整"})
+		if new_password and old_password:
+		# DB找密碼
+			cur.execute("SELECT password_hash FROM members WHERE id=%s", (user_id,))
+			row = cur.fetchone()
+			# 舊密碼驗證
+			if not verify_password(old_password, row["password_hash"]):
+				raise HTTPException(status_code=400, detail={"error":True, "message":"舊密碼輸入錯誤"})
+			# 新密碼驗證
+			if verify_password(new_password, row["password_hash"]):
+				raise HTTPException(status_code=400, detail={"error":True, "message":"新密碼不可與舊密碼相同"})
+			
+			new_password_hash = hash_password(new_password)
+			cur.execute("UPDATE members SET password_hash=%s WHERE id=%s", (new_password_hash, user_id))
+		
+		# 處理名字
+		cur.execute("UPDATE members SET name=%s WHERE id=%s", (new_name, user_id))
+		
+		conn.commit()
+
+		token = create_access_token(user_id, user_email, new_name)
+
+		return {"ok": True, "token": token}
+	except Error as e:
+		conn.rollback()
+		print(f"[DB Error] Update user Failed: {e}")
+		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
+	finally:
+		cur.close()

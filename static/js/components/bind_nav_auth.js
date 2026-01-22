@@ -75,7 +75,8 @@ function bindSignupBtn(){
             return;
         }
         // 檢查註冊密碼條件
-        const invalidRules = document.querySelectorAll('.validation-list .invalid');
+        const signupModal = document.querySelector("#signup-modal");
+        const invalidRules = signupModal.querySelectorAll('.validation-list .invalid');
         if (invalidRules.length > 0) {
             if (signupMsg) {
                 signupMsg.classList.remove("is-hidden");
@@ -126,11 +127,11 @@ function bindAuthModal(){
     const loginMsg = document.querySelector('#login-msg');
     const signupMsg = document.querySelector('#signup-msg');
 
-    const validationList = document.querySelector('.validation-list');
-    const ruleLength = document.querySelector('#rule-length');
-    const ruleNumber = document.querySelector('#rule-number');
-    const ruleCapital = document.querySelector('#rule-capital');
-    const ruleSpecial = document.querySelector('#rule-special');
+    const signupValidationList = document.querySelector('#signup-validation-list');
+    const signupRuleLength = document.querySelector('#signup-rule-length');
+    const signupRuleNumber = document.querySelector('#signup-rule-number');
+    const signupRuleCapital = document.querySelector('#signup-rule-capital');
+    const signupRuleSpecial = document.querySelector('#signup-rule-special');
 
     if (!loginModal || !signupModal || !loginBtn) return;
 
@@ -167,11 +168,11 @@ function bindAuthModal(){
             signupNameInput.value = "";
             signupEmailInput.value = "";
             signupPasswordInput.value = "";
-            validationList.classList.add('is-hidden');
-            ruleLength.classList.replace('valid', 'invalid');
-            ruleNumber.classList.replace('valid', 'invalid');
-            ruleCapital.classList.replace('valid', 'invalid');
-            ruleSpecial.classList.replace('valid', 'invalid');
+            signupValidationList.classList.add('is-hidden');
+            signupRuleLength.classList.replace('valid', 'invalid');
+            signupRuleNumber.classList.replace('valid', 'invalid');
+            signupRuleCapital.classList.replace('valid', 'invalid');
+            signupRuleSpecial.classList.replace('valid', 'invalid');
             // 清空前一筆錯誤訊息
             signupMsg.classList.add("is-hidden");
             if (signupMsg) signupMsg.textContent = "";
@@ -189,27 +190,27 @@ function bindAuthModal(){
 
 function bindSignupInput(){
     const signupPasswordInput = document.querySelector('#signup-password');
-    const validationList = document.querySelector('.validation-list');
-    const ruleLength = document.querySelector('#rule-length');
-    const ruleNumber = document.querySelector('#rule-number');
-    const ruleCapital = document.querySelector('#rule-capital');
-    const ruleSpecial = document.querySelector('#rule-special');
+    const signupValidationList = document.querySelector('#signup-validation-list');
+    const signupRuleLength = document.querySelector('#signup-rule-length');
+    const signupRuleNumber = document.querySelector('#signup-rule-number');
+    const signupRuleCapital = document.querySelector('#signup-rule-capital');
+    const signupRuleSpecial = document.querySelector('#signup-rule-special');
     signupPasswordInput.addEventListener('input', () => {
         const value = signupPasswordInput.value.trim();
         if (value.length === 0){
-            validationList.classList.add('is-hidden');
+            signupValidationList.classList.add('is-hidden');
         }else{
-            validationList.classList.remove('is-hidden');
+            signupValidationList.classList.remove('is-hidden');
         }
 
         // 檢查長度
-        updateStatus(ruleLength, value.length >= 8);
+        updateStatus(signupRuleLength, value.length >= 8);
         // 檢查數字
-        updateStatus(ruleNumber, /\d/.test(value)); // 這是 Regex 的方法，會根據 value 是否符合規則回傳 true 或 false
+        updateStatus(signupRuleNumber, /\d/.test(value)); // 這是 Regex 的方法，會根據 value 是否符合規則回傳 true 或 false
         // 檢查大寫字母
-        updateStatus(ruleCapital, /[A-Z]/.test(value));
+        updateStatus(signupRuleCapital, /[A-Z]/.test(value));
         // 檢查特殊字元
-        updateStatus(ruleSpecial, /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value));
+        updateStatus(signupRuleSpecial, /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value));
     });
 
 }
