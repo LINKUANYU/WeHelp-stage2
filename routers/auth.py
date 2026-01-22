@@ -104,11 +104,21 @@ def login(user: Login,cur = Depends(get_cur)):
 # 回傳格式（預設）：{"detail": <你給的 detail>}
 
 @router.get("/api/user/auth")
-def get_current_user(user = Depends(verify_token)):
-	id = user["sub"]
-	name = user["name"]
-	email = user["email"]
-	return {"data": {"id": id, "name": name, "email": email}}
+def get_current_user(user = Depends(verify_token), cur = Depends(get_cur)):
+	user_id = user["sub"]
+
+	try:
+		cur.execute("SELECT name, email, avatar_url FROM members WHERE id=%s", (user_id,))
+		db_user = cur.fetchone()
+		
+		if not db_user:
+			raise HTTPException(status_code=404, detail={"error":True, "message":"找不到使用者"})
+		
+		return {"data": {"id": user_id, "name": db_user["name"], "email": db_user["email"], "avatar_url": db_user["avatar_url"]}}
+	except Error as e:
+		print(f"[DB Error] Get User Failed: {e}")
+		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
+
 
 @router.patch("/api/user")
 def update_user(

@@ -2,7 +2,7 @@ from fastapi import *
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.exceptions import RequestValidationError
-from routers import attractions, auth, booking, order
+from routers import attractions, auth, booking, order, upload_avatar
 from deps import *
 from mysql.connector import Error
 from schemas import *
@@ -16,6 +16,7 @@ app.include_router(attractions.router)
 app.include_router(booking.router)
 app.include_router(auth.router)
 app.include_router(order.router)
+app.include_router(upload_avatar.router)
 
 # Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)

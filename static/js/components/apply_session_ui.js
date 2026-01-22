@@ -7,11 +7,11 @@ import { getSession } from "../common/session.js";
 
 export async function applySessionUi(){
     const {loggedIn, user} = await getSession();
-    setAuthBtn(loggedIn); // only UI
+    setAuthBtn(loggedIn, user); // only UI
     return {loggedIn, user} // 提供給各站使用
 }
 
-function setAuthBtn(loggedIn) {
+function setAuthBtn(loggedIn, user) {
     const loginBtn = document.querySelector("#login-btn");
     const accountMenuBtn = document.querySelector("#account-menu-btn");
     if (!loginBtn || !accountMenuBtn) return;
@@ -19,6 +19,7 @@ function setAuthBtn(loggedIn) {
     if (loggedIn) {
         loginBtn.classList.add("is-hidden");
         accountMenuBtn.classList.remove("is-hidden");
+        setAccountImg(user);
     } else {
         loginBtn.classList.remove("is-hidden");
         accountMenuBtn.classList.add("is-hidden");
@@ -26,3 +27,8 @@ function setAuthBtn(loggedIn) {
 }
 
 
+function setAccountImg(user){
+    const accountImg = document.querySelector('.account__img');
+    if (!user.avatar_url) return;
+    accountImg.src = user.avatar_url;
+}

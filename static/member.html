@@ -44,10 +44,12 @@
           <button class="profile__submit-btn u-text-btn u-bg-pri-70 u-c-white">儲存變更</button>
         </div>
         <aside class="profile__avatar-zone">
-          <img class="profile__avatar-img" src="/static/icon/profile.png">
-          <button class="profile__upload-btn u-text-btn u-bg-pri-70 u-c-white">選擇圖片</button>
-          <p class="upload-msg u-c-sec-50">檔案大小:最大1MB</p>
+          <img class="profile__avatar-img" id="avatar-preview" src="/static/icon/profile.png">
+          <input class="is-hidden" type="file" id="avatar-input" accept=".jpg, .jpeg, .png">
+          <button class="profile__submit-btn u-text-btn u-bg-pri-70 u-c-white" id="select-avatar-btn">選擇圖片</button>
+          <p class="upload-msg u-c-sec-50">檔案大小:最大 10 MB</p>
           <p class="upload-msg u-c-sec-50">檔案限制: .JPEG, .PNG</p>
+          <button class="profile__submit-btn u-text-btn u-bg-pri-70 u-c-white" id="save-avatar-btn">儲存照片</button>
         </aside>
       </div>
     </section>

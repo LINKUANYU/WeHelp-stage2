@@ -86,6 +86,7 @@ button:hover{cursor: pointer;}
 }
 .account__img{
     height: 34px; width: 34px;
+    border-radius: 100%;
 }
 
 .account-menu{

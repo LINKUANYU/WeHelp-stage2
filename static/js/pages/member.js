@@ -19,6 +19,8 @@ async function startup(){
     renderProfile(user);
     bindProfilePWInputValidation();
     bindProfileSubmitBtn();
+    bindAvatarSelectBtn();
+    bindAvatarSubmitBtn();
 
   }
 
@@ -79,8 +81,16 @@ function renderProfile(user){
   const name = user.name;
   const memberEmail = document.querySelector('#member-email');
   const memberName = document.querySelector('#member-name');
+  const avatarPreview = document.querySelector('#avatar-preview');
   memberEmail.value = email;
   memberName.value = name;
+
+  if (!user.avatar_url){
+    avatarPreview.src = "/static/icon/profile.png"
+  }else{
+    avatarPreview.src = user.avatar_url;
+  }
+  
 }
 
 
@@ -115,4 +125,61 @@ function updateStatus(element, isValid){
   }else{
     element.classList.replace('valid', 'invalid');
   }
+}
+
+
+function bindAvatarSelectBtn(){
+  const selectAvatarBtn = document.querySelector('#select-avatar-btn');
+  const avatarInput = document.querySelector('#avatar-input');
+  // 點擊選擇按鈕就等於點擊input
+  selectAvatarBtn.addEventListener('click', () => {
+    avatarInput.click(); // 會去自己執行選檔案這件事
+  });
+  // 'change' 狀態改變 ＝ 已經選擇完檔案
+  avatarInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file){
+      if (file.size > 10 * 1024 * 1024){
+        alert('照片檔案超過 10 MB');
+        return
+      }
+      // 使用者電腦裡二進位檔案 -> 轉換成瀏覽器可以讀的（Base64 編碼）
+      const reader = new FileReader(); // 這是在瀏覽器內開啟一個「讀卡機」。是讀取使用者電腦裡的二進位檔案，並將其轉換成網頁看得懂的格式。
+      reader.onload = function(event) { // 讀取檔案需要一點時間，所以我們要設定一個「監聽器」：當讀取完成（load）時，再執行大頭貼預覽的動作。
+        document.querySelector('#avatar-preview').src = event.target.result; // target.result 編碼完後可以直接放在 <img> 的 src 屬性裡顯示
+      };
+      reader.readAsDataURL(file); // 請把這個檔案讀取成一段長字串（Base64 編碼）
+    }
+  });
+}
+
+
+function bindAvatarSubmitBtn(){
+  const saveAvatarBtn = document.querySelector('#save-avatar-btn');
+  saveAvatarBtn.addEventListener('click', async() => {
+    const avatarInput = document.querySelector('#avatar-input');
+    const file = avatarInput.files[0];
+
+    if (!file){alert('請先選擇一張照片'); return}
+    
+    const formData = new FormData(); // 上傳照片必須用 FormData
+    formData.append('file', file);
+
+    try{
+      const res = await request("/api/user/avatar", {
+        method: "PATCH",
+        headers: authHeaders(),
+        body: formData
+      });
+
+      if (res.ok){
+        alert('大頭貼上傳成功！');
+        window.location.reload();
+      }
+    }catch(e){
+      console.log(getErrorMsg(e));
+      alert(`上傳失敗，${getErrorMsg(e)}`);
+    }
+
+  });
 }
