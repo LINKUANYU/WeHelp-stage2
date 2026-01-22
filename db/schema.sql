@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `members`(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    avatar_url VARCHAR(255) DEFAULT NULL,
     name VARCHAR(255) NOT NULL,
     UNIQUE KEY uk_email(email)
 )ENGINE=InnoDB;

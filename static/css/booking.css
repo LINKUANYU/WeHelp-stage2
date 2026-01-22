@@ -1,9 +1,3 @@
-.booking-headline{
-    max-width: 1000px; width: 100%; height: 27px;
-    display: flex; align-items: center;
-    margin: 40px auto 30px auto;
-    line-height: 1.5;
-}
 .empty-msg{
     max-width: 1000px; width: 100%; height: 27px;
     display: flex; align-items: center;
@@ -12,43 +6,9 @@
 }
 .empty-msg.is-hidden{display: none;}
 
-.order{
-    max-width: 980px; width: 100%; height: 200px;
-    margin: 0 auto;
-    position: relative;
-    display: flex; gap: 30px;
-}
-.delete-icon{
-    padding: 0px; border: 0px;
-    height: 30px; width:30px;
-    position: absolute;
-    top: 0px; right: 0px;
-}
-.order__img{
-    flex: 0 0 auto;
-    width: 250px; height: 200px;
-    overflow: hidden;
-}
-.order__img--icon{
-    width: 100%; height: 100%;
-    object-fit: cover; object-position: center;
-}
-.order__detail{
-    flex: 1 1 auto;
-    max-width: 700px; width: 100%; height: 170px;
-}
-.order__title{min-height: 24px; margin-bottom: 20px; line-height: 1.5;}
-.order__field{
-    min-height: 24px; margin-bottom: 10px;
-    display: flex; align-items: baseline;
-}
-.order__field > div:first-child{
-    flex: 0 0 auto; white-space: nowrap;
-}
-.order__item{
-    flex: 1 1 auto; min-width: 0; 
-    overflow-wrap: anywhere; line-height: 1.5;
-}
+/* order css in c-order.css */
+
+
 .contact{
     max-width: 980px; width: 100%; height: 227px;
     margin: 0 auto;
@@ -105,6 +65,16 @@
     padding: 10px 20px;
 }
 
+
+/* Contact input */
+input[readonly] {
+    background-color: #f3f3f3; /* 淡淡的灰色背景 */
+    color: #666;               /* 文字顏色變淺 */
+    cursor: not-allowed;       /* 滑鼠移上去顯示禁止符號 */
+}
+
+
+/* TapPay credit card input */
 .has-error .tpfield {
     border-color: #843534;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
@@ -117,25 +87,16 @@
 }
 
 
+
+
 @media (max-width: 1200px){
-    .booking-headline{padding: 0px 10px;}
     .empty-msg{padding: 0px 10px;}
-    .order{padding: 0px 10px;}
-    .delete-icon{right: 10px;}
     .contact{padding: 0px 10px;}
     .payment{padding: 0px 10px;}
     .confirmation{padding: 0px 10px;}
 }
 
 @media (max-width: 600px){
-    .order{
-        flex-direction: column;
-        height: 430px;
-
-    }
-    .order__img{width: 100%;}
-    .delete-icon{top: auto; bottom: 0px;}
-    .order__detail{height: 200px;}
     .divider--sp{margin: 30px auto 40px auto;}
     .contact{height: 256px;}
     .contact__info{margin-top: 5px;}

@@ -122,21 +122,8 @@
     padding: 10px 20px; margin-top: 10px;
     border: 0px; border-radius: 5px;
 }
+/* c-attraction.css */
 
-.attraction-info{
-    margin: auto; padding: 10px;
-    max-width: 1200px; width: 100%;
-}
-
-.attraction-info--orderpage{
-    margin: auto; padding: 10px;
-    max-width: 1000px; width: 100%;
-}
-
-.info-section{
-    margin-bottom: 20px;
-}
-.info-section__title{height: 32px; display: flex; align-items: center;}
 
 @media (max-width: 899px){
     .divider{display: none;}

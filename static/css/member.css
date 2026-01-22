@@ -1,0 +1,100 @@
+.profile-section{
+    max-width: 1200px;
+    padding: 25px;
+    border: 0px; border-radius: 10px;
+    margin: 50px auto;
+}
+
+.profile-headline{text-align: center;}
+
+.profile__divider{
+    border: 0px;
+    border-top: 1px solid gray;
+    margin: 20px 0px 20px 0px;
+}
+
+.profile__content{
+    display: flex;
+}
+
+.profile__form{
+    max-width: 700px; width: 100%;
+    flex: 1 1 auto;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+}
+
+.profile__avatar-zone{
+    min-width: 250px;
+    flex: 1 1 auto;
+    display: flex; flex-direction: column; 
+    align-items: center; justify-content: center;
+    border-left: 1px solid gray;
+    margin-left: 20px;
+}
+
+.profile__field{
+    width: 100%;
+    margin: 15px 0px;
+    display: flex; align-items: center; 
+}
+
+.profile__label{
+    width: 100px; 
+    margin-left: auto;
+    text-align: right; padding-right: 20px;
+}
+.profile__input{
+    width: 200px; height: 30px;
+    border: 1px solid #CCCCCC; border-radius: 5px;
+    padding: 10px;
+    margin-right: auto;
+}
+
+input[readonly] {
+    background-color: #f3f3f3; /* 淡淡的灰色背景 */
+    color: #666;               /* 文字顏色變淺 */
+    cursor: not-allowed;       /* 滑鼠移上去顯示禁止符號 */
+}
+.profile__submit-btn{
+    
+    margin: 20px 0px;
+    padding: 10px 20px;
+    border: 0px; border-radius: 5px;
+}
+
+.profile__avatar-img{
+    width: 150px; height: 150px;
+    border: 0; border-radius: 100%;
+    margin-bottom: 0px;
+}
+
+.upload-msg{
+    margin: 0px;
+}
+
+@media (max-width:1200px) {
+    .profile-section{
+    margin: 20px 20px;
+    }
+}
+
+
+@media (max-width:700px) {
+    .profile-section{
+    margin: 20px 20px;
+    }
+    .profile__content{
+        flex-direction: column-reverse;
+    }
+    .profile__avatar-zone{
+    border-left: 0px;
+}
+}
+
+@media (max-width:400px) {
+    .profile-section{
+        padding: 15px 5px;
+    }
+
+}

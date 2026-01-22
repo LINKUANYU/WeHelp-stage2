@@ -11,3 +11,6 @@ argon2_cffi
 pyJWT
 # sent request to TapPay
 requests
+
+pydantic
+pydantic[email]

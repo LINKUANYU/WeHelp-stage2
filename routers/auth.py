@@ -7,6 +7,7 @@ import jwt
 import os
 from dotenv import load_dotenv
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from schemas import *
 
 router = APIRouter()
 
@@ -47,17 +48,10 @@ def verify_token(creds: HTTPAuthorizationCredentials | None = Depends(bearer)) -
 # HTTPAuthorizationCredentials 通常有兩個重要欄位，creds.scheme：字串 "Bearer"，creds.credentials：真正的 token 字串（JWT）
 
 @router.post("/api/user")
-def signup(
-	name: str = Form(...),
-	email: str = Form(...),
-	password: str = Form(...),
-	conn = Depends(get_conn)
-):
-	name = name.strip()
-	email = email.strip().lower()
-	
-	if not name or not email or not password:
-		raise HTTPException(status_code=400, detail={"error":True, "message":"請輸入完整資訊"})
+def signup(user: Signup, conn = Depends(get_conn)):
+	name = user.name
+	email = user.email
+	password = user.password
 	
 	password_hash = hash_password(password)
 	cur = conn.cursor(dictionary=True)
@@ -71,7 +65,7 @@ def signup(
 	except IntegrityError as e:
 		conn.rollback()
 		if e.errno == errorcode.ER_DUP_ENTRY:
-			raise HTTPException(status_code=400, detail={"error":True, "message":"email已被使用"})
+			raise HTTPException(status_code=400, detail={"error":True, "message":"Email 已被使用"})
 	# 只攔「資料完整性」錯誤（例如 UNIQUE/FK）
 	# 這次交易全部撤回，避免半套資料/鎖卡住
 	# 判斷是否為「重複鍵」(MySQL 1062)
@@ -86,14 +80,9 @@ def signup(
 
 
 @router.put("/api/user/auth")
-def login(
-	email: str = Form(...),
-	password: str = Form(...),
-	cur = Depends(get_cur)
-):
-	email = email.strip().lower()
-	if not email or not password:
-		raise HTTPException(status_code=400, detail={"error":True, "message":"請輸入完整資訊"})
+def login(user: Login,cur = Depends(get_cur)):
+	email = user.email
+	password = user.password
 	
 	try:
 		cur.execute("SELECT id, name, email, password_hash FROM members WHERE email = %s", (email,))
@@ -105,7 +94,7 @@ def login(
 		
 		token = create_access_token(data["id"], data["email"], data["name"])
 		return {"token": token}
-	except Error:
+	except Error as e:
 		print(f"[DB Error] Select User Failed: {e}")
 		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
 
@@ -115,8 +104,66 @@ def login(
 # 回傳格式（預設）：{"detail": <你給的 detail>}
 
 @router.get("/api/user/auth")
-def get_current_user(user = Depends(verify_token)):
-	id = user["sub"]
-	name = user["name"]
-	email = user["email"]
-	return {"data": {"id": id, "name": name, "email": email}}
+def get_current_user(user = Depends(verify_token), cur = Depends(get_cur)):
+	user_id = user["sub"]
+
+	try:
+		cur.execute("SELECT name, email, avatar_url FROM members WHERE id=%s", (user_id,))
+		db_user = cur.fetchone()
+		
+		if not db_user:
+			raise HTTPException(status_code=404, detail={"error":True, "message":"找不到使用者"})
+		
+		return {"data": {"id": user_id, "name": db_user["name"], "email": db_user["email"], "avatar_url": db_user["avatar_url"]}}
+	except Error as e:
+		print(f"[DB Error] Get User Failed: {e}")
+		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
+
+
+@router.patch("/api/user")
+def update_user(
+	payload: UpdateUser, 
+	user = Depends(verify_token),
+	conn = Depends(get_conn)
+):
+	user_id = int(user["sub"])
+	user_email = user["email"]
+	new_name = payload.name
+	new_password = payload.new_password
+	old_password = payload.old_password
+
+	cur = conn.cursor(dictionary=True)
+	try:
+		# 有可能不改密碼，有的話兩個都要有
+		if new_password and not old_password:
+			raise HTTPException(status_code=400, detail={"error":True, "message":"新密碼與舊密碼請輸入完整"})
+		if not new_password and old_password:
+			raise HTTPException(status_code=400, detail={"error":True, "message":"新密碼與舊密碼請輸入完整"})
+		if new_password and old_password:
+		# DB找密碼
+			cur.execute("SELECT password_hash FROM members WHERE id=%s", (user_id,))
+			row = cur.fetchone()
+			# 舊密碼驗證
+			if not verify_password(old_password, row["password_hash"]):
+				raise HTTPException(status_code=400, detail={"error":True, "message":"舊密碼輸入錯誤"})
+			# 新密碼驗證
+			if verify_password(new_password, row["password_hash"]):
+				raise HTTPException(status_code=400, detail={"error":True, "message":"新密碼不可與舊密碼相同"})
+			
+			new_password_hash = hash_password(new_password)
+			cur.execute("UPDATE members SET password_hash=%s WHERE id=%s", (new_password_hash, user_id))
+		
+		# 處理名字
+		cur.execute("UPDATE members SET name=%s WHERE id=%s", (new_name, user_id))
+		
+		conn.commit()
+
+		token = create_access_token(user_id, user_email, new_name)
+
+		return {"ok": True, "token": token}
+	except Error as e:
+		conn.rollback()
+		print(f"[DB Error] Update user Failed: {e}")
+		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
+	finally:
+		cur.close()

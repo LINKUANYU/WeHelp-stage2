@@ -49,7 +49,7 @@ async function getOrderDetail(orderNumber){
 }
 
 async function renderThankyou(data){
-  const headline = document.querySelector('.booking-headline');
+  const headline = document.querySelector('#thankyou-headline');
   if (!data){
     headline.textContent = "查無訂單，請重試";
     return;
@@ -104,7 +104,7 @@ function buildAndRenderBookingContent(data){
     `.trim()
 }
 
-function mountBookingContent({mount = document.querySelector('.booking-headline')} = {}, data){
+function mountBookingContent({mount = document.querySelector('#thankyou-headline')} = {}, data){
     if (document.querySelector('.order')) return;
     mount.insertAdjacentHTML("afterend", buildAndRenderBookingContent(data));
 }
@@ -117,7 +117,7 @@ async function fetchTranSport(data){
 
 function buildAndRenderTranSport(transport){
   return`
-    <div class="attraction-info--orderpage">
+    <div class="attraction-info attraction-info--width1000">
       <div class="info-section">
         <div class="info-section__title u-text-body--bold u-c-sec-70">交通方式：</div>
         <div class="u-text-content u-c-sec-70 u-line-height--2" id="transport">${transport}</div>

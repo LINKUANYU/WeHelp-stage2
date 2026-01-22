@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/common.css">
+  <link rel="stylesheet" href="/static/css/member.css">
+  <title>Member</title>
+</head>
+<body>
+    <!-- JS 動態生成 header & nav -->
+  <main>
+    <section class="profile-section u-bg-sec-20">
+      <div class="profile-headline u-text-headline3 u-c-pri-70">變更會員資料</div>
+      <div class="profile__divider"></div>
+      <div class="profile__content">
+        <div class="profile__form">
+          <div class="profile__field">
+            <label class="profile__label u-text-body--bold u-c-pri-70" for="member-email">使用者信箱</label>
+            <input class="profile__input" id="member-email" value="example@yahoo.com" readonly>
+          </div>
+          <div class="profile__field">
+            <label class="profile__label u-text-body--bold u-c-pri-70" for="member-name">姓名</label>
+            <input class="profile__input" id="member-name">
+          </div>
+          <div class="profile__field">
+            <label class="profile__label  u-text-body--bold u-c-pri-70" for="old-password">舊密碼</label>
+            <input class="profile__input" id="old-password" type="password" placeholder="請輸入舊密碼">
+          </div>
+          <div class="profile__field">
+            <label class="profile__label u-text-body--bold u-c-pri-70" for="new-password">新密碼</label>
+            <input class="profile__input" id="new-password" type="password" placeholder="請輸入新密碼">
+          </div>
+          <ul class="validation-list is-hidden" id="profile-validation-list">
+              <li id="profile-rule-length" class="validation-item invalid">長度至少 8 位</li>
+              <li id="profile-rule-number" class="validation-item invalid">至少包含 1 個數字</li>
+              <li id="profile-rule-capital" class="validation-item invalid">至少包含 1 個大寫字母</li>
+              <li id="profile-rule-special" class="validation-item invalid">至少包含 1 個特殊符號</li>
+          </ul>
+          <p class="error-msg is-hidden">錯誤訊息</p>
+          <button class="profile__submit-btn u-text-btn u-bg-pri-70 u-c-white">儲存變更</button>
+        </div>
+        <aside class="profile__avatar-zone">
+          <img class="profile__avatar-img" id="avatar-preview" src="/static/icon/profile.png">
+          <input class="is-hidden" type="file" id="avatar-input" accept=".jpg, .jpeg, .png">
+          <button class="profile__submit-btn u-text-btn u-bg-pri-70 u-c-white" id="select-avatar-btn">選擇圖片</button>
+          <p class="upload-msg u-c-sec-50">檔案大小:最大 10 MB</p>
+          <p class="upload-msg u-c-sec-50">檔案限制: .JPEG, .PNG</p>
+          <button class="profile__submit-btn u-text-btn u-bg-pri-70 u-c-white" id="save-avatar-btn">儲存照片</button>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- JS 動態生成 footer -->
+  <script type="module" src="/static/js/pages/member.js"></script>
+</body>
+</html>

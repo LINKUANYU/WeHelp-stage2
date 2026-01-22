@@ -1,0 +1,56 @@
+/* for booking.html & thankyou.html */
+.order{
+    max-width: 980px; width: 100%; height: 200px;
+    margin: 0 auto;
+    position: relative;
+    display: flex; gap: 30px;
+}
+.delete-icon{
+    padding: 0px; border: 0px;
+    height: 30px; width:30px;
+    position: absolute;
+    top: 0px; right: 0px;
+}
+.order__img{
+    flex: 0 0 auto;
+    width: 250px; height: 200px;
+    overflow: hidden;
+}
+.order__img--icon{
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+}
+.order__detail{
+    flex: 1 1 auto;
+    max-width: 700px; width: 100%; height: 170px;
+}
+.unpaid-msg{color: red;}
+.order__title{
+    min-height: 24px; margin-bottom: 20px; line-height: 1.5;
+}
+.order__field{
+    min-height: 24px; margin-bottom: 10px;
+    display: flex; align-items: baseline;
+}
+.order__field > div:first-child{
+    flex: 0 0 auto; white-space: nowrap;
+}
+.order__item{
+    flex: 1 1 auto; min-width: 0; 
+    overflow-wrap: anywhere; line-height: 1.5;
+}
+
+@media (max-width: 1200px){
+    .order{padding: 0px 10px;}
+    .delete-icon{right: 10px;}
+}
+
+@media (max-width: 600px){
+    .order{
+        flex-direction: column;
+        height: 430px;
+    }
+    .order__img{width: 100%;}
+    .delete-icon{top: auto; bottom: 0px;}
+    .order__detail{height: 200px;}
+}
