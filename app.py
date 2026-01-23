@@ -2,10 +2,10 @@ from fastapi import *
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.exceptions import RequestValidationError
-from routers import attractions, auth, booking, order, upload_avatar
-from deps import *
+from controller import attractions, auth, booking, order, upload_avatar
+from db.deps import *
 from mysql.connector import Error
-from schemas import *
+from models.schemas import *
 
 
 app=FastAPI()
@@ -21,22 +21,22 @@ app.include_router(upload_avatar.router)
 # Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)
 async def index(request: Request):
-	return FileResponse("./static/index.html", media_type="text/html")
+	return FileResponse("./static/templates/index.html", media_type="text/html")
 @app.get("/attraction/{id}", include_in_schema=False)
 async def attraction(request: Request, id: int):
-	return FileResponse("./static/attraction.html", media_type="text/html")
+	return FileResponse("./static/templates/attraction.html", media_type="text/html")
 @app.get("/booking", include_in_schema=False)
 async def booking(request: Request):
-	return FileResponse("./static/booking.html", media_type="text/html")
+	return FileResponse("./static/templates/booking.html", media_type="text/html")
 @app.get("/thankyou", include_in_schema=False)
 async def thankyou(request: Request):
-	return FileResponse("./static/thankyou.html", media_type="text/html")
+	return FileResponse("./static/templates/thankyou.html", media_type="text/html")
 @app.get("/member", include_in_schema=False)
 async def member(request: Request):
-	return FileResponse("./static/member.html", media_type="text/html")
+	return FileResponse("./static/templates/member.html", media_type="text/html")
 @app.get("/purchase", include_in_schema=False)
 async def purchase(request: Request):
-	return FileResponse("./static/purchase.html", media_type="text/html")
+	return FileResponse("./static/templates/purchase.html", media_type="text/html")
 
 @app.on_event("startup")
 def test_db_connection():

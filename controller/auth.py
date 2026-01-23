@@ -1,5 +1,5 @@
 from fastapi import *
-from deps import get_conn, get_cur
+from db.deps import get_conn, get_cur
 from mysql.connector import Error, IntegrityError, errorcode
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
@@ -7,7 +7,7 @@ import jwt
 import os
 from dotenv import load_dotenv
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from schemas import *
+from models.schemas import *
 
 router = APIRouter()
 

@@ -25,8 +25,8 @@ respone 重要資訊：
 
 
 from fastapi import *
-from deps import get_conn, get_cur
-from routers.auth import verify_token
+from db.deps import get_conn, get_cur
+from controller.auth import verify_token
 from mysql.connector import Error, IntegrityError, DataError
 import json
 import os
@@ -34,7 +34,7 @@ from dotenv import load_dotenv
 import time
 import secrets
 import requests
-from schemas import *
+from models.schemas import *
 
 router = APIRouter()
 

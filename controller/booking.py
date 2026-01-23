@@ -12,11 +12,11 @@ Booking 流程：
 """
 
 from fastapi import *
-from deps import get_conn, get_cur
-from routers.auth import verify_token
+from db.deps import get_conn, get_cur
+from controller.auth import verify_token
 from mysql.connector import Error, IntegrityError, DataError
 import json
-from schemas import *
+from models.schemas import *
 
 router = APIRouter()
 

@@ -1,7 +1,7 @@
 from fastapi import *
-from deps import get_conn, get_cur
+from db.deps import get_conn, get_cur
 from mysql.connector import Error
-from routers.auth import verify_token
+from controller.auth import verify_token
 import time
 import os
 
