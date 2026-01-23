@@ -2,9 +2,11 @@ from fastapi import *
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.exceptions import RequestValidationError
-from controller import attractions, auth, booking, order, upload_avatar
-from db.deps import *
 from mysql.connector import Error
+from dotenv import load_dotenv
+load_dotenv()
+from controller import attractions, booking, order, user
+from db.deps import *
 from models.schemas import *
 
 
@@ -14,9 +16,8 @@ app.mount("/static", StaticFiles(directory="static"))
 
 app.include_router(attractions.router)
 app.include_router(booking.router)
-app.include_router(auth.router)
+app.include_router(user.router)
 app.include_router(order.router)
-app.include_router(upload_avatar.router)
 
 # Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)

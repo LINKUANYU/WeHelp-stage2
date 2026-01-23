@@ -5,32 +5,18 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 import jwt
 import os
+import time
 from dotenv import load_dotenv
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from models.schemas import *
+from models.user_model import *
 
 router = APIRouter()
 
-password_context = CryptContext(schemes=["argon2"], deprecated="auto")
-def hash_password(plain:str) -> str:
-	return password_context.hash(plain)
-def verify_password(plain:str, hashed:str) -> bool:
-	return password_context.verify(plain, hashed)
 
-load_dotenv()
 KEY = os.getenv("KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 bearer = HTTPBearer(auto_error=False) # 為了自定義進來沒token錯誤顯示
-
-def create_access_token(user_id:int, email:str, name:str) -> str:
-	payload = {
-		"sub": str(user_id),
-		"email": email,
-		"name": name,
-		"iat": datetime.now(timezone.utc),
-		"exp": datetime.now(timezone.utc) + timedelta(days=7)
-	}
-	return jwt.encode(payload, KEY, algorithm=ALGORITHM)
 
 def verify_token(creds: HTTPAuthorizationCredentials | None = Depends(bearer)) -> dict:
 	if creds is None or not creds.credentials:
@@ -49,19 +35,9 @@ def verify_token(creds: HTTPAuthorizationCredentials | None = Depends(bearer)) -
 
 @router.post("/api/user")
 def signup(user: Signup, conn = Depends(get_conn)):
-	name = user.name
-	email = user.email
-	password = user.password
-	
-	password_hash = hash_password(password)
-	cur = conn.cursor(dictionary=True)
-
 	try:
-		
-		cur.execute("INSERT INTO members(name, email, password_hash) VALUES(%s, %s, %s)", (name, email, password_hash))
-		conn.commit()
+		UserModel.create_user(conn, user.name, user.email, user.password)
 		return {"ok":True}
-	
 	except IntegrityError as e:
 		conn.rollback()
 		if e.errno == errorcode.ER_DUP_ENTRY:
@@ -70,29 +46,21 @@ def signup(user: Signup, conn = Depends(get_conn)):
 	# 這次交易全部撤回，避免半套資料/鎖卡住
 	# 判斷是否為「重複鍵」(MySQL 1062)
 	# 回給前端 400＋友善訊息
-
 	except Error as e:
 		conn.rollback()
 		print(f"[DB Error] Create User Failed: {e}")
 		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
-	finally:
-		cur.close()
+
 
 
 @router.put("/api/user/auth")
 def login(user: Login,cur = Depends(get_cur)):
-	email = user.email
-	password = user.password
-	
 	try:
-		cur.execute("SELECT id, name, email, password_hash FROM members WHERE email = %s", (email,))
-		data = cur.fetchone()
-		if not data:
-			raise HTTPException(status_code=400, detail={"error":True, "message":"帳號或密碼輸入錯誤"})
-		if not verify_password(password, data["password_hash"]):
+		db_user = UserModel.get_user_by_email(cur, user.email)
+		if not db_user or not UserModel.verify_password(user.password, db_user["password_hash"]):
 			raise HTTPException(status_code=400, detail={"error":True, "message":"帳號或密碼輸入錯誤"})
 		
-		token = create_access_token(data["id"], data["email"], data["name"])
+		token = UserModel.create_token(db_user["id"], db_user["email"], db_user["name"])
 		return {"token": token}
 	except Error as e:
 		print(f"[DB Error] Select User Failed: {e}")
@@ -108,9 +76,7 @@ def get_current_user(user = Depends(verify_token), cur = Depends(get_cur)):
 	user_id = user["sub"]
 
 	try:
-		cur.execute("SELECT name, email, avatar_url FROM members WHERE id=%s", (user_id,))
-		db_user = cur.fetchone()
-		
+		db_user = UserModel.get_user_by_id(cur, user_id)
 		if not db_user:
 			raise HTTPException(status_code=404, detail={"error":True, "message":"找不到使用者"})
 		
@@ -131,39 +97,91 @@ def update_user(
 	new_name = payload.name
 	new_password = payload.new_password
 	old_password = payload.old_password
-
-	cur = conn.cursor(dictionary=True)
+	
+	# 有可能不改密碼，有的話兩個都要有
+	if new_password and not old_password:
+		raise HTTPException(status_code=400, detail={"error":True, "message":"新密碼與舊密碼請輸入完整"})
+	if not new_password and old_password:
+		raise HTTPException(status_code=400, detail={"error":True, "message":"新密碼與舊密碼請輸入完整"})
+	new_password_hash = None
 	try:
-		# 有可能不改密碼，有的話兩個都要有
-		if new_password and not old_password:
-			raise HTTPException(status_code=400, detail={"error":True, "message":"新密碼與舊密碼請輸入完整"})
-		if not new_password and old_password:
-			raise HTTPException(status_code=400, detail={"error":True, "message":"新密碼與舊密碼請輸入完整"})
+		cur = conn.cursor(dictionary=True)
 		if new_password and old_password:
 		# DB找密碼
-			cur.execute("SELECT password_hash FROM members WHERE id=%s", (user_id,))
-			row = cur.fetchone()
+			db_user = UserModel.get_user_by_id(cur, user_id)
 			# 舊密碼驗證
-			if not verify_password(old_password, row["password_hash"]):
+			if not UserModel.verify_password(old_password, db_user["password_hash"]):
 				raise HTTPException(status_code=400, detail={"error":True, "message":"舊密碼輸入錯誤"})
 			# 新密碼驗證
-			if verify_password(new_password, row["password_hash"]):
+			if UserModel.verify_password(new_password, db_user["password_hash"]):
 				raise HTTPException(status_code=400, detail={"error":True, "message":"新密碼不可與舊密碼相同"})
 			
-			new_password_hash = hash_password(new_password)
-			cur.execute("UPDATE members SET password_hash=%s WHERE id=%s", (new_password_hash, user_id))
+			new_password_hash = UserModel.hash_password(new_password)
 		
-		# 處理名字
-		cur.execute("UPDATE members SET name=%s WHERE id=%s", (new_name, user_id))
+		# 姓名與新密碼一起改
+		UserModel.update_user_info(conn, user_id, new_name, new_password_hash)
 		
-		conn.commit()
-
-		token = create_access_token(user_id, user_email, new_name)
+		# 更新token
+		token = UserModel.create_token(user_id, user_email, new_name)
 
 		return {"ok": True, "token": token}
 	except Error as e:
 		conn.rollback()
 		print(f"[DB Error] Update user Failed: {e}")
 		raise HTTPException(status_code=500, detail={"error":True, "message":"資料庫錯誤，請稍後再試"})
-	finally:
-		cur.close()
+
+
+
+UPLOAD_DIR = "static/icon/upload"
+
+@router.patch("/api/user/avatar")
+async def upload_avatar(
+	file: UploadFile = File(...),
+	user = Depends(verify_token),
+	conn = Depends(get_conn)
+):
+	user_id = int(user["sub"])
+	cur = conn.cursor(dictionary=True)
+	try:
+		# 檢查該使用者是否已有圖片
+		db_user = UserModel.get_user_by_id(cur, user_id)
+		
+		if db_user and db_user["avatar_url"]:
+			# 取得舊路徑 (例如: /static/uploads/user_1_old.jpg)
+			# 因為存的是以 / 開頭的 URL，我們要去掉第一個斜線，os 才能找到正確路徑
+			old_file_path = db_user["avatar_url"].lstrip("/") # 移除最左邊的"/"
+
+			if os.path.exists(old_file_path): # 檢查檔案是否存在
+				os.remove(old_file_path)  # 存在之後才刪除檔案
+				print(f"成功刪掉舊圖，{old_file_path}") 
+
+		# 準備建立新的圖片
+		# 驗證傳入檔案類型
+		if file.content_type not in ["image/jpeg", "image/png"]: 
+			# file.content_type 是瀏覽器在傳送檔案時附帶的 MIME Type 資訊，我們不檢查檔案副檔名，而是檢查檔案的實質類型。
+			raise HTTPException(status_code=400, detail={"error":True, "message":"檔案類型錯誤"})
+		# 驗證大小
+		contents = await file.read() # 它會把整張圖片的二進位資料讀進伺服器的記憶體中。len() 算出來會是Bytes大小
+		if len(contents) > 10 * 1024 * 1024:
+			raise HTTPException(status_code=400, detail={"error":True, "message":"檔案大小超過 10 MB"})
+		
+		# 建立檔名 & 組織檔案路徑
+		ext = file.filename.split(".")[-1] # 把原檔案的黨名拆開 [-1] 代表最後一個，也就是副檔名
+		filename = f"user_{user_id}_{int(time.time())}_.{ext}" # time.time() 目前時間
+		file_path = os.path.join(UPLOAD_DIR, filename) 
+		# os.path.join 把檔案的路徑設為 UPLOAD_DIR + "/" + filename 根據你的作業系統（Windows 用 \，Linux 用 /）自動補上正確的斜線。
+
+		# 伺服器以「寫入二進位」模式開啟指定路徑的檔案（若不存在則自動建立），並將圖片內容寫入硬碟
+		with open(file_path, "wb") as f: # 在open 檔案路徑時，沒有檔案就會自動建立
+			f.write(contents) # 寫入資料，文字檔是用 "w"，但圖片是二進位資料（Binary），必須加上 b
+
+		# 更新資料庫路徑
+		avatar_url = f"/{UPLOAD_DIR}/{filename}"
+		UserModel.update_avatar(conn, user_id, avatar_url)
+
+		return {"ok": True}
+	except Error as e:
+		conn.rollback()
+		print(f"[DB Error] Update User Avatar Failed: {e}")
+		raise HTTPException(status_code=500, detail={"error":True, "message":"更新照片錯誤，請稍後再試"})
+

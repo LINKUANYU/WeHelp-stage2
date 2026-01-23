@@ -13,7 +13,7 @@ Booking 流程：
 
 from fastapi import *
 from db.deps import get_conn, get_cur
-from controller.auth import verify_token
+from controller.user import verify_token
 from mysql.connector import Error, IntegrityError, DataError
 import json
 from models.schemas import *
